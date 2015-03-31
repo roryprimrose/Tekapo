@@ -1,0 +1,1919 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Neovolve.Windows.Forms</name>
+    </assembly>
+    <members>
+        <member name="T:Neovolve.Windows.Forms.Controls.WizardPage">
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/> class defines the base control used to create pages in the
+            <see cref="T:Neovolve.Windows.Forms.WizardForm"/>form.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPage.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPage.ContentsPanel">
+            <summary>
+            Defines the panel that contains the contents of the page.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPage._navigationSettings">
+            <summary>
+            Stores the navigation settings for the page.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPage._owner">
+            <summary>
+            Stores the owner wizard form.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPage._pageSettings">
+            <summary>
+            Stores the settings for the page.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPage._wizardButtonsDisabled">
+            <summary>
+            Stores whether the wizard buttons are disabled.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/> class.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.#ctor(Neovolve.Windows.Forms.WizardForm)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/> class.
+            </summary>
+            <param name="owner">
+            The owner.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.CanNavigate(Neovolve.Windows.Forms.WizardFormNavigationEventArgs)">
+            <summary>
+            Determines whether this instance can navigate the specified e.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+            </param>
+            <returns>
+            <item>
+            True
+            </item>
+            if this instance can navigate the specified e; otherwise, 
+            <item>
+            False
+            </item>
+            .
+            </returns>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.InvokeCustomNavigation(Neovolve.Windows.Forms.WizardFormNavigationEventArgs)">
+            <summary>
+            Invokes the custom navigation.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.InvokeHelpNavigation(Neovolve.Windows.Forms.WizardFormNavigationEventArgs)">
+            <summary>
+            Invokes the help navigation.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.SetOwner(Neovolve.Windows.Forms.WizardForm)">
+            <summary>
+            Sets the owner.
+            </summary>
+            <param name="owner">
+            The owner.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.OnClosed(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Neovolve.Windows.Forms.Controls.WizardPage.Closed"/> event.
+            </summary>
+            <param name="e">
+            The <see cref="T:System.EventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.OnClosing(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Neovolve.Windows.Forms.Controls.WizardPage.Closing"/> event.
+            </summary>
+            <param name="e">
+            The <see cref="T:System.EventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.OnOpened(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Neovolve.Windows.Forms.Controls.WizardPage.Opened"/> event.
+            </summary>
+            <param name="e">
+            The <see cref="T:System.EventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.OnOpening(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Neovolve.Windows.Forms.Controls.WizardPage.Opening"/> event.
+            </summary>
+            <param name="e">
+            The <see cref="T:System.EventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.OnUpdateWizardSettingsRequiredRequired(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:Neovolve.Windows.Forms.Controls.WizardPage.UpdateWizardSettingsRequired"/> event.
+            </summary>
+            <param name="e">
+            The <see cref="T:System.EventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.InvokeNavigation(Neovolve.Windows.Forms.WizardFormNavigationType)">
+            <summary>
+            Invokes the navigation.
+            </summary>
+            <param name="navigationType">
+            Type of the navigation.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.InvokeNavigation(System.String)">
+            <summary>
+            Invokes the navigation.
+            </summary>
+            <param name="navigationKey">
+            The navigation key.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPage.ValidateOwnerAndPage">
+            <summary>
+            Validates the owner and page.
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPage.Contents">
+            <summary>
+            Defines the panel that contains the contents of the page.
+            </summary>
+        </member>
+        <member name="E:Neovolve.Windows.Forms.Controls.WizardPage.Closed">
+            <summary>
+            Raised when the page has been removed as the current page in the owning
+            <see cref="T:Neovolve.Windows.Forms.WizardForm"/>.
+            </summary>
+        </member>
+        <member name="E:Neovolve.Windows.Forms.Controls.WizardPage.Closing">
+            <summary>
+            Raised when the page is about to be removed as the current page in the owning
+            <see cref="T:Neovolve.Windows.Forms.WizardForm"/>.
+            </summary>
+        </member>
+        <member name="E:Neovolve.Windows.Forms.Controls.WizardPage.Opened">
+            <summary>
+            Raised when the page is has been made the current page in the owning
+            <see cref="T:Neovolve.Windows.Forms.WizardForm"/>.
+            </summary>
+        </member>
+        <member name="E:Neovolve.Windows.Forms.Controls.WizardPage.Opening">
+            <summary>
+            Raised when the page is about to be the current page in the owning
+            <see cref="T:Neovolve.Windows.Forms.WizardForm"/>.
+            </summary>
+        </member>
+        <member name="E:Neovolve.Windows.Forms.Controls.WizardPage.UpdateWizardSettingsRequired">
+            <summary>
+            Raised when the user interface of the <see cref="T:Neovolve.Windows.Forms.WizardForm"/> needs to be updated.
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPage.CurrentNavigationSettings">
+            <summary>
+            Gets the current navigation settings.
+            </summary>
+            <value>
+            The current navigation settings.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPage.CurrentSettings">
+            <summary>
+            Gets the current settings.
+            </summary>
+            <value>
+            The current settings.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPage.DefaultFocus">
+            <summary>
+            Gets or sets the default focus.
+            </summary>
+            <value>
+            The default focus.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPage.NavigationSettings">
+            <summary>
+            Gets or sets the navigation settings.
+            </summary>
+            <value>
+            The navigation settings.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPage.PageSettings">
+            <summary>
+            Gets or sets the page settings.
+            </summary>
+            <value>
+            The page settings.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPage.WizardButtonsDisabled">
+            <summary>
+            Gets or sets a value indicating whether the wizard buttons disabled.
+            </summary>
+            <value>
+            <c>true</c>if the wizard buttons are disabled; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPage.State">
+            <summary>
+            Gets the state data.
+            </summary>
+            <value>
+            The state data.
+            </value>
+            <exception cref="T:System.InvalidOperationException">
+            The control is not hosted in a <see cref="T:Neovolve.Windows.Forms.WizardForm"/> instance.
+            </exception>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs">
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> class defines the event argument information when a
+            <see cref="E:Neovolve.Windows.Forms.WizardForm.Navigating"/>event is fired.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardFormNavigationEventArgs._currentPage">
+            <summary>
+            Stores a reference to the current page.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardFormNavigationEventArgs.#ctor(Neovolve.Windows.Forms.Controls.WizardPage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> class.
+            </summary>
+            <param name="currentPageValue">
+            The current page value.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardFormNavigationEventArgs.#ctor(Neovolve.Windows.Forms.Controls.WizardPage,Neovolve.Windows.Forms.WizardFormNavigationType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> class.
+            </summary>
+            <param name="currentPageValue">
+            The current page value.
+            </param>
+            <param name="navigationValue">
+            The navigation value.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardFormNavigationEventArgs.#ctor(Neovolve.Windows.Forms.Controls.WizardPage,Neovolve.Windows.Forms.WizardFormNavigationType,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> class.
+            </summary>
+            <param name="currentPageValue">
+            The current page value.
+            </param>
+            <param name="navigationType">
+            The navigation value.
+            </param>
+            <param name="navigationKey">
+            The custom navigation value.
+            </param>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.WizardFormNavigationEventArgs.CurrentPage">
+            <summary>
+            Gets the current page.
+            </summary>
+            <value>
+            The current page.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.WizardFormNavigationEventArgs.NavigationKey">
+            <summary>
+            Gets or sets the navigation key.
+            </summary>
+            <value>
+            The navigation key.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.WizardFormNavigationEventArgs.NavigationType">
+            <summary>
+            Gets or sets the type of the navigation.
+            </summary>
+            <value>
+            The type of the navigation.
+            </value>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.Controls.WizardPageDictionary">
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageDictionary"/> class contains a set of
+            <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/>controls that are loaded by a
+            <see cref="T:Neovolve.Windows.Forms.WizardForm"/>window.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPageDictionary._store">
+            <summary>
+            Stores the collection of pages.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageDictionary"/> class.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.Add(System.String,Neovolve.Windows.Forms.Controls.WizardPage)">
+            <summary>
+            Adds an element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            </summary>
+            <param name="key">
+            The object to use as the key of the element to add.
+            </param>
+            <param name="value">
+            The object to use as the value of the element to add.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            The <paramref name="key"/> value is <c>null</c>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            An element with the same key already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+            The <see cref="T:System.Collections.Generic.IDictionary`2"/> is read-only.
+            </exception>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.Add(System.Collections.Generic.KeyValuePair{System.String,Neovolve.Windows.Forms.Controls.WizardPage})">
+            <summary>
+            Adds an item to the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+            </summary>
+            <param name="item">
+            The object to add to the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+            </param>
+            <exception cref="T:System.NotSupportedException">
+            The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
+            </exception>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.Add(System.String,Neovolve.Windows.Forms.Controls.WizardPage,Neovolve.Windows.Forms.Controls.WizardPageSettings)">
+            <summary>
+            Adds the specified page.
+            </summary>
+            <param name="key">
+            The page key.
+            </param>
+            <param name="page">
+            The wizard page.
+            </param>
+            <param name="settings">
+            The page settings.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.Add(System.String,Neovolve.Windows.Forms.Controls.WizardPage,Neovolve.Windows.Forms.Controls.WizardPageSettings,Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings)">
+            <summary>
+            Adds the specified page.
+            </summary>
+            <param name="key">
+            The page key.
+            </param>
+            <param name="page">
+            The wizard page.
+            </param>
+            <param name="settings">
+            The page settings.
+            </param>
+            <param name="navigationSettings">
+            The navigation settings.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.Clear">
+            <summary>
+            Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.Contains(System.Collections.Generic.KeyValuePair{System.String,Neovolve.Windows.Forms.Controls.WizardPage})">
+            <summary>
+            Determines whether the <see cref="T:System.Collections.Generic.ICollection`1"></see> contains a specific value.
+            </summary>
+            <param name="item">
+            The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
+            </param>
+            <returns>
+            True if item is found in the <see cref="T:System.Collections.Generic.ICollection`1"></see>; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.ContainsKey(System.String)">
+            <summary>
+            Determines whether the <see cref="T:System.Collections.Generic.IDictionary`2"/> contains an element with the specified key.
+            </summary>
+            <param name="key">
+            The key to locate in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            </param>
+            <returns>
+            <c>true</c>if the <see cref="T:System.Collections.Generic.IDictionary`2"/> contains an element with the key; otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            The <paramref name="key"/> value is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.ContainsValue(Neovolve.Windows.Forms.Controls.WizardPage)">
+            <summary>
+            Determines whether the specified value contains value.
+            </summary>
+            <param name="value">
+            The value.
+            </param>
+            <returns>
+            <item>
+            True
+            </item>
+            if the specified value contains value; otherwise, 
+            <item>
+            False
+            </item>
+            .
+            </returns>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.CopyTo(System.Collections.Generic.KeyValuePair{System.String,Neovolve.Windows.Forms.Controls.WizardPage}[],System.Int32)">
+            <summary>
+            Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1"></see> to an <see cref="T:System.Array"></see>, starting at a particular <see cref="T:System.Array"></see> index.
+            </summary>
+            <param name="array">
+            The one-dimensional <see cref="T:System.Array"></see> that is the destination of the elements copied from <see cref="T:System.Collections.Generic.ICollection`1"></see>. The <see cref="T:System.Array"></see> must have zero-based indexing.
+            </param>
+            <param name="arrayIndex">
+            The zero-based index in array at which copying begins.
+            </param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            ArrayIndex is less than 0.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Array is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            Array is multidimensional.
+            -or-
+            arrayIndex is equal to or greater than the length of array
+            .-or-
+            The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"></see> is greater than the available space from arrayIndex to the end of the destination array.
+            -or-
+            Type T cannot be cast automatically to the type of the destination array.
+            </exception>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>
+            A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.GetNextStoredPage(Neovolve.Windows.Forms.Controls.WizardPage)">
+            <summary>
+            Gets the next page from the collection.
+            </summary>
+            <param name="page">
+            The wizard page.
+            </param>
+            <returns>
+            A <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/> instance. Returns <c>null</c> if no relevant page exists.
+            </returns>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.OnPageAdded(Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs)">
+            <summary>
+            Raises the <see cref="E:Neovolve.Windows.Forms.Controls.WizardPageDictionary.PageAdded"/> event.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.OnPageRemoved(Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs)">
+            <summary>
+            Raises the <see cref="E:Neovolve.Windows.Forms.Controls.WizardPageDictionary.PageRemoved"/> event.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.Remove(System.String)">
+            <summary>
+            Removes the element with the specified key from the <see cref="T:System.Collections.Generic.IDictionary`2"></see>.
+            </summary>
+            <param name="key">
+            The key of the element to remove.
+            </param>
+            <returns>
+            True if the element is successfully removed; otherwise, false.  This method also returns false if key was not found in the original <see cref="T:System.Collections.Generic.IDictionary`2"></see>.
+            </returns>
+            <exception cref="T:System.NotSupportedException">
+            The <see cref="T:System.Collections.Generic.IDictionary`2"></see> is read-only.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Key is null.
+            </exception>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.Remove(System.Collections.Generic.KeyValuePair{System.String,Neovolve.Windows.Forms.Controls.WizardPage})">
+            <summary>
+            Removes the first occurrence of a specific object from the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
+            </summary>
+            <param name="item">
+            The object to remove from the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
+            </param>
+            <returns>
+            True if item was successfully removed from the <see cref="T:System.Collections.Generic.ICollection`1"></see>; otherwise, false. This method also returns false if item is not found in the original <see cref="T:System.Collections.Generic.ICollection`1"></see>.
+            </returns>
+            <exception cref="T:System.NotSupportedException">
+            The <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only.
+            </exception>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.TryGetValue(System.String,Neovolve.Windows.Forms.Controls.WizardPage@)">
+            <summary>
+            Tries the get value.
+            </summary>
+            <param name="key">
+            The page key.
+            </param>
+            <param name="value">
+            The value.
+            </param>
+            <returns>
+            The try get value.
+            </returns>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionary.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="E:Neovolve.Windows.Forms.Controls.WizardPageDictionary.PageAdded">
+            <summary>
+            Raised when a <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/> control is added to the
+            <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageDictionary"/>class.
+            </summary>
+        </member>
+        <member name="E:Neovolve.Windows.Forms.Controls.WizardPageDictionary.PageRemoved">
+            <summary>
+            Raised when a <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/> control is removed from the
+            <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageDictionary"/>class.
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageDictionary.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
+            </summary>
+            <value>
+            The count.
+            </value>
+            <returns>
+            The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
+            </returns>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageDictionary.IsReadOnly">
+            <summary>
+            Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only.
+            </summary>
+            <value>
+            The is read only.
+            </value>
+            <returns>
+            True if the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only; otherwise, false.
+            </returns>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageDictionary.Keys">
+            <summary>
+            Gets an <see cref="T:System.Collections.Generic.ICollection`1"></see> containing the keys of the <see cref="T:System.Collections.Generic.IDictionary`2"></see>.
+            </summary>
+            <value>
+            The page keys.
+            </value>
+            <returns>
+            An <see cref="T:System.Collections.Generic.ICollection`1"></see> containing the keys of the object that implements <see cref="T:System.Collections.Generic.IDictionary`2"></see>.
+            </returns>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageDictionary.Values">
+            <summary>
+            Gets an <see cref="T:System.Collections.Generic.ICollection`1"></see> containing the values in the <see cref="T:System.Collections.Generic.IDictionary`2"></see>.
+            </summary>
+            <value>
+            The values.
+            </value>
+            <returns>
+            An <see cref="T:System.Collections.Generic.ICollection`1"></see> containing the values in the object that implements <see cref="T:System.Collections.Generic.IDictionary`2"></see>.
+            </returns>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageDictionary.Item(System.String)">
+            <summary>
+            Gets or sets the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/> with the specified key.
+            </summary>
+            <param name="key">
+            The page key.
+            </param>
+            <value>
+            A <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/> instance.
+            </value>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.WizardButtonSettingsTypeConverter">
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.WizardButtonSettingsTypeConverter"/>
+            class is used to convert the
+            <see cref="T:Neovolve.Windows.Forms.WizardButtonSettings"/>class to and from other types.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardButtonSettingsTypeConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+            <summary>
+            Returns whether this converter can convert an object of the given type to the type of this converter, using the specified context.
+            </summary>
+            <param name="context">
+            An <see cref="T:System.ComponentModel.ITypeDescriptorContext"></see> that provides a format context.
+            </param>
+            <param name="sourceType">
+            A <see cref="T:System.Type"></see> that represents the type you want to convert from.
+            </param>
+            <returns>
+            True if this converter can perform the conversion; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardButtonSettingsTypeConverter.CanConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+            <summary>
+            Returns whether this converter can convert the object to the specified type, using the specified context.
+            </summary>
+            <param name="context">
+            An <see cref="T:System.ComponentModel.ITypeDescriptorContext"></see> that provides a format context.
+            </param>
+            <param name="destinationType">
+            A <see cref="T:System.Type"></see> that represents the type you want to convert to.
+            </param>
+            <returns>
+            True if this converter can perform the conversion; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardButtonSettingsTypeConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
+            <summary>
+            Converts the given object to the type of this converter, using the specified context and culture information.
+            </summary>
+            <param name="context">
+            An <see cref="T:System.ComponentModel.ITypeDescriptorContext"></see> that provides a format context.
+            </param>
+            <param name="culture">
+            The <see cref="T:System.Globalization.CultureInfo"></see> to use as the current culture.
+            </param>
+            <param name="value">
+            The <see cref="T:System.Object"/> to convert.
+            </param>
+            <returns>
+            An <see cref="T:System.Object"/> that represents the converted value.
+            </returns>
+            <exception cref="T:System.NotSupportedException">
+            The conversion cannot be performed. 
+            </exception>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardButtonSettingsTypeConverter.ConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object,System.Type)">
+            <summary>
+            Converts the given value object to the specified type, using the specified context and culture information.
+            </summary>
+            <param name="context">
+            An <see cref="T:System.ComponentModel.ITypeDescriptorContext"></see> that provides a format context.
+            </param>
+            <param name="culture">
+            A <see cref="T:System.Globalization.CultureInfo"></see>. If null is passed, the current culture is assumed.
+            </param>
+            <param name="value">
+            The <see cref="T:System.Object"/> to convert.
+            </param>
+            <param name="destinationType">
+            The <see cref="T:System.Type"></see> to convert the value parameter to.
+            </param>
+            <returns>
+            An <see cref="T:System.Object"/> that represents the converted value.
+            </returns>
+            <exception cref="T:System.NotSupportedException">
+            The conversion cannot be performed. 
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            The destinationType parameter is null. 
+            </exception>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.Controls.WizardBannerPage">
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.Controls.WizardBannerPage"/> class is a control that inherits from the
+            <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/> control to provide a wizard page that has a banner at the top of the page.
+            </summary>
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.Controls.WizardBannerPage"/>
+            class is used to provide a banner page implementation.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardBannerPage.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardBannerPage.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardBannerPage.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardBannerPage.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardBannerPage"/> class.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardBannerPage.BannerPanel_Paint(System.Object,System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            Handles the Paint event of the BannerPanel control.
+            </summary>
+            <param name="sender">
+            The source of the event.
+            </param>
+            <param name="e">
+            The <see cref="T:System.Windows.Forms.PaintEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardBannerPage.BannerImage">
+            <summary>
+            Gets or sets the banner image.
+            </summary>
+            <value>
+            The banner image.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardBannerPage.Description">
+            <summary>
+            Gets or sets the description.
+            </summary>
+            <value>
+            The description.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardBannerPage.Title">
+            <summary>
+            Gets or sets the title.
+            </summary>
+            <value>
+            The title.
+            </value>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.StateCollection">
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.StateCollection"/>
+            class is used to provide a state persistence implementation.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.StateCollection.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.StateCollection"/> class.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.StateCollection.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.StateCollection"/> class.
+            </summary>
+            <param name="info">
+            A <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object that contains the information required to serialize the new <see cref="T:System.Collections.Specialized.NameObjectCollectionBase"/> instance.
+            </param>
+            <param name="context">
+            A <see cref="T:System.Runtime.Serialization.StreamingContext"/> object that contains the source and destination of the serialized stream associated with the new <see cref="T:System.Collections.Specialized.NameObjectCollectionBase"/> instance.
+            </param>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.StateCollection.Item(System.String)">
+            <summary>
+            Gets or sets the <see cref="T:System.Object"/> with the specified key.
+            </summary>
+            <param name="key">
+            The key for the item in the collection.
+            </param>
+            <value>
+            An <see cref="T:System.Object"/> instance or <c>null</c> if the key does not exist.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.StateCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets the <see cref="T:System.Object"/> at the specified index.
+            </summary>
+            <param name="index">
+            The index of the item in the collection.
+            </param>
+            <value>
+            An <see cref="T:System.Object"/> instance.
+            </value>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.WizardFormNavigationType">
+            <summary>
+            Defines the types of wizard page navigations available.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardFormNavigationType.Previous">
+            <summary>
+            Defines that a previous navigation should be invoked.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardFormNavigationType.Next">
+            <summary>
+            Defines that a next navigation should be invoked.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardFormNavigationType.Cancel">
+            <summary>
+            Defines that a cancel navigation should be invoked.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardFormNavigationType.Help">
+            <summary>
+            Defines that a help navigation should be invoked.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardFormNavigationType.Custom">
+            <summary>
+            Defines that a custom navigation should be invoked.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardFormNavigationType.NavigationKey">
+            <summary>
+            Defines that a navigation to a specific navigation key should be invoked.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardFormNavigationType.Ignore">
+            <summary>
+            Defines that no navigation action should be taken.
+            </summary>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.WizardForm">
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.WizardForm"/> class is a wizard style form that contains the logic of managing the navigation flow
+            of <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/> derived controls.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardForm._pageHistory">
+            <summary>
+            Stores the navigation history from the start page to the current page.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardForm._pages">
+            <summary>
+            Stores the set of wizard pages.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardForm._state">
+            <summary>
+            Stores the state information for the wizard.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardForm._autoTabOrdering">
+            <summary>
+            Stores the AutomaticTabOrdering value.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardForm._confirmCancel">
+            <summary>
+            Stores whether a confirmation message will be displayed when the Cancel navigation is invoked.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardForm._currentPage">
+            <summary>
+            Stores the current page.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.WizardForm"/> class.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.GenerateNavigationEvent(Neovolve.Windows.Forms.WizardFormNavigationType)">
+            <summary>
+            Generates the navigation event.
+            </summary>
+            <param name="navigationType">
+            Type of the navigation.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.GenerateNavigationEvent(Neovolve.Windows.Forms.WizardFormNavigationType,System.String)">
+            <summary>
+            Generates the navigation event.
+            </summary>
+            <param name="navigationType">
+            Type of the navigation.
+            </param>
+            <param name="navigationKey">
+            The navigation key.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.CalculateTabOrdering">
+            <summary>
+            Calculates the tab ordering.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.NavigateCancel(Neovolve.Windows.Forms.WizardFormNavigationEventArgs)">
+            <summary>
+            Navigates the cancel.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.NavigateCustom(Neovolve.Windows.Forms.WizardFormNavigationEventArgs)">
+            <summary>
+            Navigates the custom.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.NavigateHelp(Neovolve.Windows.Forms.WizardFormNavigationEventArgs)">
+            <summary>
+            Navigates the help.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.NavigateNext(Neovolve.Windows.Forms.WizardFormNavigationEventArgs)">
+            <summary>
+            Navigates the next.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.NavigatePrevious(Neovolve.Windows.Forms.WizardFormNavigationEventArgs)">
+            <summary>
+            Navigates the previous.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.OnNavigate(Neovolve.Windows.Forms.WizardFormNavigationEventArgs)">
+            <summary>
+            Raises the <see cref="E:Neovolve.Windows.Forms.WizardForm.Navigating"/> and <see cref="E:Neovolve.Windows.Forms.WizardForm.Navigated"/> events.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.OnNavigated(Neovolve.Windows.Forms.WizardFormNavigationEventArgs)">
+            <summary>
+            Raises the <see cref="E:Neovolve.Windows.Forms.WizardForm.Navigated"/> event.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.OnNavigating(Neovolve.Windows.Forms.WizardFormNavigationEventArgs)">
+            <summary>
+            Raises the <see cref="E:Neovolve.Windows.Forms.WizardForm.Navigating"/> event.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.PageRemoved(System.Object,Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs)">
+            <summary>
+            Handles the PageRemoved event of the WizardPage control.
+            </summary>
+            <param name="sender">
+            The source of the event.
+            </param>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.SetContainerTabOrdering(System.Windows.Forms.Control,System.Int32)">
+            <summary>
+            Sets the container tab ordering.
+            </summary>
+            <param name="container">
+            The container.
+            </param>
+            <param name="currentIndex">
+            Index of the current.
+            </param>
+            <returns>
+            The current tab index of the form.
+            </returns>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.Back_Click(System.Object,System.EventArgs)">
+            <summary>
+            Handles the Click event of the Back control.
+            </summary>
+            <param name="sender">
+            The source of the event.
+            </param>
+            <param name="e">
+            The <see cref="T:System.EventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.BottomPanel_Paint(System.Object,System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            Handles the Paint event of the BottomPanel control.
+            </summary>
+            <param name="sender">
+            The source of the event.
+            </param>
+            <param name="e">
+            The <see cref="T:System.Windows.Forms.PaintEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.Cancel_Click(System.Object,System.EventArgs)">
+            <summary>
+            Handles the Click event of the Cancel control.
+            </summary>
+            <param name="sender">
+            The source of the event.
+            </param>
+            <param name="e">
+            The <see cref="T:System.EventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.CanContinueCancel">
+            <summary>
+            Determines whether this instance can continue the cancel operation.
+            </summary>
+            <returns>
+            <item>
+            True
+            </item>
+            if this instance can continue the cancel operation.; otherwise, 
+            <item>
+            False
+            </item>
+            .
+            </returns>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.CloseWizard(System.Windows.Forms.DialogResult)">
+            <summary>
+            Closes the wizard.
+            </summary>
+            <param name="result">
+            The result.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.ConfigureCurrentPage">
+            <summary>
+            Configures the current page.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.Custom_Click(System.Object,System.EventArgs)">
+            <summary>
+            Handles the Click event of the Custom control.
+            </summary>
+            <param name="sender">
+            The source of the event.
+            </param>
+            <param name="e">
+            The <see cref="T:System.EventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.Help_Click(System.Object,System.EventArgs)">
+            <summary>
+            Handles the Click event of the Help control.
+            </summary>
+            <param name="sender">
+            The source of the event.
+            </param>
+            <param name="e">
+            The <see cref="T:System.EventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.NavigateKey(Neovolve.Windows.Forms.WizardFormNavigationEventArgs)">
+            <summary>
+            Navigates to the page with the specified key.
+            </summary>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.Next_Click(System.Object,System.EventArgs)">
+            <summary>
+            Handles the Click event of the Next control.
+            </summary>
+            <param name="sender">
+            The source of the event.
+            </param>
+            <param name="e">
+            The <see cref="T:System.EventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.PageAdded(System.Object,Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs)">
+            <summary>
+            Handles the PageAdded event of the WizardPage control.
+            </summary>
+            <param name="sender">
+            The source of the event.
+            </param>
+            <param name="e">
+            The <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.PopulateCurrentPage">
+            <summary>
+            Populates the current page.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.RemoveCurrentPage">
+            <summary>
+            Removes the current page.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.UpdateWizardSettingsRequired(System.Object,System.EventArgs)">
+            <summary>
+            Handles the UpdateWizardSettingsRequired event of the WizardPage control.
+            </summary>
+            <param name="sender">
+            The source of the event.
+            </param>
+            <param name="e">
+            The <see cref="T:System.EventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.WizardForm_FormClosed(System.Object,System.Windows.Forms.FormClosedEventArgs)">
+            <summary>
+            Handles the FormClosed event of the WizardForm control.
+            </summary>
+            <param name="sender">
+            The source of the event.
+            </param>
+            <param name="e">
+            The <see cref="T:System.Windows.Forms.FormClosedEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.WizardForm_FormClosing(System.Object,System.Windows.Forms.FormClosingEventArgs)">
+            <summary>
+            Handles the FormClosing event of the WizardForm control.
+            </summary>
+            <param name="sender">
+            The source of the event.
+            </param>
+            <param name="e">
+            The <see cref="T:System.Windows.Forms.FormClosingEventArgs"/> instance containing the event data.
+            </param>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.WizardForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="E:Neovolve.Windows.Forms.WizardForm.Navigated">
+            <summary>
+            Raised when a navigation has occurred.
+            </summary>
+        </member>
+        <member name="E:Neovolve.Windows.Forms.WizardForm.Navigating">
+            <summary>
+            Raised when a navigation is about to occur.
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.WizardForm.AutoTabOrdering">
+            <summary>
+            Gets or sets a value indicating whether automatic tab ordering is used.
+            </summary>
+            <value>
+            <item>
+            True
+            </item>
+            if automatic tab ordering is used; otherwise, 
+            <item>
+            False
+            </item>
+            .
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.WizardForm.ConfirmCancel">
+            <summary>
+            Gets or sets a value indicating whether [confirm cancel].
+            </summary>
+            <value>
+            <item>
+            True
+            </item>
+            if [confirm cancel]; otherwise, 
+            <item>
+            False
+            </item>
+            .
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.WizardForm.CurrentPage">
+            <summary>
+            Gets or sets the current page.
+            </summary>
+            <value>
+            The current page.
+            </value>
+            <exception cref="T:System.ArgumentNullException">
+            The value is <c>null</c>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            The new value is not in the collection of pages.
+            </exception>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.WizardForm.Pages">
+            <summary>
+            Gets the pages.
+            </summary>
+            <value>
+            The pages.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.WizardForm.State">
+            <summary>
+            Gets the state.
+            </summary>
+            <value>
+            The state.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.WizardForm.IgnoreCancelCheck">
+            <summary>
+            Gets or sets a value indicating whether to ignore the cancel check.
+            </summary>
+            <value>
+            <item>
+            True
+            </item>
+            if the cancel check should be ignored; otherwise, 
+            <item>
+            False
+            </item>
+            .
+            </value>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.WizardForm.CloseWizardDelegate">
+            <summary>
+            Defines the delegate used to close the wizard.
+            </summary>
+            <param name="result">
+            The dialog result to assign.
+            </param>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.WizardForm.GenerateNavigationEventDelegate">
+            <summary>
+            Defines the delegate used to switch threads when a navigation event is generated.
+            </summary>
+            <param name="navigationType">
+            Type of the navigation.
+            </param>
+            <param name="navigationKey">
+            The navigation key.
+            </param>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.WizardForm.ThreadSwitchDelegate">
+            <summary>
+            Defines a parameterless thread switch delegate.
+            </summary>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Properties.Resources.Back">
+            <summary>
+              Looks up a localized string similar to Back.
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Properties.Resources.Cancel">
+            <summary>
+              Looks up a localized string similar to Cancel.
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Properties.Resources.Custom">
+            <summary>
+              Looks up a localized string similar to Custom.
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Properties.Resources.FailedToConvertType">
+            <summary>
+              Looks up a localized string similar to Failed to convert object of type {0} to {1}..
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Properties.Resources.FailedToRemovePageWithNoValidKey">
+            <summary>
+              Looks up a localized string similar to Failed to remove page from the collection. A key value must be specified..
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Properties.Resources.Help">
+            <summary>
+              Looks up a localized string similar to Help.
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Properties.Resources.Next">
+            <summary>
+              Looks up a localized string similar to Next.
+            </summary>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings">
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings"/> class defines the page keys to navigate to when a previous,
+            cancel, help or custom navigation is requested for a page.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings"/> class.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings"/> class.
+            </summary>
+            <param name="nextPage">
+            The next page.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings"/> class.
+            </summary>
+            <param name="nextPage">
+            The next page.
+            </param>
+            <param name="previousPage">
+            The previous page.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings"/> class.
+            </summary>
+            <param name="nextPage">
+            The next page.
+            </param>
+            <param name="previousPage">
+            The previous page.
+            </param>
+            <param name="cancelPage">
+            The cancel page.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings"/> class.
+            </summary>
+            <param name="nextPage">
+            The next page.
+            </param>
+            <param name="previousPage">
+            The previous page.
+            </param>
+            <param name="cancelPage">
+            The cancel page.
+            </param>
+            <param name="helpPage">
+            The help page.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings.#ctor(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings"/> class.
+            </summary>
+            <param name="nextPage">
+            The next page.
+            </param>
+            <param name="previousPage">
+            The previous page.
+            </param>
+            <param name="cancelPage">
+            The cancel page.
+            </param>
+            <param name="helpPage">
+            The help page.
+            </param>
+            <param name="customPage">
+            The custom page.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings.CancelPageKey">
+            <summary>
+            Gets or sets the cancel page key.
+            </summary>
+            <value>
+            The cancel page key.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings.CustomPageKey">
+            <summary>
+            Gets or sets the custom page key.
+            </summary>
+            <value>
+            The custom page key.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings.HelpPageKey">
+            <summary>
+            Gets or sets the help page key.
+            </summary>
+            <value>
+            The help page key.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings.NextPageKey">
+            <summary>
+            Gets or sets the next page key.
+            </summary>
+            <value>
+            The next page key.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageNavigationSettings.PreviousPageKey">
+            <summary>
+            Gets or sets the previous page key.
+            </summary>
+            <value>
+            The previous page key.
+            </value>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs">
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs"/> class contains information about a
+            <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/>class as it is added and removed from the dictionary.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs._key">
+            <summary>
+            Stores the key of the item in the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageDictionary"/> class.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs._page">
+            <summary>
+            Stores the page instance that is contained in the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageDictionary"/> class.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs.#ctor(System.String,Neovolve.Windows.Forms.Controls.WizardPage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs"/> class.
+            </summary>
+            <param name="key">
+            The page key.
+            </param>
+            <param name="page">
+            The wizard page.
+            </param>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs.Key">
+            <summary>
+            Gets the key.
+            </summary>
+            <value>
+            The page key.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageDictionaryEventArgs.Page">
+            <summary>
+            Gets the page.
+            </summary>
+            <value>
+            The wizard page.
+            </value>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.Controls.WizardSplashPage">
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.Controls.WizardSplashPage"/> class is a 
+            <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/>derived control that defines a splash page for the wizard interface.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardSplashPage.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardSplashPage"/> class.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardSplashPage.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardSplashPage.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardSplashPage.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardSplashPage.Description">
+            <summary>
+            Gets or sets the description.
+            </summary>
+            <value>
+            The description.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardSplashPage.SplashImage">
+            <summary>
+            Gets or sets the splash image.
+            </summary>
+            <value>
+            The splash image.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardSplashPage.Title">
+            <summary>
+            Gets or sets the title.
+            </summary>
+            <value>
+            The title.
+            </value>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.Controls.WizardPageSettings">
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageSettings"/> class defines settings to be applied to a
+            <see cref="T:Neovolve.Windows.Forms.Controls.WizardPage"/>instance.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPageSettings._backButtonSettings">
+            <summary>
+            Stores the settings for the previous button.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPageSettings._cancelButtonSettings">
+            <summary>
+            Stores the settings for the cancel button.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPageSettings._customButtonSettings">
+            <summary>
+            Stores the settings for the custom button.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPageSettings._helpButtonSettings">
+            <summary>
+            Stores the settings for the help button.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.Controls.WizardPageSettings._nextButtonSettings">
+            <summary>
+            Stores the settings for the next button.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageSettings.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageSettings"/> class.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageSettings.#ctor(Neovolve.Windows.Forms.WizardButtonSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageSettings"/> class.
+            </summary>
+            <param name="nextButton">
+            The next button.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageSettings.#ctor(Neovolve.Windows.Forms.WizardButtonSettings,Neovolve.Windows.Forms.WizardButtonSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageSettings"/> class.
+            </summary>
+            <param name="nextButton">
+            The next button.
+            </param>
+            <param name="previousButton">
+            The previous button.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageSettings.#ctor(Neovolve.Windows.Forms.WizardButtonSettings,Neovolve.Windows.Forms.WizardButtonSettings,Neovolve.Windows.Forms.WizardButtonSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageSettings"/> class.
+            </summary>
+            <param name="nextButton">
+            The next button.
+            </param>
+            <param name="previousButton">
+            The previous button.
+            </param>
+            <param name="cancelButton">
+            The cancel button.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageSettings.#ctor(Neovolve.Windows.Forms.WizardButtonSettings,Neovolve.Windows.Forms.WizardButtonSettings,Neovolve.Windows.Forms.WizardButtonSettings,Neovolve.Windows.Forms.WizardButtonSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageSettings"/> class.
+            </summary>
+            <param name="nextButton">
+            The next button.
+            </param>
+            <param name="previousButton">
+            The previous button.
+            </param>
+            <param name="cancelButton">
+            The cancel button.
+            </param>
+            <param name="helpButton">
+            The help button.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageSettings.#ctor(Neovolve.Windows.Forms.WizardButtonSettings,Neovolve.Windows.Forms.WizardButtonSettings,Neovolve.Windows.Forms.WizardButtonSettings,Neovolve.Windows.Forms.WizardButtonSettings,Neovolve.Windows.Forms.WizardButtonSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.Controls.WizardPageSettings"/> class.
+            </summary>
+            <param name="nextButton">
+            The next button.
+            </param>
+            <param name="previousButton">
+            The previous button.
+            </param>
+            <param name="cancelButton">
+            The cancel button.
+            </param>
+            <param name="helpButton">
+            The help button.
+            </param>
+            <param name="customButton">
+            The custom button.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageSettings.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.Controls.WizardPageSettings.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageSettings.BackButtonSettings">
+            <summary>
+            Gets or sets the back button settings.
+            </summary>
+            <value>
+            The back button settings.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageSettings.CancelButtonSettings">
+            <summary>
+            Gets or sets the cancel button settings.
+            </summary>
+            <value>
+            The cancel button settings.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageSettings.CustomButtonSettings">
+            <summary>
+            Gets or sets the custom button settings.
+            </summary>
+            <value>
+            The custom button settings.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageSettings.HelpButtonSettings">
+            <summary>
+            Gets or sets the help button settings.
+            </summary>
+            <value>
+            The help button settings.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.Controls.WizardPageSettings.NextButtonSettings">
+            <summary>
+            Gets or sets the next button settings.
+            </summary>
+            <value>
+            The next button settings.
+            </value>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.WizardButtonSettings">
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.WizardButtonSettings"/> class stores the settings for a button control in the
+            <see cref="T:Neovolve.Windows.Forms.WizardForm"/>form.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardButtonSettings.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.WizardButtonSettings"/> class.
+            </summary>
+            <param name="textValue">
+            The text value.
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardButtonSettings.#ctor(System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.WizardButtonSettings"/> class.
+            </summary>
+            <param name="textValue">
+            The text value.
+            </param>
+            <param name="enabledValue">
+            If set to 
+            <item>
+            True
+            </item>
+            [enabled value].
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardButtonSettings.#ctor(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Neovolve.Windows.Forms.WizardButtonSettings"/> class.
+            </summary>
+            <param name="textValue">
+            The text value.
+            </param>
+            <param name="enabledValue">
+            If set to 
+            <item>
+            True
+            </item>
+            [enabled value].
+            </param>
+            <param name="visibleValue">
+            If set to 
+            <item>
+            True
+            </item>
+            [visible value].
+            </param>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.WizardButtonSettings.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.WizardButtonSettings.Enabled">
+            <summary>
+            Gets or sets a value indicating whether this <see cref="T:Neovolve.Windows.Forms.WizardButtonSettings"/> is enabled.
+            </summary>
+            <value>
+            <item>
+            True
+            </item>
+            if enabled; otherwise, 
+            <item>
+            False
+            </item>
+            .
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.WizardButtonSettings.Text">
+            <summary>
+            Gets or sets the text.
+            </summary>
+            <value>
+            The button text.
+            </value>
+        </member>
+        <member name="P:Neovolve.Windows.Forms.WizardButtonSettings.Visible">
+            <summary>
+            Gets or sets a value indicating whether this <see cref="T:Neovolve.Windows.Forms.WizardButtonSettings"/> is visible.
+            </summary>
+            <value>
+            <item>
+            True
+            </item>
+            if visible; otherwise, 
+            <item>
+            False
+            </item>
+            .
+            </value>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.ControlPositionComparer">
+            <summary>
+            The <see cref="T:Neovolve.Windows.Forms.ControlPositionComparer"/>
+            class is used to compare positions of <see cref="T:System.Windows.Forms.Control"/> instances.
+            </summary>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.ControlPositionComparer.Compare(System.Windows.Forms.Control,System.Windows.Forms.Control)">
+            <summary>
+            Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+            </summary>
+            <param name="x">
+            The first object to compare.
+            </param>
+            <param name="y">
+            The second object to compare.
+            </param>
+            <returns>
+            Value Condition Less than zerox is less than y.Zerox equals y.Greater than zerox is greater than y.
+            </returns>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.ControlPositionComparer.Compare(System.Object,System.Object)">
+            <summary>
+            Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+            </summary>
+            <param name="x">
+            The first object to compare.
+            </param>
+            <param name="y">
+            The second object to compare.
+            </param>
+            <returns>
+            Value Condition Less than zero x is less than y. Zero x equals y. Greater than zero x is greater than y.
+            </returns>
+            <exception cref="T:System.ArgumentException">
+            Neither x nor y implements the <see cref="T:System.IComparable"></see> interface.-or- x and y are of different types and neither one can handle comparisons with the other. 
+            </exception>
+        </member>
+        <member name="M:Neovolve.Windows.Forms.ControlPositionComparer.DetermineControlVerticalAlignment(System.Windows.Forms.Control,System.Windows.Forms.Control)">
+            <summary>
+            Determines the control vertical alignment.
+            </summary>
+            <param name="firstControl">
+            The first control.
+            </param>
+            <param name="secondControl">
+            The second control.
+            </param>
+            <returns>
+            A <see cref="T:Neovolve.Windows.Forms.ControlPositionComparer.ControlVerticalAlignment"/> value.
+            </returns>
+        </member>
+        <member name="T:Neovolve.Windows.Forms.ControlPositionComparer.ControlVerticalAlignment">
+            <summary>
+            Defines the control vertical alignment values.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.ControlPositionComparer.ControlVerticalAlignment.None">
+            <summary>
+            No vertical alignment is used.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.ControlPositionComparer.ControlVerticalAlignment.Top">
+            <summary>
+            Controls are aligned by their top position.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.ControlPositionComparer.ControlVerticalAlignment.Middle">
+            <summary>
+            Controls are aligned by their middle position.
+            </summary>
+        </member>
+        <member name="F:Neovolve.Windows.Forms.ControlPositionComparer.ControlVerticalAlignment.Bottom">
+            <summary>
+            Controls are aligned by their bottom position.
+            </summary>
+        </member>
+    </members>
+</doc>
