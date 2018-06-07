@@ -1,10 +1,13 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using ExifLibrary;
 
 namespace Tekapo.Processing
 {
@@ -29,77 +32,90 @@ namespace Tekapo.Processing
         /// </returns>
         public static DateTime GetPictureTaken(String filePath)
         {
-            DateTime pictureTaken = DateTime.Now;
+            DateTime pictureTaken = default(DateTime);
 
             // Check if the file exists
             if (File.Exists(filePath) == false)
             {
-                return pictureTaken;
+                return DateTime.Now;
             }
 
             try
             {
                 String pictureTakenValue;
 
-                // Load the image
-                using (Image picture = Image.FromFile(filePath))
+                var source = ImageFile.FromFile(filePath);
+
+                var dateTakenProperty = source.Properties.FirstOrDefault(x => x.Tag == ExifTag.DateTimeOriginal);
+
+                if (dateTakenProperty.Value is DateTime)
                 {
-                    // Get the picture taken date
-                    PropertyItem propertyValue = picture.GetPropertyItem(PictureTakenId);
-                    pictureTakenValue = Encoding.ASCII.GetString(propertyValue.Value);
+                    pictureTaken = (DateTime)dateTakenProperty.Value;
                 }
-
-                Regex dateCheck = new Regex(@"[0-9]{4}:[0-9]{2}:[0-9]{2}\s{1}[0-9]{2}:[0-9]{2}:[0-9]{2}");
-
-                // Check if the date value matches the expression
-                if (dateCheck.IsMatch(pictureTakenValue))
+                else
                 {
-                    // Convert the date separators
-                    pictureTakenValue = dateCheck.Match(pictureTakenValue).Value.Replace(" ", ":");
+                    pictureTakenValue = dateTakenProperty.Value.ToString();
 
-                    // Split the string using : as a delimiter
-                    String[] textArray1 = pictureTakenValue.Split(
-                        new[]
-                            {
+                    Regex dateCheck = new Regex(@"[0-9]{4}:[0-9]{2}:[0-9]{2}\s{1}[0-9]{2}:[0-9]{2}:[0-9]{2}");
+
+                    // Check if the date value matches the expression
+                    if (dateCheck.IsMatch(pictureTakenValue))
+                    {
+                        // Convert the date separators
+                        pictureTakenValue = dateCheck.Match(pictureTakenValue).Value.Replace(" ", ":");
+
+                        // Split the string using : as a delimiter
+                        String[] textArray1 = pictureTakenValue.Split(
+                            new[]
+                                {
                                 ':'
-                            });
+                                });
 
-                    // Determine the month value
-                    Int32 monthValue = Int32.Parse(textArray1[1], CultureInfo.InvariantCulture) - 1;
-                    String abbreviatedMonth =
-                        CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames[monthValue];
+                        // Determine the month value
+                        Int32 monthValue = Int32.Parse(textArray1[1], CultureInfo.InvariantCulture) - 1;
+                        String abbreviatedMonth =
+                            CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames[monthValue];
 
-                    // Reconstruct the string
-                    pictureTakenValue = String.Format(
-                        CultureInfo.CurrentCulture,
-                        "{0}:{1}:{2} {3}/{4}/{5}",
-                        textArray1[3],
-                        textArray1[4],
-                        textArray1[5],
-                        textArray1[2],
-                        abbreviatedMonth,
-                        textArray1[0]);
+                        // Reconstruct the string
+                        pictureTakenValue = String.Format(
+                            CultureInfo.CurrentCulture,
+                            "{0}:{1}:{2} {3}/{4}/{5}",
+                            textArray1[3],
+                            textArray1[4],
+                            textArray1[5],
+                            textArray1[2],
+                            abbreviatedMonth,
+                            textArray1[0]);
+                    }
+
+                    if (DateTime.TryParse(pictureTakenValue, out pictureTaken) == false)
+                    {
+                        pictureTaken = default(DateTime);
+                    }
                 }
+            }
+            catch (Exception)
+            {
+                // Fall through to default handling below
+            }
+            
+            if (pictureTaken == default(DateTime))
+            {
+                // The data stored in the image is not a valid date or no value is stored
 
-                // Check if a date can be correctly parsed from the string
-                if (DateTime.TryParse(pictureTakenValue, out pictureTaken) == false)
+                // Take the file created or last modified date as the picture taken date, whichever is earlier
+                FileInfo fileDetails = new FileInfo(filePath);
+                var creationTime = fileDetails.CreationTime;
+                var lastWriteTime = fileDetails.LastWriteTimeUtc;
+
+                if (creationTime < lastWriteTime)
                 {
-                    // The data stored in the image is not a valid date
-
-                    // Take the file created date as the current date
-                    FileInfo fileDetails = new FileInfo(filePath);
-                    pictureTaken = fileDetails.CreationTime;
+                    pictureTaken = creationTime;
                 }
-            }
-            catch (IOException)
-            {
-                // Default to the current date
-                pictureTaken = DateTime.Now;
-            }
-            catch (ArgumentException)
-            {
-                // Default to the current date
-                pictureTaken = DateTime.Now;
+                else
+                {
+                    pictureTaken = lastWriteTime;
+                }
             }
 
             // Return the date calculated

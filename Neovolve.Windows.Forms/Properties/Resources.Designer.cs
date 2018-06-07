@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Tekapo.Processing.Properties {
+namespace Neovolve.Windows.Forms.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Tekapo.Processing.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Tekapo.Processing.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Neovolve.Windows.Forms.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,36 +61,65 @@ namespace Tekapo.Processing.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///
-        ///&lt;xsl:stylesheet version=&quot;1.0&quot;
-        ///                xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;&gt;
-        ///
-        ///  &lt;xsl:template match=&quot;/&quot;&gt;
-        ///    &lt;html&gt;
-        ///      &lt;head&gt;
-        ///        &lt;style&gt;
-        ///
-        ///          body
-        ///          {            
-        ///            font-family: Arial;
-        ///          }
-        ///          
-        ///          h1
-        ///          {
-        ///            font-family: Verdana;
-        ///            font-size: 18pt;
-        ///          }
-        ///
-        ///          dl.header dt
-        ///          {
-        ///            float: left;
-        ///            width: 150px;
-        ///  [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to Back.
         /// </summary>
-        internal static string ResultsLog {
+        internal static string Back {
             get {
-                return ResourceManager.GetString("ResultsLog", resourceCulture);
+                return ResourceManager.GetString("Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom.
+        /// </summary>
+        internal static string Custom {
+            get {
+                return ResourceManager.GetString("Custom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to convert object of type {0} to {1}..
+        /// </summary>
+        internal static string FailedToConvertType {
+            get {
+                return ResourceManager.GetString("FailedToConvertType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to remove page from the collection. A key value must be specified..
+        /// </summary>
+        internal static string FailedToRemovePageWithNoValidKey {
+            get {
+                return ResourceManager.GetString("FailedToRemovePageWithNoValidKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Help.
+        /// </summary>
+        internal static string Help {
+            get {
+                return ResourceManager.GetString("Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        internal static string Next {
+            get {
+                return ResourceManager.GetString("Next", resourceCulture);
             }
         }
     }

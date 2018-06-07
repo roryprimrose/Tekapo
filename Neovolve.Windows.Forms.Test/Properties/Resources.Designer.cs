@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Tekapo.Processing.Properties {
+namespace Neovolve.Windows.Forms.Test.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Tekapo.Processing.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Tekapo.Processing.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Neovolve.Windows.Forms.Test.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,40 +57,6 @@ namespace Tekapo.Processing.Properties {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///
-        ///&lt;xsl:stylesheet version=&quot;1.0&quot;
-        ///                xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;&gt;
-        ///
-        ///  &lt;xsl:template match=&quot;/&quot;&gt;
-        ///    &lt;html&gt;
-        ///      &lt;head&gt;
-        ///        &lt;style&gt;
-        ///
-        ///          body
-        ///          {            
-        ///            font-family: Arial;
-        ///          }
-        ///          
-        ///          h1
-        ///          {
-        ///            font-family: Verdana;
-        ///            font-size: 18pt;
-        ///          }
-        ///
-        ///          dl.header dt
-        ///          {
-        ///            float: left;
-        ///            width: 150px;
-        ///  [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string ResultsLog {
-            get {
-                return ResourceManager.GetString("ResultsLog", resourceCulture);
             }
         }
     }
