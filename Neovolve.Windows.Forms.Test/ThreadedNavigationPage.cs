@@ -1,20 +1,21 @@
-using System;
-using System.Threading;
-
 namespace Neovolve.Windows.Forms.Test
 {
+    using System;
+    using System.Threading;
+    using Neovolve.Windows.Forms.Controls;
+
     /// <summary>
-    /// Threaded navigation page.
+    ///     Threaded navigation page.
     /// </summary>
-    public partial class ThreadedNavigationPage : Neovolve.Windows.Forms.Controls.WizardPage
+    public partial class ThreadedNavigationPage : WizardPage
     {
         /// <summary>
-        /// Stores the worker thread.
+        ///     Stores the worker thread.
         /// </summary>
         private Thread _workerThread;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ThreadedNavigationPage"/> class.
+        ///     Initializes a new instance of the <see cref="ThreadedNavigationPage" /> class.
         /// </summary>
         public ThreadedNavigationPage()
         {
@@ -22,7 +23,7 @@ namespace Neovolve.Windows.Forms.Test
         }
 
         /// <summary>
-        /// Run process.
+        ///     Run process.
         /// </summary>
         private void RunProcess()
         {
@@ -32,20 +33,19 @@ namespace Neovolve.Windows.Forms.Test
         }
 
         /// <summary>
-        /// Handles the Closing event of the ThreadedNavigation control.
+        ///     Handles the Closing event of the ThreadedNavigation control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void ThreadedNavigation_Closing(Object sender, EventArgs e)
+        private void ThreadedNavigation_Closing(object sender, EventArgs e)
         {
             if (_workerThread != null)
             {
-                if ((_workerThread.ThreadState & ThreadState.Running)
-                    == ThreadState.Running)
+                if ((_workerThread.ThreadState & ThreadState.Running) == ThreadState.Running)
                 {
                     _workerThread.Abort();
                 }
@@ -55,15 +55,15 @@ namespace Neovolve.Windows.Forms.Test
         }
 
         /// <summary>
-        /// Handles the Opening event of the ThreadedNavigation control.
+        ///     Handles the Opening event of the ThreadedNavigation control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void ThreadedNavigation_Opening(Object sender, EventArgs e)
+        private void ThreadedNavigation_Opening(object sender, EventArgs e)
         {
             // Create the thread and start it
             _workerThread = new Thread(RunProcess);

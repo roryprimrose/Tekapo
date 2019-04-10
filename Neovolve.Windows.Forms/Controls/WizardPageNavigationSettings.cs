@@ -1,105 +1,108 @@
-using System;
-using System.ComponentModel;
-
 namespace Neovolve.Windows.Forms.Controls
 {
+    using System.ComponentModel;
+
     /// <summary>
-    /// The <see cref="WizardPageNavigationSettings"/> class defines the page keys to navigate to when a previous,
-    /// cancel, help or custom navigation is requested for a page.
+    ///     The <see cref="WizardPageNavigationSettings" /> class defines the page keys to navigate to when a previous,
+    ///     cancel, help or custom navigation is requested for a page.
     /// </summary>
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public class WizardPageNavigationSettings
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPageNavigationSettings"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPageNavigationSettings" /> class.
         /// </summary>
         public WizardPageNavigationSettings()
-            : this(String.Empty, String.Empty, String.Empty, String.Empty, String.Empty)
+            : this(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPageNavigationSettings"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPageNavigationSettings" /> class.
         /// </summary>
         /// <param name="nextPage">
-        /// The next page.
+        ///     The next page.
         /// </param>
-        public WizardPageNavigationSettings(String nextPage)
-            : this(nextPage, String.Empty, String.Empty, String.Empty, String.Empty)
+        public WizardPageNavigationSettings(string nextPage)
+            : this(nextPage, string.Empty, string.Empty, string.Empty, string.Empty)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPageNavigationSettings"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPageNavigationSettings" /> class.
         /// </summary>
         /// <param name="nextPage">
-        /// The next page.
+        ///     The next page.
         /// </param>
         /// <param name="previousPage">
-        /// The previous page.
+        ///     The previous page.
         /// </param>
-        public WizardPageNavigationSettings(String nextPage, String previousPage)
-            : this(nextPage, previousPage, String.Empty, String.Empty, String.Empty)
+        public WizardPageNavigationSettings(string nextPage, string previousPage)
+            : this(nextPage, previousPage, string.Empty, string.Empty, string.Empty)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPageNavigationSettings"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPageNavigationSettings" /> class.
         /// </summary>
         /// <param name="nextPage">
-        /// The next page.
+        ///     The next page.
         /// </param>
         /// <param name="previousPage">
-        /// The previous page.
+        ///     The previous page.
         /// </param>
         /// <param name="cancelPage">
-        /// The cancel page.
+        ///     The cancel page.
         /// </param>
-        public WizardPageNavigationSettings(String nextPage, String previousPage, String cancelPage)
-            : this(nextPage, previousPage, cancelPage, String.Empty, String.Empty)
+        public WizardPageNavigationSettings(string nextPage, string previousPage, string cancelPage)
+            : this(nextPage, previousPage, cancelPage, string.Empty, string.Empty)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPageNavigationSettings"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPageNavigationSettings" /> class.
         /// </summary>
         /// <param name="nextPage">
-        /// The next page.
+        ///     The next page.
         /// </param>
         /// <param name="previousPage">
-        /// The previous page.
+        ///     The previous page.
         /// </param>
         /// <param name="cancelPage">
-        /// The cancel page.
+        ///     The cancel page.
         /// </param>
         /// <param name="helpPage">
-        /// The help page.
+        ///     The help page.
         /// </param>
-        public WizardPageNavigationSettings(String nextPage, String previousPage, String cancelPage, String helpPage)
-            : this(nextPage, previousPage, cancelPage, helpPage, String.Empty)
+        public WizardPageNavigationSettings(string nextPage, string previousPage, string cancelPage, string helpPage)
+            : this(nextPage, previousPage, cancelPage, helpPage, string.Empty)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPageNavigationSettings"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPageNavigationSettings" /> class.
         /// </summary>
         /// <param name="nextPage">
-        /// The next page.
+        ///     The next page.
         /// </param>
         /// <param name="previousPage">
-        /// The previous page.
+        ///     The previous page.
         /// </param>
         /// <param name="cancelPage">
-        /// The cancel page.
+        ///     The cancel page.
         /// </param>
         /// <param name="helpPage">
-        /// The help page.
+        ///     The help page.
         /// </param>
         /// <param name="customPage">
-        /// The custom page.
+        ///     The custom page.
         /// </param>
         public WizardPageNavigationSettings(
-            String nextPage, String previousPage, String cancelPage, String helpPage, String customPage)
+            string nextPage,
+            string previousPage,
+            string cancelPage,
+            string helpPage,
+            string customPage)
         {
             NextPageKey = nextPage;
             PreviousPageKey = previousPage;
@@ -109,90 +112,70 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Returns a <see cref="String"/> that represents the current <see cref="Object"/>.
+        ///     Returns a <see cref="string" /> that represents the current <see cref="object" />.
         /// </summary>
         /// <returns>
-        /// A <see cref="String"/> that represents the current <see cref="Object"/>.
+        ///     A <see cref="string" /> that represents the current <see cref="object" />.
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
-            return String.Empty;
+            return string.Empty;
         }
 
         /// <summary>
-        /// Gets or sets the cancel page key.
+        ///     Gets or sets the cancel page key.
         /// </summary>
         /// <value>
-        /// The cancel page key.
+        ///     The cancel page key.
         /// </value>
         [Category("Navigation")]
         [Description("The navigation key used to identify the page to navigate to when a Cancel action is requested.")]
         [DefaultValue("")]
-        public String CancelPageKey
-        {
-            get;
-            set;
-        }
+        public string CancelPageKey { get; set; }
 
         /// <summary>
-        /// Gets or sets the custom page key.
+        ///     Gets or sets the custom page key.
         /// </summary>
         /// <value>
-        /// The custom page key.
+        ///     The custom page key.
         /// </value>
         [Category("Navigation")]
         [Description("The navigation key used to identify the page to navigate to when a Custom action is requested.")]
         [DefaultValue("")]
-        public String CustomPageKey
-        {
-            get;
-            set;
-        }
+        public string CustomPageKey { get; set; }
 
         /// <summary>
-        /// Gets or sets the help page key.
+        ///     Gets or sets the help page key.
         /// </summary>
         /// <value>
-        /// The help page key.
+        ///     The help page key.
         /// </value>
         [Category("Navigation")]
         [Description("The navigation key used to identify the page to navigate to when a Help action is requested.")]
         [DefaultValue("")]
-        public String HelpPageKey
-        {
-            get;
-            set;
-        }
+        public string HelpPageKey { get; set; }
 
         /// <summary>
-        /// Gets or sets the next page key.
+        ///     Gets or sets the next page key.
         /// </summary>
         /// <value>
-        /// The next page key.
+        ///     The next page key.
         /// </value>
         [Category("Navigation")]
         [Description("The navigation key used to identify the page to navigate to when a Next action is requested.")]
         [DefaultValue("")]
-        public String NextPageKey
-        {
-            get;
-            set;
-        }
+        public string NextPageKey { get; set; }
 
         /// <summary>
-        /// Gets or sets the previous page key.
+        ///     Gets or sets the previous page key.
         /// </summary>
         /// <value>
-        /// The previous page key.
+        ///     The previous page key.
         /// </value>
         [Category("Navigation")]
-        [Description(
-            "The navigation key used to identify the page to navigate " + "to when a Previous action is requested.")]
+        [Description("The navigation key used to identify the page to navigate "
+                     + "to when a Previous action is requested.")]
         [DefaultValue("")]
-        public String PreviousPageKey
-        {
-            get;
-            set;
-        }
+        public string PreviousPageKey { get; set; }
     }
 }

@@ -1,16 +1,16 @@
-using System;
-using System.Windows.Forms;
-
 namespace Neovolve.Windows.Forms.Test
 {
+    using System;
+    using System.Windows.Forms;
+
     /// <summary>
-    /// The <see cref="Program"/>
-    /// class is used to run the application.
+    ///     The <see cref="Program" />
+    ///     class is used to run the application.
     /// </summary>
     internal static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
         private static void Main()

@@ -6,11 +6,18 @@
 // Error List, point to "Suppress Message(s)", and click 
 // "In Project Suppression File". 
 // You do not need to add suppressions to this file manually. 
+
+using System.Diagnostics.CodeAnalysis;
+
 [assembly:
-    System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming",
-        "CA1703:ResourceStrings" + "ShouldBeSpelledCorrectly", MessageId = "nwill", Scope = "resource",
+    SuppressMessage("Microsoft.Naming",
+        "CA1703:ResourceStrings" + "ShouldBeSpelledCorrectly",
+        MessageId = "nwill",
+        Scope = "resource",
         Target = "Tekapo.Properties.Resources.resources")]
 [assembly:
-    System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults",
-        MessageId = "System.Text.RegularExpressions.Regex", Scope = "member",
+    SuppressMessage("Microsoft.Usage",
+        "CA1806:DoNotIgnoreMethodResults",
+        MessageId = "System.Text.RegularExpressions.Regex",
+        Scope = "member",
         Target = "Tekapo.Controls.SelectPathPage.#IsPageValid()")]

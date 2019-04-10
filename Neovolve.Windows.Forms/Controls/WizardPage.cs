@@ -1,66 +1,37 @@
-using System;
-using System.ComponentModel;
-using System.Windows.Forms;
-
 namespace Neovolve.Windows.Forms.Controls
 {
+    using System;
+    using System.ComponentModel;
+    using System.Windows.Forms;
+
     /// <summary>
-    /// The <see cref="WizardPage"/> class defines the base control used to create pages in the
-    /// <see cref="Neovolve.Windows.Forms.WizardForm"/>form.
+    ///     The <see cref="WizardPage" /> class defines the base control used to create pages in the
+    ///     <see cref="Neovolve.Windows.Forms.WizardForm" />form.
     /// </summary>
     public partial class WizardPage : UserControl
     {
         /// <summary>
-        /// Stores the navigation settings for the page.
+        ///     Stores the navigation settings for the page.
         /// </summary>
         private WizardPageNavigationSettings _navigationSettings;
 
         /// <summary>
-        /// Stores the owner wizard form.
+        ///     Stores the owner wizard form.
         /// </summary>
         private WizardForm _owner;
 
         /// <summary>
-        /// Stores the settings for the page.
+        ///     Stores the settings for the page.
         /// </summary>
         private WizardPageSettings _pageSettings;
 
         /// <summary>
-        /// Stores whether the wizard buttons are disabled.
+        ///     Stores whether the wizard buttons are disabled.
         /// </summary>
-        private Boolean _wizardButtonsDisabled;
+        private bool _wizardButtonsDisabled;
 
         /// <summary>
-        /// Raised when the page has been removed as the current page in the owning
-        /// <see cref="Neovolve.Windows.Forms.WizardForm"/>.
-        /// </summary>
-        public event EventHandler Closed;
-
-        /// <summary>
-        /// Raised when the page is about to be removed as the current page in the owning
-        /// <see cref="Neovolve.Windows.Forms.WizardForm"/>.
-        /// </summary>
-        public event EventHandler Closing;
-
-        /// <summary>
-        /// Raised when the page is has been made the current page in the owning
-        /// <see cref="Neovolve.Windows.Forms.WizardForm"/>.
-        /// </summary>
-        public event EventHandler Opened;
-
-        /// <summary>
-        /// Raised when the page is about to be the current page in the owning
-        /// <see cref="Neovolve.Windows.Forms.WizardForm"/>.
-        /// </summary>
-        public event EventHandler Opening;
-
-        /// <summary>
-        /// Raised when the user interface of the <see cref="Neovolve.Windows.Forms.WizardForm"/> needs to be updated.
-        /// </summary>
-        public event EventHandler UpdateWizardSettingsRequired;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPage"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPage" /> class.
         /// </summary>
         public WizardPage()
             : this(null)
@@ -68,10 +39,10 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPage"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPage" /> class.
         /// </summary>
         /// <param name="owner">
-        /// The owner.
+        ///     The owner.
         /// </param>
         public WizardPage(WizardForm owner)
         {
@@ -82,31 +53,60 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Determines whether this instance can navigate the specified e.
+        ///     Raised when the page has been removed as the current page in the owning
+        ///     <see cref="Neovolve.Windows.Forms.WizardForm" />.
+        /// </summary>
+        public event EventHandler Closed;
+
+        /// <summary>
+        ///     Raised when the page is about to be removed as the current page in the owning
+        ///     <see cref="Neovolve.Windows.Forms.WizardForm" />.
+        /// </summary>
+        public event EventHandler Closing;
+
+        /// <summary>
+        ///     Raised when the page is has been made the current page in the owning
+        ///     <see cref="Neovolve.Windows.Forms.WizardForm" />.
+        /// </summary>
+        public event EventHandler Opened;
+
+        /// <summary>
+        ///     Raised when the page is about to be the current page in the owning
+        ///     <see cref="Neovolve.Windows.Forms.WizardForm" />.
+        /// </summary>
+        public event EventHandler Opening;
+
+        /// <summary>
+        ///     Raised when the user interface of the <see cref="Neovolve.Windows.Forms.WizardForm" /> needs to be updated.
+        /// </summary>
+        public event EventHandler UpdateWizardSettingsRequired;
+
+        /// <summary>
+        ///     Determines whether this instance can navigate the specified e.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         /// <returns>
-        /// <item>
-        /// True
-        /// </item>
-        /// if this instance can navigate the specified e; otherwise, 
-        /// <item>
-        /// False
-        /// </item>
-        /// .
+        ///     <item>
+        ///         True
+        ///     </item>
+        ///     if this instance can navigate the specified e; otherwise,
+        ///     <item>
+        ///         False
+        ///     </item>
+        ///     .
         /// </returns>
-        public virtual Boolean CanNavigate(WizardFormNavigationEventArgs e)
+        public virtual bool CanNavigate(WizardFormNavigationEventArgs e)
         {
             return true;
         }
 
         /// <summary>
-        /// Invokes the custom navigation.
+        ///     Invokes the custom navigation.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         public virtual void InvokeCustomNavigation(WizardFormNavigationEventArgs e)
         {
@@ -114,10 +114,10 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Invokes the help navigation.
+        ///     Invokes the help navigation.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         public virtual void InvokeHelpNavigation(WizardFormNavigationEventArgs e)
         {
@@ -125,10 +125,10 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Sets the owner.
+        ///     Sets the owner.
         /// </summary>
         /// <param name="owner">
-        /// The owner.
+        ///     The owner.
         /// </param>
         internal void SetOwner(WizardForm owner)
         {
@@ -136,10 +136,10 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Raises the <see cref="Closed"/> event.
+        ///     Raises the <see cref="Closed" /> event.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
         protected internal virtual void OnClosed(EventArgs e)
         {
@@ -152,10 +152,10 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Raises the <see cref="Closing"/> event.
+        ///     Raises the <see cref="Closing" /> event.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
         protected internal virtual void OnClosing(EventArgs e)
         {
@@ -168,10 +168,10 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Raises the <see cref="Opened"/> event.
+        ///     Raises the <see cref="Opened" /> event.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
         protected internal virtual void OnOpened(EventArgs e)
         {
@@ -184,10 +184,10 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Raises the <see cref="Opening"/> event.
+        ///     Raises the <see cref="Opening" /> event.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
         protected internal virtual void OnOpening(EventArgs e)
         {
@@ -200,10 +200,10 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Raises the <see cref="UpdateWizardSettingsRequired"/> event.
+        ///     Raises the <see cref="UpdateWizardSettingsRequired" /> event.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
         protected internal virtual void OnUpdateWizardSettingsRequiredRequired(EventArgs e)
         {
@@ -216,10 +216,10 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Invokes the navigation.
+        ///     Invokes the navigation.
         /// </summary>
         /// <param name="navigationType">
-        /// Type of the navigation.
+        ///     Type of the navigation.
         /// </param>
         protected void InvokeNavigation(WizardFormNavigationType navigationType)
         {
@@ -230,12 +230,12 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Invokes the navigation.
+        ///     Invokes the navigation.
         /// </summary>
         /// <param name="navigationKey">
-        /// The navigation key.
+        ///     The navigation key.
         /// </param>
-        protected void InvokeNavigation(String navigationKey)
+        protected void InvokeNavigation(string navigationKey)
         {
             ValidateOwnerAndPage();
 
@@ -244,7 +244,7 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Validates the owner and page.
+        ///     Validates the owner and page.
         /// </summary>
         private void ValidateOwnerAndPage()
         {
@@ -255,33 +255,26 @@ namespace Neovolve.Windows.Forms.Controls
             }
 
             // Check that the current page is this page
-            if (this
-                != _owner.CurrentPage)
+            if (this != _owner.CurrentPage)
             {
                 throw new InvalidOperationException("The page invoking the navigation is not the current page.");
             }
         }
 
         /// <summary>
-        /// Gets the current navigation settings.
+        ///     Gets the current navigation settings.
         /// </summary>
         /// <value>
-        /// The current navigation settings.
+        ///     The current navigation settings.
         /// </value>
         [Browsable(false)]
-        public virtual WizardPageNavigationSettings CurrentNavigationSettings
-        {
-            get
-            {
-                return NavigationSettings;
-            }
-        }
+        public virtual WizardPageNavigationSettings CurrentNavigationSettings { get { return NavigationSettings; } }
 
         /// <summary>
-        /// Gets the current settings.
+        ///     Gets the current settings.
         /// </summary>
         /// <value>
-        /// The current settings.
+        ///     The current settings.
         /// </value>
         [Browsable(false)]
         public virtual WizardPageSettings CurrentSettings
@@ -296,7 +289,7 @@ namespace Neovolve.Windows.Forms.Controls
 
                 // The wizard buttons should be disabled
                 // Get the current settings
-                WizardPageSettings pageSettings = PageSettings.Clone();
+                var pageSettings = PageSettings.Clone();
 
                 // Disable all the buttons
                 pageSettings.CancelButtonSettings.Enabled = false;
@@ -311,25 +304,21 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Gets or sets the default focus.
+        ///     Gets or sets the default focus.
         /// </summary>
         /// <value>
-        /// The default focus.
+        ///     The default focus.
         /// </value>
         [Category("Behaviour")]
         [Description("Determines the control that will receive the focus by default.")]
         [DefaultValue(null)]
-        public Control DefaultFocus
-        {
-            get;
-            set;
-        }
+        public Control DefaultFocus { get; set; }
 
         /// <summary>
-        /// Gets or sets the navigation settings.
+        ///     Gets or sets the navigation settings.
         /// </summary>
         /// <value>
-        /// The navigation settings.
+        ///     The navigation settings.
         /// </value>
         [Category("Wizard")]
         [Description("The navigation settings of the wizard page.")]
@@ -351,18 +340,14 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the value
                 return _navigationSettings;
             }
-
-            set
-            {
-                _navigationSettings = value;
-            }
+            set { _navigationSettings = value; }
         }
 
         /// <summary>
-        /// Gets or sets the page settings.
+        ///     Gets or sets the page settings.
         /// </summary>
         /// <value>
-        /// The page settings.
+        ///     The page settings.
         /// </value>
         [Category("Wizard")]
         [Description("The page settings of the wizard page.")]
@@ -385,27 +370,19 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the settings
                 return _pageSettings;
             }
-
-            set
-            {
-                _pageSettings = value;
-            }
+            set { _pageSettings = value; }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the wizard buttons disabled.
+        ///     Gets or sets a value indicating whether the wizard buttons disabled.
         /// </summary>
         /// <value>
-        /// <c>true</c>if the wizard buttons are disabled; otherwise, <c>false</c>.
+        ///     <c>true</c>if the wizard buttons are disabled; otherwise, <c>false</c>.
         /// </value>
         [Browsable(false)]
-        public Boolean WizardButtonsDisabled
+        public bool WizardButtonsDisabled
         {
-            get
-            {
-                return _wizardButtonsDisabled;
-            }
-
+            get { return _wizardButtonsDisabled; }
             set
             {
                 _wizardButtonsDisabled = value;
@@ -416,13 +393,13 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Gets the state data.
+        ///     Gets the state data.
         /// </summary>
         /// <value>
-        /// The state data.
+        ///     The state data.
         /// </value>
         /// <exception cref="InvalidOperationException">
-        /// The control is not hosted in a <see cref="WizardForm"/> instance.
+        ///     The control is not hosted in a <see cref="WizardForm" /> instance.
         /// </exception>
         [Browsable(false)]
         protected StateCollection State

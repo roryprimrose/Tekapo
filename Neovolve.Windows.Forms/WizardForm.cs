@@ -1,85 +1,52 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Windows.Forms;
-using Neovolve.Windows.Forms.Controls;
-
 namespace Neovolve.Windows.Forms
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Drawing;
+    using System.Windows.Forms;
+    using Neovolve.Windows.Forms.Controls;
+
     /// <summary>
-    /// The <see cref="Neovolve.Windows.Forms.WizardForm"/> class is a wizard style form that contains the logic of managing the navigation flow
-    /// of <see cref="WizardPage"/> derived controls.
+    ///     The <see cref="Neovolve.Windows.Forms.WizardForm" /> class is a wizard style form that contains the logic of
+    ///     managing the navigation flow
+    ///     of <see cref="WizardPage" /> derived controls.
     /// </summary>
     public partial class WizardForm : Form
     {
         /// <summary>
-        /// Stores the navigation history from the start page to the current page.
+        ///     Stores the navigation history from the start page to the current page.
         /// </summary>
         private readonly Stack<WizardPage> _pageHistory;
 
         /// <summary>
-        /// Stores the set of wizard pages.
+        ///     Stores the set of wizard pages.
         /// </summary>
         private readonly WizardPageDictionary _pages;
 
         /// <summary>
-        /// Stores the state information for the wizard.
+        ///     Stores the state information for the wizard.
         /// </summary>
         private readonly StateCollection _state;
 
         /// <summary>
-        /// Stores the AutomaticTabOrdering value.
+        ///     Stores the AutomaticTabOrdering value.
         /// </summary>
-        private Boolean _autoTabOrdering = true;
+        private bool _autoTabOrdering = true;
 
         /// <summary>
-        /// Stores whether a confirmation message will be displayed when the Cancel navigation is invoked.
+        ///     Stores whether a confirmation message will be displayed when the Cancel navigation is invoked.
         /// </summary>
-        private Boolean _confirmCancel = true;
+        private bool _confirmCancel = true;
 
         /// <summary>
-        /// Stores the current page.
+        ///     Stores the current page.
         /// </summary>
         private WizardPage _currentPage;
 
         /// <summary>
-        /// Defines the delegate used to close the wizard.
-        /// </summary>
-        /// <param name="result">
-        /// The dialog result to assign.
-        /// </param>
-        private delegate void CloseWizardDelegate(DialogResult result);
-
-        /// <summary>
-        /// Defines the delegate used to switch threads when a navigation event is generated.
-        /// </summary>
-        /// <param name="navigationType">
-        /// Type of the navigation.
-        /// </param>
-        /// <param name="navigationKey">
-        /// The navigation key.
-        /// </param>
-        private delegate void GenerateNavigationEventDelegate(
-            WizardFormNavigationType navigationType, String navigationKey);
-
-        /// <summary>
-        /// Defines a parameterless thread switch delegate.
-        /// </summary>
-        private delegate void ThreadSwitchDelegate();
-
-        /// <summary>
-        /// Raised when a navigation has occurred.
-        /// </summary>
-        public event EventHandler<WizardFormNavigationEventArgs> Navigated;
-
-        /// <summary>
-        /// Raised when a navigation is about to occur.
-        /// </summary>
-        public event EventHandler<WizardFormNavigationEventArgs> Navigating;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WizardForm"/> class.
+        ///     Initializes a new instance of the <see cref="WizardForm" /> class.
         /// </summary>
         public WizardForm()
         {
@@ -96,15 +63,51 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Generates the navigation event.
+        ///     Defines the delegate used to close the wizard.
+        /// </summary>
+        /// <param name="result">
+        ///     The dialog result to assign.
+        /// </param>
+        private delegate void CloseWizardDelegate(DialogResult result);
+
+        /// <summary>
+        ///     Defines the delegate used to switch threads when a navigation event is generated.
         /// </summary>
         /// <param name="navigationType">
-        /// Type of the navigation.
+        ///     Type of the navigation.
+        /// </param>
+        /// <param name="navigationKey">
+        ///     The navigation key.
+        /// </param>
+        private delegate void GenerateNavigationEventDelegate(
+            WizardFormNavigationType navigationType,
+            string navigationKey);
+
+        /// <summary>
+        ///     Defines a parameterless thread switch delegate.
+        /// </summary>
+        private delegate void ThreadSwitchDelegate();
+
+        /// <summary>
+        ///     Raised when a navigation has occurred.
+        /// </summary>
+        public event EventHandler<WizardFormNavigationEventArgs> Navigated;
+
+        /// <summary>
+        ///     Raised when a navigation is about to occur.
+        /// </summary>
+        public event EventHandler<WizardFormNavigationEventArgs> Navigating;
+
+        /// <summary>
+        ///     Generates the navigation event.
+        /// </summary>
+        /// <param name="navigationType">
+        ///     Type of the navigation.
         /// </param>
         internal void GenerateNavigationEvent(WizardFormNavigationType navigationType)
         {
-            WizardPage page = CurrentPage;
-            String navigationKey;
+            var page = CurrentPage;
+            string navigationKey;
 
             // Determine the navigation key
             switch (navigationType)
@@ -149,34 +152,31 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Generates the navigation event.
+        ///     Generates the navigation event.
         /// </summary>
         /// <param name="navigationType">
-        /// Type of the navigation.
+        ///     Type of the navigation.
         /// </param>
         /// <param name="navigationKey">
-        /// The navigation key.
+        ///     The navigation key.
         /// </param>
-        internal void GenerateNavigationEvent(WizardFormNavigationType navigationType, String navigationKey)
+        internal void GenerateNavigationEvent(WizardFormNavigationType navigationType, string navigationKey)
         {
             // Check if a thread switch is required
             if (InvokeRequired)
             {
                 // Invoke the method on the UI thread
-                Object[] args = new Object[]
-                                    {
-                                        navigationType, navigationKey
-                                    };
+                object[] args = {navigationType, navigationKey};
                 Invoke(new GenerateNavigationEventDelegate(GenerateNavigationEvent), args);
 
                 return;
             }
 
-            WizardPage page = CurrentPage;
+            var page = CurrentPage;
 
             // Check if the type is for a specific key where no key is provided
             if (navigationType == WizardFormNavigationType.NavigationKey
-                && String.IsNullOrEmpty(navigationKey))
+                && string.IsNullOrEmpty(navigationKey))
             {
                 throw new ArgumentNullException("navigationKey");
             }
@@ -186,7 +186,7 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Calculates the tab ordering.
+        ///     Calculates the tab ordering.
         /// </summary>
         protected virtual void CalculateTabOrdering()
         {
@@ -194,10 +194,10 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Navigates the cancel.
+        ///     Navigates the cancel.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         protected virtual void NavigateCancel(WizardFormNavigationEventArgs e)
         {
@@ -210,10 +210,10 @@ namespace Neovolve.Windows.Forms
             DialogResult = DialogResult.None;
 
             // Get the navigation key
-            String navigationKey = e.NavigationKey;
+            var navigationKey = e.NavigationKey;
 
             // Check if there is a navigation key
-            if (String.IsNullOrEmpty(navigationKey) == false)
+            if (string.IsNullOrEmpty(navigationKey) == false)
             {
                 // Set the next page
                 CurrentPage = Pages[navigationKey];
@@ -228,10 +228,10 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Navigates the custom.
+        ///     Navigates the custom.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         protected virtual void NavigateCustom(WizardFormNavigationEventArgs e)
         {
@@ -241,10 +241,10 @@ namespace Neovolve.Windows.Forms
             }
 
             // Get the navigation key
-            String navigationKey = e.NavigationKey;
+            var navigationKey = e.NavigationKey;
 
             // Check if there is a navigation key
-            if (String.IsNullOrEmpty(navigationKey) == false)
+            if (string.IsNullOrEmpty(navigationKey) == false)
             {
                 // Set the next page
                 CurrentPage = Pages[navigationKey];
@@ -255,8 +255,8 @@ namespace Neovolve.Windows.Forms
                 e.CurrentPage.InvokeCustomNavigation(e);
 
                 // Check if the navigation details have changed
-                if ((e.NavigationType != WizardFormNavigationType.Custom)
-                    || (String.IsNullOrEmpty(e.NavigationKey) == false))
+                if (e.NavigationType != WizardFormNavigationType.Custom
+                    || string.IsNullOrEmpty(e.NavigationKey) == false)
                 {
                     // The page has specified a new navigation value
 
@@ -267,10 +267,10 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Navigates the help.
+        ///     Navigates the help.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         protected virtual void NavigateHelp(WizardFormNavigationEventArgs e)
         {
@@ -280,10 +280,10 @@ namespace Neovolve.Windows.Forms
             }
 
             // Get the navigation key
-            String navigationKey = e.NavigationKey;
+            var navigationKey = e.NavigationKey;
 
             // Check if there is a navigation key
-            if (String.IsNullOrEmpty(navigationKey) == false)
+            if (string.IsNullOrEmpty(navigationKey) == false)
             {
                 // Set the next page
                 CurrentPage = Pages[navigationKey];
@@ -296,10 +296,10 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Navigates the next.
+        ///     Navigates the next.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         protected virtual void NavigateNext(WizardFormNavigationEventArgs e)
         {
@@ -309,11 +309,11 @@ namespace Neovolve.Windows.Forms
             }
 
             // Get the navigation key
-            String navigationKey = e.NavigationKey;
+            var navigationKey = e.NavigationKey;
             WizardPage page;
 
             // Check if there is a navigation key
-            if (String.IsNullOrEmpty(navigationKey) == false)
+            if (string.IsNullOrEmpty(navigationKey) == false)
             {
                 // Get the next page
                 page = Pages[navigationKey];
@@ -339,10 +339,10 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Navigates the previous.
+        ///     Navigates the previous.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         protected virtual void NavigatePrevious(WizardFormNavigationEventArgs e)
         {
@@ -352,11 +352,11 @@ namespace Neovolve.Windows.Forms
             }
 
             // Get the navigation key
-            String navigationKey = e.NavigationKey;
+            var navigationKey = e.NavigationKey;
             WizardPage page;
 
             // Check if there is a navigation key
-            if (String.IsNullOrEmpty(navigationKey) == false)
+            if (string.IsNullOrEmpty(navigationKey) == false)
             {
                 // Get the next page to navigate to
                 page = Pages[navigationKey];
@@ -376,10 +376,10 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Raises the <see cref="Navigating"/> and <see cref="Navigated"/> events.
+        ///     Raises the <see cref="Navigating" /> and <see cref="Navigated" /> events.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         protected virtual void OnNavigate(WizardFormNavigationEventArgs e)
         {
@@ -388,10 +388,10 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Raises the <see cref="Navigated"/> event.
+        ///     Raises the <see cref="Navigated" /> event.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         protected virtual void OnNavigated(WizardFormNavigationEventArgs e)
         {
@@ -404,10 +404,10 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Raises the <see cref="Navigating"/> event.
+        ///     Raises the <see cref="Navigating" /> event.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         protected virtual void OnNavigating(WizardFormNavigationEventArgs e)
         {
@@ -417,8 +417,7 @@ namespace Neovolve.Windows.Forms
             }
 
             // Check if the ignore navigation has been specified
-            if (e.NavigationType
-                == WizardFormNavigationType.Ignore)
+            if (e.NavigationType == WizardFormNavigationType.Ignore)
             {
                 return;
             }
@@ -483,33 +482,33 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Handles the PageRemoved event of the WizardPage control.
+        ///     Handles the PageRemoved event of the WizardPage control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="WizardPageDictionaryEventArgs"/> instance containing the event data.
+        ///     The <see cref="WizardPageDictionaryEventArgs" /> instance containing the event data.
         /// </param>
-        private static void PageRemoved(Object sender, WizardPageDictionaryEventArgs e)
+        private static void PageRemoved(object sender, WizardPageDictionaryEventArgs e)
         {
             // Remove this form as the owner of the page
             e.Page.SetOwner(null);
         }
 
         /// <summary>
-        /// Sets the container tab ordering.
+        ///     Sets the container tab ordering.
         /// </summary>
         /// <param name="container">
-        /// The container.
+        ///     The container.
         /// </param>
         /// <param name="currentIndex">
-        /// Index of the current.
+        ///     Index of the current.
         /// </param>
         /// <returns>
-        /// The current tab index of the form.
+        ///     The current tab index of the form.
         /// </returns>
-        private static Int32 SetContainerTabOrdering(Control container, Int32 currentIndex)
+        private static int SetContainerTabOrdering(Control container, int currentIndex)
         {
             // Assign the new tab index for this item
             container.TabIndex = currentIndex;
@@ -517,7 +516,7 @@ namespace Neovolve.Windows.Forms
             // Increment the index
             currentIndex++;
 
-            ArrayList sortedControls = new ArrayList(container.Controls);
+            var sortedControls = new ArrayList(container.Controls);
             sortedControls.Sort(new ControlPositionComparer());
 
             foreach (Control item in sortedControls)
@@ -530,70 +529,69 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Handles the Click event of the Back control.
+        ///     Handles the Click event of the Back control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void Back_Click(Object sender, EventArgs e)
+        private void Back_Click(object sender, EventArgs e)
         {
             GenerateNavigationEvent(WizardFormNavigationType.Previous);
         }
 
         /// <summary>
-        /// Handles the Paint event of the BottomPanel control.
+        ///     Handles the Paint event of the BottomPanel control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.Windows.Forms.PaintEventArgs"/> instance containing the event data.
+        ///     The <see cref="System.Windows.Forms.PaintEventArgs" /> instance containing the event data.
         /// </param>
-        private void BottomPanel_Paint(Object sender, PaintEventArgs e)
+        private void BottomPanel_Paint(object sender, PaintEventArgs e)
         {
             // Paint the border
-            e.Graphics.DrawLine(System.Drawing.SystemPens.ControlDark, 0, 0, BottomPanel.Width, 0);
-            e.Graphics.DrawLine(System.Drawing.SystemPens.ControlLightLight, 0, 1, BottomPanel.Width, 1);
+            e.Graphics.DrawLine(SystemPens.ControlDark, 0, 0, BottomPanel.Width, 0);
+            e.Graphics.DrawLine(SystemPens.ControlLightLight, 0, 1, BottomPanel.Width, 1);
         }
 
         /// <summary>
-        /// Handles the Click event of the Cancel control.
+        ///     Handles the Click event of the Cancel control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void Cancel_Click(Object sender, EventArgs e)
+        private void Cancel_Click(object sender, EventArgs e)
         {
             GenerateNavigationEvent(WizardFormNavigationType.Cancel);
         }
 
         /// <summary>
-        /// Determines whether this instance can continue the cancel operation.
+        ///     Determines whether this instance can continue the cancel operation.
         /// </summary>
         /// <returns>
-        /// <item>
-        /// True
-        /// </item>
-        /// if this instance can continue the cancel operation.; otherwise, 
-        /// <item>
-        /// False
-        /// </item>
-        /// .
+        ///     <item>
+        ///         True
+        ///     </item>
+        ///     if this instance can continue the cancel operation.; otherwise,
+        ///     <item>
+        ///         False
+        ///     </item>
+        ///     .
         /// </returns>
-        private Boolean CanContinueCancel()
+        private bool CanContinueCancel()
         {
             // Confirm if the user wants to cancel
-            if (ConfirmCancel
-                &&
-                (MessageBox.Show(
-                     "Are you sure you want to cancel?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                 == DialogResult.No))
+            if (ConfirmCancel && MessageBox.Show("Are you sure you want to cancel?",
+                    Text,
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question) == DialogResult.No)
             {
                 return false;
             }
@@ -602,20 +600,17 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Closes the wizard.
+        ///     Closes the wizard.
         /// </summary>
         /// <param name="result">
-        /// The result.
+        ///     The result.
         /// </param>
         private void CloseWizard(DialogResult result)
         {
             // Check if a thread switch is required
             if (InvokeRequired)
             {
-                Object[] args = new Object[]
-                                    {
-                                        result
-                                    };
+                object[] args = {result};
                 Invoke(new CloseWizardDelegate(CloseWizard), args);
 
                 return;
@@ -633,7 +628,7 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Configures the current page.
+        ///     Configures the current page.
         /// </summary>
         private void ConfigureCurrentPage()
         {
@@ -647,7 +642,7 @@ namespace Neovolve.Windows.Forms
             }
 
             // Get the current settings for the page
-            WizardPageSettings currentSettings = _currentPage.CurrentSettings;
+            var currentSettings = _currentPage.CurrentSettings;
 
             // Set up the next button
             Next.Text = currentSettings.NextButtonSettings.Text;
@@ -656,7 +651,7 @@ namespace Neovolve.Windows.Forms
 
             // Set up the previous button
             Back.Text = currentSettings.BackButtonSettings.Text;
-            Back.Enabled = (_pageHistory.Count > 0) && currentSettings.BackButtonSettings.Enabled;
+            Back.Enabled = _pageHistory.Count > 0 && currentSettings.BackButtonSettings.Enabled;
             Back.Visible = currentSettings.BackButtonSettings.Visible;
 
             // Set up the cancel button
@@ -676,38 +671,38 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Handles the Click event of the Custom control.
+        ///     Handles the Click event of the Custom control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void Custom_Click(Object sender, EventArgs e)
+        private void Custom_Click(object sender, EventArgs e)
         {
             GenerateNavigationEvent(WizardFormNavigationType.Custom);
         }
 
         /// <summary>
-        /// Handles the Click event of the Help control.
+        ///     Handles the Click event of the Help control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void Help_Click(Object sender, EventArgs e)
+        private void Help_Click(object sender, EventArgs e)
         {
             GenerateNavigationEvent(WizardFormNavigationType.Help);
         }
 
         /// <summary>
-        /// Navigates to the page with the specified key.
+        ///     Navigates to the page with the specified key.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         private void NavigateKey(WizardFormNavigationEventArgs e)
         {
@@ -716,29 +711,29 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Handles the Click event of the Next control.
+        ///     Handles the Click event of the Next control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void Next_Click(Object sender, EventArgs e)
+        private void Next_Click(object sender, EventArgs e)
         {
             GenerateNavigationEvent(WizardFormNavigationType.Next);
         }
 
         /// <summary>
-        /// Handles the PageAdded event of the WizardPage control.
+        ///     Handles the PageAdded event of the WizardPage control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="WizardPageDictionaryEventArgs"/> instance containing the event data.
+        ///     The <see cref="WizardPageDictionaryEventArgs" /> instance containing the event data.
         /// </param>
-        private void PageAdded(Object sender, WizardPageDictionaryEventArgs e)
+        private void PageAdded(object sender, WizardPageDictionaryEventArgs e)
         {
             // Assign this form as the owner
             e.Page.SetOwner(this);
@@ -752,7 +747,7 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Populates the current page.
+        ///     Populates the current page.
         /// </summary>
         private void PopulateCurrentPage()
         {
@@ -780,7 +775,7 @@ namespace Neovolve.Windows.Forms
                 CalculateTabOrdering();
             }
 
-            if ((_currentPage.DefaultFocus != null)
+            if (_currentPage.DefaultFocus != null
                 && _currentPage.DefaultFocus.CanFocus)
             {
                 _currentPage.DefaultFocus.Focus();
@@ -792,7 +787,7 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Removes the current page.
+        ///     Removes the current page.
         /// </summary>
         private void RemoveCurrentPage()
         {
@@ -810,30 +805,30 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Handles the UpdateWizardSettingsRequired event of the WizardPage control.
+        ///     Handles the UpdateWizardSettingsRequired event of the WizardPage control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void UpdateWizardSettingsRequired(Object sender, EventArgs e)
+        private void UpdateWizardSettingsRequired(object sender, EventArgs e)
         {
             // Update the state of the wizard UI
             ConfigureCurrentPage();
         }
 
         /// <summary>
-        /// Handles the FormClosed event of the WizardForm control.
+        ///     Handles the FormClosed event of the WizardForm control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.Windows.Forms.FormClosedEventArgs"/> instance containing the event data.
+        ///     The <see cref="System.Windows.Forms.FormClosedEventArgs" /> instance containing the event data.
         /// </param>
-        private void WizardForm_FormClosed(Object sender, FormClosedEventArgs e)
+        private void WizardForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             // Notify the current page that it is closed
             if (_currentPage != null)
@@ -843,19 +838,20 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Handles the FormClosing event of the WizardForm control.
+        ///     Handles the FormClosing event of the WizardForm control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.Windows.Forms.FormClosingEventArgs"/> instance containing the event data.
+        ///     The <see cref="System.Windows.Forms.FormClosingEventArgs" /> instance containing the event data.
         /// </param>
-        private void WizardForm_FormClosing(Object sender, FormClosingEventArgs e)
+        private void WizardForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Check if the user wants the cancel to continue
-            if ((IgnoreCancelCheck == false) && (e.CloseReason == CloseReason.UserClosing)
-                && (CanContinueCancel() == false))
+            if (IgnoreCancelCheck == false
+                && e.CloseReason == CloseReason.UserClosing
+                && CanContinueCancel() == false)
             {
                 e.Cancel = true;
 
@@ -877,74 +873,52 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether automatic tab ordering is used.
+        ///     Gets or sets a value indicating whether automatic tab ordering is used.
         /// </summary>
         /// <value>
-        /// <item>
-        /// True
-        /// </item>
-        /// if automatic tab ordering is used; otherwise, 
-        /// <item>
-        /// False
-        /// </item>
-        /// .
+        ///     <item>
+        ///         True
+        ///     </item>
+        ///     if automatic tab ordering is used; otherwise,
+        ///     <item>
+        ///         False
+        ///     </item>
+        ///     .
         /// </value>
         [Category("Behaviour")]
         [Description("Determines whether control tab ordering is automatically calculated based on positioning.")]
         [DefaultValue(true)]
-        public Boolean AutoTabOrdering
-        {
-            get
-            {
-                return _autoTabOrdering;
-            }
-
-            set
-            {
-                _autoTabOrdering = value;
-            }
-        }
+        public bool AutoTabOrdering { get { return _autoTabOrdering; } set { _autoTabOrdering = value; } }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [confirm cancel].
+        ///     Gets or sets a value indicating whether [confirm cancel].
         /// </summary>
         /// <value>
-        /// <item>
-        /// True
-        /// </item>
-        /// if [confirm cancel]; otherwise, 
-        /// <item>
-        /// False
-        /// </item>
-        /// .
+        ///     <item>
+        ///         True
+        ///     </item>
+        ///     if [confirm cancel]; otherwise,
+        ///     <item>
+        ///         False
+        ///     </item>
+        ///     .
         /// </value>
         [Category("Behaviour")]
         [Description("Determines whether the user will be asked to confirm a cancel action.")]
         [DefaultValue(true)]
-        public Boolean ConfirmCancel
-        {
-            get
-            {
-                return _confirmCancel;
-            }
-
-            set
-            {
-                _confirmCancel = value;
-            }
-        }
+        public bool ConfirmCancel { get { return _confirmCancel; } set { _confirmCancel = value; } }
 
         /// <summary>
-        /// Gets or sets the current page.
+        ///     Gets or sets the current page.
         /// </summary>
         /// <value>
-        /// The current page.
+        ///     The current page.
         /// </value>
         /// <exception cref="ArgumentNullException">
-        /// The value is <c>null</c>.
+        ///     The value is <c>null</c>.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// The new value is not in the collection of pages.
+        ///     The new value is not in the collection of pages.
         /// </exception>
         [Browsable(false)]
         public WizardPage CurrentPage
@@ -971,7 +945,6 @@ namespace Neovolve.Windows.Forms
                 // There is no page available
                 return null;
             }
-
             set
             {
                 // Check if a value has been supplied
@@ -987,7 +960,7 @@ namespace Neovolve.Windows.Forms
                 }
 
                 // Get a reference to the old current page
-                WizardPage oldPage = _currentPage;
+                var oldPage = _currentPage;
 
                 // Check if the navigation history contains the specified item
                 if (_pageHistory.Contains(value))
@@ -1000,8 +973,7 @@ namespace Neovolve.Windows.Forms
                     do
                     {
                         previousPage = _pageHistory.Pop();
-                    }
-                    while (previousPage.Equals(value) == false);
+                    } while (previousPage.Equals(value) == false);
                 }
                 else if (oldPage != null)
                 {
@@ -1049,54 +1021,37 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Gets the pages.
+        ///     Gets the pages.
         /// </summary>
         /// <value>
-        /// The pages.
+        ///     The pages.
         /// </value>
         [Browsable(false)]
-        public WizardPageDictionary Pages
-        {
-            get
-            {
-                return _pages;
-            }
-        }
+        public WizardPageDictionary Pages { get { return _pages; } }
 
         /// <summary>
-        /// Gets the state.
+        ///     Gets the state.
         /// </summary>
         /// <value>
-        /// The state.
+        ///     The state.
         /// </value>
         [Browsable(false)]
-        public StateCollection State
-        {
-            get
-            {
-                return _state;
-            }
-        }
+        public StateCollection State { get { return _state; } }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to ignore the cancel check.
+        ///     Gets or sets a value indicating whether to ignore the cancel check.
         /// </summary>
         /// <value>
-        /// <item>
-        /// True
-        /// </item>
-        /// if the cancel check should be ignored; otherwise, 
-        /// <item>
-        /// False
-        /// </item>
-        /// .
+        ///     <item>
+        ///         True
+        ///     </item>
+        ///     if the cancel check should be ignored; otherwise,
+        ///     <item>
+        ///         False
+        ///     </item>
+        ///     .
         /// </value>
         [Browsable(false)]
-        private Boolean IgnoreCancelCheck
-        {
-            get;
-
-            set;
-        }
+        private bool IgnoreCancelCheck { get; set; }
     }
 }

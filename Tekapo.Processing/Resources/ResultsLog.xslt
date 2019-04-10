@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -9,47 +9,47 @@
         <style>
 
           body
-          {            
-            font-family: Arial;
+          {
+          font-family: Arial;
           }
-          
+
           h1
           {
-            font-family: Verdana;
-            font-size: 18pt;
+          font-family: Verdana;
+          font-size: 18pt;
           }
 
           dl.header dt
           {
-            float: left;
-            width: 150px;
-            clear: both;
-            margin-bottom: 5px;
+          float: left;
+          width: 150px;
+          clear: both;
+          margin-bottom: 5px;
           }
-          
+
           dl.items dt
           {
-            margin-top: 40px;
-            border-top: 1px solid;
-            padding-top: 10px;
-            padding-bottom: 10px;
+          margin-top: 40px;
+          border-top: 1px solid;
+          padding-top: 10px;
+          padding-bottom: 10px;
           }
-          
+
           dl.items dd
           {
-            margin-left: 0px;
-            font-size: smaller;
-            padding-bottom: 5px;
+          margin-left: 0px;
+          font-size: smaller;
+          padding-bottom: 5px;
           }
-          
+
           .succeeded
           {
-            color: green;
+          color: green;
           }
 
           .failed
           {
-            color: red;
+          color: red;
           }
 
         </style>
@@ -70,19 +70,19 @@
           </dd>
           <dt>Time run:</dt>
           <dd>
-            <xsl:value-of select="Results/ProcessRunDate"/>
+            <xsl:value-of select="Results/ProcessRunDate" />
           </dd>
           <dt>Files processed:</dt>
           <dd>
-            <xsl:value-of select="Results/FilesProcessed"/>
+            <xsl:value-of select="Results/FilesProcessed" />
           </dd>
           <dt>Files succeeded:</dt>
           <dd class="succeeded">
-            <xsl:value-of select="Results/FilesSucceeded"/>
+            <xsl:value-of select="Results/FilesSucceeded" />
           </dd>
           <dt>Files failed:</dt>
           <dd class="failed">
-            <xsl:value-of select="Results/FilesFailed"/>
+            <xsl:value-of select="Results/FilesFailed" />
           </dd>
         </dl>
         <xsl:apply-templates select="Results/FileResults" />
@@ -95,20 +95,20 @@
     <xsl:for-each select="FileResult">
       <dl class="items">
         <dt>
-          <xsl:value-of select="OriginalPath"/>
+          <xsl:value-of select="OriginalPath" />
         </dt>
         <xsl:choose>
           <xsl:when test="../../ProcessType = 'RenameTask'">
             <dd>
-              Copy file to <xsl:value-of select="NewPath"/>
+              Copy file to <xsl:value-of select="NewPath" />
             </dd>
           </xsl:when>
           <xsl:otherwise>
             <dd>
-              Shift time from 
-              <xsl:value-of select="OriginalPictureTakenDate"/>
+              Shift time from
+              <xsl:value-of select="OriginalPictureTakenDate" />
               to
-              <xsl:value-of select="NewPictureTakenDate"/>
+              <xsl:value-of select="NewPictureTakenDate" />
             </dd>
           </xsl:otherwise>
         </xsl:choose>
@@ -120,7 +120,7 @@
             <xsl:otherwise>
               <span class="failed">File failed to be processed</span>
               <blockquote>
-                <xsl:value-of select="ErrorMessage"/>
+                <xsl:value-of select="ErrorMessage" />
               </blockquote>
             </xsl:otherwise>
           </xsl:choose>

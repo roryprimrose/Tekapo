@@ -6,10 +6,16 @@
 // Error List, point to "Suppress Message(s)", and click 
 // "In Project Suppression File". 
 // You do not need to add suppressions to this file manually. 
+
+using System.Diagnostics.CodeAnalysis;
+
 [assembly:
-    System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions",
-        Scope = "member", Target = "Neovolve.Windows.Forms.WizardForm.#CanContinueCancel()")]
+    SuppressMessage("Microsoft.Globalization",
+        "CA1300:SpecifyMessageBoxOptions",
+        Scope = "member",
+        Target = "Neovolve.Windows.Forms.WizardForm.#CanContinueCancel()")]
 [assembly:
-    System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-        "CA1035:ICollectionImplementationsHaveStronglyTypedMembers", Scope = "type",
+    SuppressMessage("Microsoft.Design",
+        "CA1035:ICollectionImplementationsHaveStronglyTypedMembers",
+        Scope = "type",
         Target = "Neovolve.Windows.Forms.StateCollection")]

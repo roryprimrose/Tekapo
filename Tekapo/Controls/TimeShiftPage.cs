@@ -1,17 +1,17 @@
-using System;
-using Neovolve.Windows.Forms;
-using Neovolve.Windows.Forms.Controls;
-using Tekapo.Properties;
-
 namespace Tekapo.Controls
 {
+    using System;
+    using Neovolve.Windows.Forms;
+    using Neovolve.Windows.Forms.Controls;
+    using Tekapo.Properties;
+
     /// <summary>
-    /// Time shift page.
+    ///     Time shift page.
     /// </summary>
     public partial class TimeShiftPage : WizardBannerPage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TimeShiftPage"/> class.
+        ///     Initializes a new instance of the <see cref="TimeShiftPage" /> class.
         /// </summary>
         public TimeShiftPage()
         {
@@ -19,19 +19,19 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Determines whether this instance can navigate the specified e.
+        ///     Determines whether this instance can navigate the specified e.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         /// <returns>
-        /// <c>true</c>if this instance can navigate the specified e; otherwise, <c>false</c>.
+        ///     <c>true</c>if this instance can navigate the specified e; otherwise, <c>false</c>.
         /// </returns>
-        public override Boolean CanNavigate(WizardFormNavigationEventArgs e)
+        public override bool CanNavigate(WizardFormNavigationEventArgs e)
         {
             // Check if the user is clicking next
-            if ((e.NavigationType == WizardFormNavigationType.Next)
-                && (IsPageValid() == false))
+            if (e.NavigationType == WizardFormNavigationType.Next
+                && IsPageValid() == false)
             {
                 // The page isn't valid
                 return false;
@@ -41,30 +41,30 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Gets the shift value.
+        ///     Gets the shift value.
         /// </summary>
         /// <param name="stateKey">
-        /// The state key.
+        ///     The state key.
         /// </param>
         /// <returns>
-        /// The shift value.
+        ///     The shift value.
         /// </returns>
-        private Decimal GetShiftValue(String stateKey)
+        private decimal GetShiftValue(string stateKey)
         {
-            Object stateValue = State[stateKey];
+            var stateValue = State[stateKey];
 
-            if (stateValue is Decimal)
+            if (stateValue is decimal)
             {
-                return (Decimal)stateValue;
+                return (decimal) stateValue;
             }
 
-            String value = Convert.ToString(State[stateKey]);
+            var value = Convert.ToString(State[stateKey]);
 
-            Decimal returnValue;
+            decimal returnValue;
 
             // Check if the value is a decimal
-            if ((String.IsNullOrEmpty(value) == false)
-                && Decimal.TryParse(value, out returnValue))
+            if (string.IsNullOrEmpty(value) == false
+                && decimal.TryParse(value, out returnValue))
             {
                 return returnValue;
             }
@@ -73,21 +73,24 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Determines whether the page is valid.
+        ///     Determines whether the page is valid.
         /// </summary>
         /// <returns>
-        /// <c>true</c>if the page is valid; otherwise, <c>false</c>.
+        ///     <c>true</c>if the page is valid; otherwise, <c>false</c>.
         /// </returns>
-        private Boolean IsPageValid()
+        private bool IsPageValid()
         {
-            Boolean result = true;
+            var result = true;
 
             // Clear the error provider
             ErrorDisplay.Clear();
 
-            if ((txtHours.Value == 0) && (txtMinutes.Value == 0) && (txtSeconds.Value == 0) && (txtYears.Value == 0)
-                && (txtMonths.Value == 0)
-                && (txtDays.Value == 0))
+            if (txtHours.Value == 0
+                && txtMinutes.Value == 0
+                && txtSeconds.Value == 0
+                && txtYears.Value == 0
+                && txtMonths.Value == 0
+                && txtDays.Value == 0)
             {
                 // Set the error provider
                 ErrorDisplay.SetError(txtHours, Resources.ErrorNoTimeShiftProvided);
@@ -106,15 +109,15 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the Closing event of the TimeShiftPage control.
+        ///     Handles the Closing event of the TimeShiftPage control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void TimeShiftPage_Closing(Object sender, EventArgs e)
+        private void TimeShiftPage_Closing(object sender, EventArgs e)
         {
             State[Constants.ShiftHoursStateKey] = txtHours.Value;
             State[Constants.ShiftMinutesStateKey] = txtMinutes.Value;
@@ -125,15 +128,15 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the Opening event of the TimeShiftPage control.
+        ///     Handles the Opening event of the TimeShiftPage control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void TimeShiftPage_Opening(Object sender, EventArgs e)
+        private void TimeShiftPage_Opening(object sender, EventArgs e)
         {
             txtHours.Value = GetShiftValue(Constants.ShiftHoursStateKey);
             txtMinutes.Value = GetShiftValue(Constants.ShiftMinutesStateKey);

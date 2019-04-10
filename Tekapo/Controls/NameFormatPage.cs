@@ -1,46 +1,30 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Globalization;
-using System.Threading;
-using System.Windows.Forms;
-using Neovolve.Windows.Forms;
-using Neovolve.Windows.Forms.Controls;
-using Tekapo.Processing;
-using Tekapo.Properties;
-
 namespace Tekapo.Controls
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Drawing;
+    using System.Globalization;
+    using System.Threading;
+    using System.Windows.Forms;
+    using Neovolve.Windows.Forms;
+    using Neovolve.Windows.Forms.Controls;
+    using Tekapo.Processing;
+    using Tekapo.Properties;
+
     /// <summary>
-    /// The <see cref="NameFormatPage"/> class is a Wizard page that allows the user to specify a format to use when
-    /// renaming images.
+    ///     The <see cref="NameFormatPage" /> class is a Wizard page that allows the user to specify a format to use when
+    ///     renaming images.
     /// </summary>
     public partial class NameFormatPage : WizardBannerPage
     {
         /// <summary>
-        /// Stores the thread used to calculate the rename example.
+        ///     Stores the thread used to calculate the rename example.
         /// </summary>
         private Thread _exampleThread;
 
         /// <summary>
-        /// Get format value delegate.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="string"/> value.
-        /// </returns>
-        private delegate String GetFormatValueDelegate();
-
-        /// <summary>
-        /// Set example value delegate.
-        /// </summary>
-        /// <param name="example">
-        /// The example.
-        /// </param>
-        private delegate void SetExampleValueDelegate(String example);
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NameFormatPage"/> class.
+        ///     Initializes a new instance of the <see cref="NameFormatPage" /> class.
         /// </summary>
         public NameFormatPage()
         {
@@ -48,19 +32,35 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Determines whether this instance can navigate the specified e.
+        ///     Get format value delegate.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="string" /> value.
+        /// </returns>
+        private delegate string GetFormatValueDelegate();
+
+        /// <summary>
+        ///     Set example value delegate.
+        /// </summary>
+        /// <param name="example">
+        ///     The example.
+        /// </param>
+        private delegate void SetExampleValueDelegate(string example);
+
+        /// <summary>
+        ///     Determines whether this instance can navigate the specified e.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         /// <returns>
-        /// <c>true</c>if this instance can navigate the specified e; otherwise, <c>false</c>.
+        ///     <c>true</c>if this instance can navigate the specified e; otherwise, <c>false</c>.
         /// </returns>
-        public override Boolean CanNavigate(WizardFormNavigationEventArgs e)
+        public override bool CanNavigate(WizardFormNavigationEventArgs e)
         {
             // Check if the user is clicking next
-            if ((e.NavigationType == WizardFormNavigationType.Next)
-                && (IsPageValid() == false))
+            if (e.NavigationType == WizardFormNavigationType.Next
+                && IsPageValid() == false)
             {
                 // The page isn't valid
                 return false;
@@ -70,12 +70,12 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Updates the example.
+        ///     Updates the example.
         /// </summary>
         private void BuildExample()
         {
-            if ((_exampleThread != null)
-                && ((_exampleThread.ThreadState & ThreadState.Running) == ThreadState.Running))
+            if (_exampleThread != null
+                && (_exampleThread.ThreadState & ThreadState.Running) == ThreadState.Running)
             {
                 // Abort the currently running thread
                 _exampleThread.Abort();
@@ -90,15 +90,15 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Calculates the example value.
+        ///     Calculates the example value.
         /// </summary>
         private void CalculateExampleValue()
         {
-            String renameFormat = GetFormatValue();
-            String exampleMessage;
+            var renameFormat = GetFormatValue();
+            string exampleMessage;
 
             // Check if a format is specified
-            if (String.IsNullOrEmpty(renameFormat))
+            if (string.IsNullOrEmpty(renameFormat))
             {
                 exampleMessage = Resources.NameFormatExampleNoFormatAvailable.Replace("\\n", "\n");
             }
@@ -111,62 +111,65 @@ namespace Tekapo.Controls
             {
                 // A name format is specified and is valid
                 // Generate the example
-                String sourcePath = ((BindingList<String>)State[Constants.FileListStateKey])[0];
-                DateTime pictureTaken = JpegInformation.GetPictureTaken(sourcePath);
-                Boolean incrementOnCollision = IncrementOnCollision.Checked;
-                Int32 maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
-                String resultPath = ImageRenaming.GetRenamedPath(
-                    renameFormat, pictureTaken, sourcePath, incrementOnCollision, maxCollisionIncrement);
-                String exampleFormat = Resources.NameFormatExample.Replace("\\n", "\n");
+                var sourcePath = ((BindingList<string>) State[Constants.FileListStateKey])[0];
+                var pictureTaken = JpegInformation.GetPictureTaken(sourcePath);
+                var incrementOnCollision = IncrementOnCollision.Checked;
+                var maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
+                var resultPath = ImageRenaming.GetRenamedPath(renameFormat,
+                    pictureTaken,
+                    sourcePath,
+                    incrementOnCollision,
+                    maxCollisionIncrement);
+                var exampleFormat = Resources.NameFormatExample.Replace("\\n", "\n");
 
-                exampleMessage = String.Format(CultureInfo.CurrentUICulture, exampleFormat, sourcePath, resultPath);
+                exampleMessage = string.Format(CultureInfo.CurrentUICulture, exampleFormat, sourcePath, resultPath);
             }
 
             SetExampleValue(exampleMessage);
         }
 
         /// <summary>
-        /// Gets the format value.
+        ///     Gets the format value.
         /// </summary>
         /// <returns>
-        /// The format value.
+        ///     The format value.
         /// </returns>
-        private String GetFormatValue()
+        private string GetFormatValue()
         {
             if (NameFormat.InvokeRequired)
             {
-                return (String)NameFormat.Invoke(new GetFormatValueDelegate(GetFormatValue));
+                return (string) NameFormat.Invoke(new GetFormatValueDelegate(GetFormatValue));
             }
 
             return NameFormat.Text;
         }
 
         /// <summary>
-        /// Handles the CheckedChanged event of the IncrementOnCollision control.
+        ///     Handles the CheckedChanged event of the IncrementOnCollision control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void IncrementOnCollision_CheckedChanged(Object sender, EventArgs e)
+        private void IncrementOnCollision_CheckedChanged(object sender, EventArgs e)
         {
             BuildExample();
         }
 
         /// <summary>
-        /// Handles the Click event of the InsertFormat control.
+        ///     Handles the Click event of the InsertFormat control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void InsertFormat_Click(Object sender, EventArgs e)
+        private void InsertFormat_Click(object sender, EventArgs e)
         {
-            Point menuLocation = InsertFormat.Location;
+            var menuLocation = InsertFormat.Location;
 
             menuLocation.X += InsertFormat.Width;
 
@@ -174,19 +177,19 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Determines whether the page is valid.
+        ///     Determines whether the page is valid.
         /// </summary>
         /// <returns>
-        /// <c>true</c>if the page is valid; otherwise, <c>false</c>.
+        ///     <c>true</c>if the page is valid; otherwise, <c>false</c>.
         /// </returns>
-        private Boolean IsPageValid()
+        private bool IsPageValid()
         {
-            Boolean result = true;
+            var result = true;
 
             // Clear the error provider
             ErrorDisplay.Clear();
 
-            if (String.IsNullOrEmpty(NameFormat.Text))
+            if (string.IsNullOrEmpty(NameFormat.Text))
             {
                 // Set the error provider
                 ErrorDisplay.SetError(NameFormat, Resources.ErrorNoNameFormatProvided);
@@ -208,62 +211,62 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the TextChanged event of the NameFormat control.
+        ///     Handles the TextChanged event of the NameFormat control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void NameFormat_TextChanged(Object sender, EventArgs e)
+        private void NameFormat_TextChanged(object sender, EventArgs e)
         {
             BuildExample();
         }
 
         /// <summary>
-        /// Handles the Closing event of the NameFormatPage control.
+        ///     Handles the Closing event of the NameFormatPage control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void NameFormatPage_Closing(Object sender, EventArgs e)
+        private void NameFormatPage_Closing(object sender, EventArgs e)
         {
             State[Constants.NameFormatStateKey] = NameFormat.Text;
             State[Constants.IncrementOnCollisionStateKey] = IncrementOnCollision.Checked;
         }
 
         /// <summary>
-        /// Handles the Load event of the NameFormatPage control.
+        ///     Handles the Load event of the NameFormatPage control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void NameFormatPage_Load(Object sender, EventArgs e)
+        private void NameFormatPage_Load(object sender, EventArgs e)
         {
-            ContextMenu formatMenu = new ContextMenu();
+            var formatMenu = new ContextMenu();
 
             // Populate the rename formats into the context menu
-            foreach (KeyValuePair<String, String> pair in ImageRenaming.RenameFormats)
+            foreach (var pair in ImageRenaming.RenameFormats)
             {
-                MenuItem renameMenuItem = new MenuItem();
-                String formatValue = String.Concat("<", pair.Key, ">");
-                String formatDescription = pair.Value;
+                var renameMenuItem = new MenuItem();
+                var formatValue = string.Concat("<", pair.Key, ">");
+                var formatDescription = pair.Value;
 
-                renameMenuItem.Text = String.Format(
-                    CultureInfo.CurrentUICulture, "{0}  {1}", formatValue, formatDescription);
+                renameMenuItem.Text = string.Format(
+                    CultureInfo.CurrentUICulture,
+                    "{0}  {1}",
+                    formatValue,
+                    formatDescription);
                 renameMenuItem.Tag = formatValue;
 
-                renameMenuItem.Click += delegate
-                                        {
-                                            NameFormat.Text += formatValue;
-                                        };
+                renameMenuItem.Click += delegate { NameFormat.Text += formatValue; };
 
                 formatMenu.MenuItems.Add(renameMenuItem);
             }
@@ -272,39 +275,36 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the Opening event of the NameFormatPage control.
+        ///     Handles the Opening event of the NameFormatPage control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void NameFormatPage_Opening(Object sender, EventArgs e)
+        private void NameFormatPage_Opening(object sender, EventArgs e)
         {
             // Load the state values
-            NameFormat.Text = (String)State[Constants.NameFormatStateKey];
+            NameFormat.Text = (string) State[Constants.NameFormatStateKey];
             NameFormat.DataSource = State[Constants.NameFormatMRUStateKey];
-            IncrementOnCollision.Checked = (Boolean)State[Constants.IncrementOnCollisionStateKey];
+            IncrementOnCollision.Checked = (bool) State[Constants.IncrementOnCollisionStateKey];
 
             // Build the example
             BuildExample();
         }
 
         /// <summary>
-        /// Sets the example value.
+        ///     Sets the example value.
         /// </summary>
         /// <param name="example">
-        /// The example.
+        ///     The example.
         /// </param>
-        private void SetExampleValue(String example)
+        private void SetExampleValue(string example)
         {
             if (Example.InvokeRequired)
             {
-                Object[] args = new Object[]
-                                    {
-                                        example
-                                    };
+                object[] args = {example};
 
                 Example.Invoke(new SetExampleValueDelegate(SetExampleValue), args);
 

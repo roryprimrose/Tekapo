@@ -1,16 +1,15 @@
-using System;
-using System.Drawing;
-
 namespace Neovolve.Windows.Forms.Controls
 {
+    using System.Drawing;
+
     /// <summary>
-    /// The <see cref="WizardSplashPage"/> class is a 
-    /// <see cref="WizardPage"/>derived control that defines a splash page for the wizard interface.
+    ///     The <see cref="WizardSplashPage" /> class is a
+    ///     <see cref="WizardPage" />derived control that defines a splash page for the wizard interface.
     /// </summary>
     public partial class WizardSplashPage : WizardPage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardSplashPage"/> class.
+        ///     Initializes a new instance of the <see cref="WizardSplashPage" /> class.
         /// </summary>
         public WizardSplashPage()
         {
@@ -18,60 +17,27 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Gets or sets the description.
+        ///     Gets or sets the description.
         /// </summary>
         /// <value>
-        /// The description.
+        ///     The description.
         /// </value>
-        public String Description
-        {
-            get
-            {
-                return DescriptionLabel.Text;
-            }
-
-            set
-            {
-                DescriptionLabel.Text = value;
-            }
-        }
+        public string Description { get { return DescriptionLabel.Text; } set { DescriptionLabel.Text = value; } }
 
         /// <summary>
-        /// Gets or sets the splash image.
+        ///     Gets or sets the splash image.
         /// </summary>
         /// <value>
-        /// The splash image.
+        ///     The splash image.
         /// </value>
-        public Image SplashImage
-        {
-            get
-            {
-                return SplashPicture.Image;
-            }
-
-            set
-            {
-                SplashPicture.Image = value;
-            }
-        }
+        public Image SplashImage { get { return SplashPicture.Image; } set { SplashPicture.Image = value; } }
 
         /// <summary>
-        /// Gets or sets the title.
+        ///     Gets or sets the title.
         /// </summary>
         /// <value>
-        /// The title.
+        ///     The title.
         /// </value>
-        public String Title
-        {
-            get
-            {
-                return TitleLabel.Text;
-            }
-
-            set
-            {
-                TitleLabel.Text = value;
-            }
-        }
+        public string Title { get { return TitleLabel.Text; } set { TitleLabel.Text = value; } }
     }
 }

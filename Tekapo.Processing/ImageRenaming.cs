@@ -1,113 +1,119 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Text.RegularExpressions;
-
 namespace Tekapo.Processing
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Text.RegularExpressions;
+
     /// <summary>
-    /// The <see cref="ImageRenaming"/> class is used to process image renaming based on format masks.
+    ///     The <see cref="ImageRenaming" /> class is used to process image renaming based on format masks.
     /// </summary>
     public static class ImageRenaming
     {
         /// <summary>
-        /// Stores the renaming formats.
+        ///     Stores the renaming formats.
         /// </summary>
-        private static readonly Dictionary<String, String> _formats = GenerateFormats();
+        private static readonly Dictionary<string, string> _formats = GenerateFormats();
 
         /// <summary>
-        /// Creates the file path with increment.
+        ///     Creates the file path with increment.
         /// </summary>
         /// <param name="path">
-        /// The path to process.
+        ///     The path to process.
         /// </param>
         /// <param name="increment">
-        /// The increment.
+        ///     The increment.
         /// </param>
         /// <param name="maxCollisionIncrement">
-        /// The max collision increment.
+        ///     The max collision increment.
         /// </param>
         /// <returns>
-        /// A <see cref="System.String"/> that contains the path modified with an increment.
+        ///     A <see cref="System.String" /> that contains the path modified with an increment.
         /// </returns>
-        public static String CreateFilePathWithIncrement(String path, Int32 increment, Int32 maxCollisionIncrement)
+        public static string CreateFilePathWithIncrement(string path, int increment, int maxCollisionIncrement)
         {
             // Store the parts of the path
-            String baseFilePath = Path.GetDirectoryName(path);
-            String baseFileName = Path.GetFileNameWithoutExtension(path);
-            String fileExtension = Path.GetExtension(path);
+            var baseFilePath = Path.GetDirectoryName(path);
+            var baseFileName = Path.GetFileNameWithoutExtension(path);
+            var fileExtension = Path.GetExtension(path);
 
-            Int32 maxPaddingCount = maxCollisionIncrement.ToString(CultureInfo.InvariantCulture).Length;
+            var maxPaddingCount = maxCollisionIncrement.ToString(CultureInfo.InvariantCulture).Length;
 
             // Build the incremented path
-            String incrementValue = "-" + increment.ToString(CultureInfo.InvariantCulture).PadLeft(maxPaddingCount, '0');
+            var incrementValue =
+                "-" + increment.ToString(CultureInfo.InvariantCulture).PadLeft(maxPaddingCount, '0');
 
             // Combine the path with the increment value at the end of the new filename
-            String incrementedFileName = String.Format(
-                CultureInfo.CurrentCulture, "{0}{1}{2}", baseFileName, incrementValue, fileExtension);
-            String incrementedPath = Path.Combine(baseFilePath, incrementedFileName);
+            var incrementedFileName = string.Format(CultureInfo.CurrentCulture,
+                "{0}{1}{2}",
+                baseFileName,
+                incrementValue,
+                fileExtension);
+            var incrementedPath = Path.Combine(baseFilePath, incrementedFileName);
 
             return incrementedPath;
         }
 
         /// <summary>
-        /// Gets the renamed path.
+        ///     Gets the renamed path.
         /// </summary>
         /// <param name="renamingFormat">
-        /// The renaming format.
+        ///     The renaming format.
         /// </param>
         /// <param name="pictureTakenDate">
-        /// The picture taken date.
+        ///     The picture taken date.
         /// </param>
         /// <param name="originalFilePath">
-        /// The original file path.
+        ///     The original file path.
         /// </param>
         /// <param name="incrementOnCollision">
-        /// If set to <c>true</c> add an increment to the filename on collision.
+        ///     If set to <c>true</c> add an increment to the filename on collision.
         /// </param>
         /// <param name="maxCollisionIncrement">
-        /// The max collision increment.
+        ///     The max collision increment.
         /// </param>
         /// <returns>
-        /// An absolute or relative file path that has been renamed based on the date the picture was taken and a renaming format.
+        ///     An absolute or relative file path that has been renamed based on the date the picture was taken and a renaming
+        ///     format.
         /// </returns>
-        public static String GetRenamedPath(
-            String renamingFormat,
+        public static string GetRenamedPath(
+            string renamingFormat,
             DateTime pictureTakenDate,
-            String originalFilePath,
-            Boolean incrementOnCollision,
-            Int32 maxCollisionIncrement)
+            string originalFilePath,
+            bool incrementOnCollision,
+            int maxCollisionIncrement)
         {
-            String newName = ProcessFormat(renamingFormat, pictureTakenDate);
+            var newName = ProcessFormat(renamingFormat, pictureTakenDate);
 
             // Strip leading and trailing slashes
             newName = StripSlashes(newName);
 
-            String newPath = Path.GetPathRoot(newName);
+            var newPath = Path.GetPathRoot(newName);
 
-            if (String.IsNullOrEmpty(newPath))
+            if (string.IsNullOrEmpty(newPath))
             {
-                String directoryName = Path.GetDirectoryName(originalFilePath);
+                var directoryName = Path.GetDirectoryName(originalFilePath);
 
                 newName = Path.Combine(directoryName, newName);
             }
 
-            if (String.IsNullOrEmpty(Path.GetExtension(newName)))
+            if (string.IsNullOrEmpty(Path.GetExtension(newName)))
             {
                 newName = newName + Path.GetExtension(originalFilePath);
             }
 
             // We now have a fully qualified new path
-            String firstIncrement = CreateFilePathWithIncrement(newName, 1, maxCollisionIncrement);
+            var firstIncrement = CreateFilePathWithIncrement(newName, 1, maxCollisionIncrement);
 
             // Check for naming collisions
-            if (incrementOnCollision && (newName != originalFilePath)
+            if (incrementOnCollision
+                && newName != originalFilePath
                 && (File.Exists(newName) || File.Exists(firstIncrement)))
             {
-                for (Int32 index = 2; index <= maxCollisionIncrement; index++)
+                for (var index = 2; index <= maxCollisionIncrement; index++)
                 {
-                    String incrementedPath = CreateFilePathWithIncrement(newName, index, maxCollisionIncrement);
+                    var incrementedPath = CreateFilePathWithIncrement(newName, index, maxCollisionIncrement);
 
                     // Check if the path exists
                     if (File.Exists(incrementedPath) == false)
@@ -126,21 +132,21 @@ namespace Tekapo.Processing
         }
 
         /// <summary>
-        /// Determines whether the specified naming format is valid.
+        ///     Determines whether the specified naming format is valid.
         /// </summary>
         /// <param name="renamingFormat">
-        /// The renaming format.
+        ///     The renaming format.
         /// </param>
         /// <returns>
-        /// <c>true</c>if the specified format is valid; otherwise, <c>false</c>.
+        ///     <c>true</c>if the specified format is valid; otherwise, <c>false</c>.
         /// </returns>
-        public static Boolean IsFormatValid(String renamingFormat)
+        public static bool IsFormatValid(string renamingFormat)
         {
-            String formatTest = renamingFormat;
+            var formatTest = renamingFormat;
 
-            foreach (String key in _formats.Keys)
+            foreach (var key in _formats.Keys)
             {
-                formatTest = formatTest.Replace("<" + key + ">", String.Empty);
+                formatTest = formatTest.Replace("<" + key + ">", string.Empty);
             }
 
             // Check if there is a correct set of mask brackets
@@ -159,14 +165,14 @@ namespace Tekapo.Processing
         }
 
         /// <summary>
-        /// Generates the formats.
+        ///     Generates the formats.
         /// </summary>
         /// <returns>
-        /// A <see cref="Dictionary{String, String}"/> instance.
+        ///     A <see cref="Dictionary{String, String}" /> instance.
         /// </returns>
-        private static Dictionary<String, String> GenerateFormats()
+        private static Dictionary<string, string> GenerateFormats()
         {
-            Dictionary<String, String> formats = new Dictionary<String, String>();
+            var formats = new Dictionary<string, string>();
 
             formats.Add("d", "Numeric day value without a leading zero");
             formats.Add("dd", "Numeric day value with a leading zero");
@@ -197,55 +203,56 @@ namespace Tekapo.Processing
         }
 
         /// <summary>
-        /// Processes the format.
+        ///     Processes the format.
         /// </summary>
         /// <param name="renamingFormat">
-        /// The renaming format.
+        ///     The renaming format.
         /// </param>
         /// <param name="pictureTakenDate">
-        /// The picture taken date.
+        ///     The picture taken date.
         /// </param>
         /// <returns>
-        /// A <see cref="String"/> instance.
+        ///     A <see cref="String" /> instance.
         /// </returns>
-        private static String ProcessFormat(String renamingFormat, DateTime pictureTakenDate)
+        private static string ProcessFormat(string renamingFormat, DateTime pictureTakenDate)
         {
-            String renameFormat = renamingFormat;
+            var renameFormat = renamingFormat;
 
-            foreach (String key in _formats.Keys)
+            foreach (var key in _formats.Keys)
             {
                 renameFormat = renameFormat.Replace("<" + key + ">", "{0:" + key + "}");
             }
 
             // Return the formatted path
-            return String.Format(CultureInfo.InvariantCulture, renameFormat, pictureTakenDate);
+            return string.Format(CultureInfo.InvariantCulture, renameFormat, pictureTakenDate);
         }
 
         /// <summary>
-        /// Strips the slashes.
+        ///     Strips the slashes.
         /// </summary>
         /// <param name="path">
-        /// The path to process.
+        ///     The path to process.
         /// </param>
         /// <returns>
-        /// A path with the leading a trailing slashes removed as required.
+        ///     A path with the leading a trailing slashes removed as required.
         /// </returns>
-        private static String StripSlashes(String path)
+        private static string StripSlashes(string path)
         {
-            if (String.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(path))
             {
                 return path;
             }
 
-            String returnPath = path;
+            var returnPath = path;
 
             // Check if there is a leading slash
-            if ((returnPath.Substring(0, 1) == Path.DirectorySeparatorChar.ToString())
-                || (returnPath.Substring(0, 1) == Path.AltDirectorySeparatorChar.ToString()))
+            if (returnPath.Substring(0, 1) == Path.DirectorySeparatorChar.ToString()
+                || returnPath.Substring(0, 1) == Path.AltDirectorySeparatorChar.ToString())
             {
                 // Check if the path starts with a double slash
-                if ((returnPath.Length > 1) && (returnPath.Substring(1, 1) != Path.DirectorySeparatorChar.ToString())
-                    && (returnPath.Substring(1, 1) != Path.AltDirectorySeparatorChar.ToString()))
+                if (returnPath.Length > 1
+                    && returnPath.Substring(1, 1) != Path.DirectorySeparatorChar.ToString()
+                    && returnPath.Substring(1, 1) != Path.AltDirectorySeparatorChar.ToString())
                 {
                     // Strip the single leading slash
                     returnPath = returnPath.Substring(1);
@@ -253,8 +260,8 @@ namespace Tekapo.Processing
             }
 
             // Check if there is a trailing slash
-            if ((returnPath.Substring(returnPath.Length - 1, 1) == Path.DirectorySeparatorChar.ToString())
-                || (returnPath.Substring(returnPath.Length - 1, 1) == Path.AltDirectorySeparatorChar.ToString()))
+            if (returnPath.Substring(returnPath.Length - 1, 1) == Path.DirectorySeparatorChar.ToString()
+                || returnPath.Substring(returnPath.Length - 1, 1) == Path.AltDirectorySeparatorChar.ToString())
             {
                 // Remove the trailing slash
                 returnPath = returnPath.Substring(0, returnPath.Length - 1);
@@ -265,17 +272,11 @@ namespace Tekapo.Processing
         }
 
         /// <summary>
-        /// Gets the rename formats.
+        ///     Gets the rename formats.
         /// </summary>
         /// <value>
-        /// The rename formats.
+        ///     The rename formats.
         /// </value>
-        public static Dictionary<String, String> RenameFormats
-        {
-            get
-            {
-                return _formats;
-            }
-        }
+        public static Dictionary<string, string> RenameFormats { get { return _formats; } }
     }
 }

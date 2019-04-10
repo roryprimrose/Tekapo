@@ -1,37 +1,38 @@
-using System;
-using System.ComponentModel;
-using System.Globalization;
-using Neovolve.Windows.Forms.Properties;
-
 namespace Neovolve.Windows.Forms
 {
+    using System;
+    using System.ComponentModel;
+    using System.Globalization;
+    using Neovolve.Windows.Forms.Properties;
+
     /// <summary>
-    /// The <see cref="Neovolve.Windows.Forms.WizardButtonSettingsTypeConverter"/>
-    /// class is used to convert the
-    /// <see cref="Neovolve.Windows.Forms.WizardButtonSettings"/>class to and from other types.
+    ///     The <see cref="Neovolve.Windows.Forms.WizardButtonSettingsTypeConverter" />
+    ///     class is used to convert the
+    ///     <see cref="Neovolve.Windows.Forms.WizardButtonSettings" />class to and from other types.
     /// </summary>
     public class WizardButtonSettingsTypeConverter : ExpandableObjectConverter
     {
         /// <summary>
-        /// Returns whether this converter can convert an object of the given type to the type of this converter, using the specified context.
+        ///     Returns whether this converter can convert an object of the given type to the type of this converter, using the
+        ///     specified context.
         /// </summary>
         /// <param name="context">
-        /// An <see cref="T:System.ComponentModel.ITypeDescriptorContext"></see> that provides a format context.
+        ///     An <see cref="T:System.ComponentModel.ITypeDescriptorContext"></see> that provides a format context.
         /// </param>
         /// <param name="sourceType">
-        /// A <see cref="T:System.Type"></see> that represents the type you want to convert from.
+        ///     A <see cref="T:System.Type"></see> that represents the type you want to convert from.
         /// </param>
         /// <returns>
-        /// True if this converter can perform the conversion; otherwise, false.
+        ///     True if this converter can perform the conversion; otherwise, false.
         /// </returns>
-        public override Boolean CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             if (sourceType == null)
             {
                 throw new ArgumentNullException(nameof(sourceType));
             }
 
-            if (sourceType.Equals(typeof(String)))
+            if (sourceType.Equals(typeof(string)))
             {
                 return true;
             }
@@ -40,25 +41,25 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Returns whether this converter can convert the object to the specified type, using the specified context.
+        ///     Returns whether this converter can convert the object to the specified type, using the specified context.
         /// </summary>
         /// <param name="context">
-        /// An <see cref="T:System.ComponentModel.ITypeDescriptorContext"></see> that provides a format context.
+        ///     An <see cref="T:System.ComponentModel.ITypeDescriptorContext"></see> that provides a format context.
         /// </param>
         /// <param name="destinationType">
-        /// A <see cref="T:System.Type"></see> that represents the type you want to convert to.
+        ///     A <see cref="T:System.Type"></see> that represents the type you want to convert to.
         /// </param>
         /// <returns>
-        /// True if this converter can perform the conversion; otherwise, false.
+        ///     True if this converter can perform the conversion; otherwise, false.
         /// </returns>
-        public override Boolean CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
             if (destinationType == null)
             {
                 throw new ArgumentNullException(nameof(destinationType));
             }
 
-            if (destinationType.Equals(typeof(String)))
+            if (destinationType.Equals(typeof(string)))
             {
                 return true;
             }
@@ -67,79 +68,73 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Converts the given object to the type of this converter, using the specified context and culture information.
+        ///     Converts the given object to the type of this converter, using the specified context and culture information.
         /// </summary>
         /// <param name="context">
-        /// An <see cref="T:System.ComponentModel.ITypeDescriptorContext"></see> that provides a format context.
+        ///     An <see cref="T:System.ComponentModel.ITypeDescriptorContext"></see> that provides a format context.
         /// </param>
         /// <param name="culture">
-        /// The <see cref="T:System.Globalization.CultureInfo"></see> to use as the current culture.
+        ///     The <see cref="T:System.Globalization.CultureInfo"></see> to use as the current culture.
         /// </param>
         /// <param name="value">
-        /// The <see cref="Object"/> to convert.
+        ///     The <see cref="Object" /> to convert.
         /// </param>
         /// <returns>
-        /// An <see cref="Object"/> that represents the converted value.
+        ///     An <see cref="Object" /> that represents the converted value.
         /// </returns>
         /// <exception cref="T:System.NotSupportedException">
-        /// The conversion cannot be performed. 
+        ///     The conversion cannot be performed.
         /// </exception>
-        public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            String newValue = value as String;
+            var newValue = value as string;
 
             if (newValue != null)
             {
                 // Check if the value exists
-                if (String.IsNullOrEmpty(newValue))
+                if (string.IsNullOrEmpty(newValue))
                 {
-                    throw new NotSupportedException(
-                        String.Format(
-                            CultureInfo.InvariantCulture,
-                            Resources.FailedToConvertType,
-                            typeof(String).FullName,
-                            typeof(WizardButtonSettings).FullName));
+                    throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture,
+                        Resources.FailedToConvertType,
+                        typeof(string).FullName,
+                        typeof(WizardButtonSettings).FullName));
                 }
 
                 // Split the parts of the value
-                String[] parts = newValue.Split(
-                    new[]
-                        {
-                            ','
-                        });
+                var parts = newValue.Split(',');
 
                 // Get the text of the value
-                String text = parts[0];
+                var text = parts[0];
 
-                Boolean enabled = true;
+                var enabled = true;
 
                 // Check if there is a valid enabled value
                 if (parts.Length > 1)
                 {
-                    String enabledValue = parts[1].ToUpperInvariant();
+                    var enabledValue = parts[1].ToUpperInvariant();
 
                     if (enabledValue == "DISABLED")
                     {
                         enabled = false;
                     }
-                    else if (Boolean.TryParse(enabledValue, out enabled) == false)
+                    else if (bool.TryParse(enabledValue, out enabled) == false)
                     {
                         enabled = true;
                     }
                 }
 
-                Boolean visible = true;
+                var visible = true;
 
                 // Check if there is a valid visible value
                 if (parts.Length > 2)
                 {
-                    String visibleValue = parts[2].ToUpperInvariant();
+                    var visibleValue = parts[2].ToUpperInvariant();
 
                     if (visibleValue == "INVISIBLE")
                     {
                         visible = false;
                     }
-                    else if (Boolean.TryParse(visibleValue, out visible) == false)
+                    else if (bool.TryParse(visibleValue, out visible) == false)
                     {
                         visible = true;
                     }
@@ -153,42 +148,45 @@ namespace Neovolve.Windows.Forms
         }
 
         /// <summary>
-        /// Converts the given value object to the specified type, using the specified context and culture information.
+        ///     Converts the given value object to the specified type, using the specified context and culture information.
         /// </summary>
         /// <param name="context">
-        /// An <see cref="T:System.ComponentModel.ITypeDescriptorContext"></see> that provides a format context.
+        ///     An <see cref="T:System.ComponentModel.ITypeDescriptorContext"></see> that provides a format context.
         /// </param>
         /// <param name="culture">
-        /// A <see cref="T:System.Globalization.CultureInfo"></see>. If null is passed, the current culture is assumed.
+        ///     A <see cref="T:System.Globalization.CultureInfo"></see>. If null is passed, the current culture is assumed.
         /// </param>
         /// <param name="value">
-        /// The <see cref="Object"/> to convert.
+        ///     The <see cref="Object" /> to convert.
         /// </param>
         /// <param name="destinationType">
-        /// The <see cref="T:System.Type"></see> to convert the value parameter to.
+        ///     The <see cref="T:System.Type"></see> to convert the value parameter to.
         /// </param>
         /// <returns>
-        /// An <see cref="Object"/> that represents the converted value.
+        ///     An <see cref="Object" /> that represents the converted value.
         /// </returns>
         /// <exception cref="T:System.NotSupportedException">
-        /// The conversion cannot be performed. 
+        ///     The conversion cannot be performed.
         /// </exception>
         /// <exception cref="T:System.ArgumentNullException">
-        /// The destinationType parameter is null. 
+        ///     The destinationType parameter is null.
         /// </exception>
-        public override Object ConvertTo(
-            ITypeDescriptorContext context, CultureInfo culture, Object value, Type destinationType)
+        public override object ConvertTo(
+            ITypeDescriptorContext context,
+            CultureInfo culture,
+            object value,
+            Type destinationType)
         {
             if (destinationType == null)
             {
                 throw new ArgumentNullException(nameof(destinationType));
             }
 
-            if (destinationType.Equals(typeof(String)))
+            if (destinationType.Equals(typeof(string)))
             {
-                WizardButtonSettings settings = (WizardButtonSettings)value;
+                var settings = (WizardButtonSettings) value;
 
-                String convertedValue = settings.Text;
+                var convertedValue = settings.Text;
 
                 convertedValue += ", " + (settings.Enabled ? "Enabled" : "Disabled");
                 convertedValue += ", " + (settings.Visible ? "Visible" : "Invisible");

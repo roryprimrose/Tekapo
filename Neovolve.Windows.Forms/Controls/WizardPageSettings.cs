@@ -1,43 +1,42 @@
-using System;
-using System.ComponentModel;
-using Neovolve.Windows.Forms.Properties;
-
 namespace Neovolve.Windows.Forms.Controls
 {
+    using System.ComponentModel;
+    using Neovolve.Windows.Forms.Properties;
+
     /// <summary>
-    /// The <see cref="WizardPageSettings"/> class defines settings to be applied to a
-    /// <see cref="WizardPage"/>instance.
+    ///     The <see cref="WizardPageSettings" /> class defines settings to be applied to a
+    ///     <see cref="WizardPage" />instance.
     /// </summary>
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public class WizardPageSettings
     {
         /// <summary>
-        /// Stores the settings for the previous button.
+        ///     Stores the settings for the previous button.
         /// </summary>
         private WizardButtonSettings _backButtonSettings;
 
         /// <summary>
-        /// Stores the settings for the cancel button.
+        ///     Stores the settings for the cancel button.
         /// </summary>
         private WizardButtonSettings _cancelButtonSettings;
 
         /// <summary>
-        /// Stores the settings for the custom button.
+        ///     Stores the settings for the custom button.
         /// </summary>
         private WizardButtonSettings _customButtonSettings;
 
         /// <summary>
-        /// Stores the settings for the help button.
+        ///     Stores the settings for the help button.
         /// </summary>
         private WizardButtonSettings _helpButtonSettings;
 
         /// <summary>
-        /// Stores the settings for the next button.
+        ///     Stores the settings for the next button.
         /// </summary>
         private WizardButtonSettings _nextButtonSettings;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPageSettings"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPageSettings" /> class.
         /// </summary>
         public WizardPageSettings()
             : this(null, null, null, null, null)
@@ -45,10 +44,10 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPageSettings"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPageSettings" /> class.
         /// </summary>
         /// <param name="nextButton">
-        /// The next button.
+        ///     The next button.
         /// </param>
         public WizardPageSettings(WizardButtonSettings nextButton)
             : this(nextButton, null, null, null, null)
@@ -56,13 +55,13 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPageSettings"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPageSettings" /> class.
         /// </summary>
         /// <param name="nextButton">
-        /// The next button.
+        ///     The next button.
         /// </param>
         /// <param name="previousButton">
-        /// The previous button.
+        ///     The previous button.
         /// </param>
         public WizardPageSettings(WizardButtonSettings nextButton, WizardButtonSettings previousButton)
             : this(nextButton, previousButton, null, null, null)
@@ -70,37 +69,39 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPageSettings"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPageSettings" /> class.
         /// </summary>
         /// <param name="nextButton">
-        /// The next button.
+        ///     The next button.
         /// </param>
         /// <param name="previousButton">
-        /// The previous button.
+        ///     The previous button.
         /// </param>
         /// <param name="cancelButton">
-        /// The cancel button.
+        ///     The cancel button.
         /// </param>
         public WizardPageSettings(
-            WizardButtonSettings nextButton, WizardButtonSettings previousButton, WizardButtonSettings cancelButton)
+            WizardButtonSettings nextButton,
+            WizardButtonSettings previousButton,
+            WizardButtonSettings cancelButton)
             : this(nextButton, previousButton, cancelButton, null, null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPageSettings"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPageSettings" /> class.
         /// </summary>
         /// <param name="nextButton">
-        /// The next button.
+        ///     The next button.
         /// </param>
         /// <param name="previousButton">
-        /// The previous button.
+        ///     The previous button.
         /// </param>
         /// <param name="cancelButton">
-        /// The cancel button.
+        ///     The cancel button.
         /// </param>
         /// <param name="helpButton">
-        /// The help button.
+        ///     The help button.
         /// </param>
         public WizardPageSettings(
             WizardButtonSettings nextButton,
@@ -112,22 +113,22 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WizardPageSettings"/> class.
+        ///     Initializes a new instance of the <see cref="WizardPageSettings" /> class.
         /// </summary>
         /// <param name="nextButton">
-        /// The next button.
+        ///     The next button.
         /// </param>
         /// <param name="previousButton">
-        /// The previous button.
+        ///     The previous button.
         /// </param>
         /// <param name="cancelButton">
-        /// The cancel button.
+        ///     The cancel button.
         /// </param>
         /// <param name="helpButton">
-        /// The help button.
+        ///     The help button.
         /// </param>
         /// <param name="customButton">
-        /// The custom button.
+        ///     The custom button.
         /// </param>
         public WizardPageSettings(
             WizardButtonSettings nextButton,
@@ -144,16 +145,15 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Creates a new object that is a copy of the current instance.
+        ///     Creates a new object that is a copy of the current instance.
         /// </summary>
         /// <returns>
-        /// A new object that is a copy of this instance.
+        ///     A new object that is a copy of this instance.
         /// </returns>
         public WizardPageSettings Clone()
         {
             // Return the new instance
-            return new WizardPageSettings(
-                NextButtonSettings.Clone(),
+            return new WizardPageSettings(NextButtonSettings.Clone(),
                 BackButtonSettings.Clone(),
                 CancelButtonSettings.Clone(),
                 HelpButtonSettings.Clone(),
@@ -161,21 +161,21 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
-        /// Returns a <see cref="string"/> that represents the current <see cref="object"/>.
+        ///     Returns a <see cref="string" /> that represents the current <see cref="object" />.
         /// </summary>
         /// <returns>
-        /// A <see cref="string"/> that represents the current <see cref="object"/>.
+        ///     A <see cref="string" /> that represents the current <see cref="object" />.
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
-            return String.Empty;
+            return string.Empty;
         }
 
         /// <summary>
-        /// Gets or sets the back button settings.
+        ///     Gets or sets the back button settings.
         /// </summary>
         /// <value>
-        /// The back button settings.
+        ///     The back button settings.
         /// </value>
         [Category("Button Settings")]
         [Description("The Previous button settings.")]
@@ -197,18 +197,14 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the settings
                 return _backButtonSettings;
             }
-
-            set
-            {
-                _backButtonSettings = value;
-            }
+            set { _backButtonSettings = value; }
         }
 
         /// <summary>
-        /// Gets or sets the cancel button settings.
+        ///     Gets or sets the cancel button settings.
         /// </summary>
         /// <value>
-        /// The cancel button settings.
+        ///     The cancel button settings.
         /// </value>
         [Category("Button Settings")]
         [Description("The Cancel button settings.")]
@@ -230,18 +226,14 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the settings
                 return _cancelButtonSettings;
             }
-
-            set
-            {
-                _cancelButtonSettings = value;
-            }
+            set { _cancelButtonSettings = value; }
         }
 
         /// <summary>
-        /// Gets or sets the custom button settings.
+        ///     Gets or sets the custom button settings.
         /// </summary>
         /// <value>
-        /// The custom button settings.
+        ///     The custom button settings.
         /// </value>
         [Category("Button Settings")]
         [Description("The Custom button settings.")]
@@ -263,18 +255,14 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the settings
                 return _customButtonSettings;
             }
-
-            set
-            {
-                _customButtonSettings = value;
-            }
+            set { _customButtonSettings = value; }
         }
 
         /// <summary>
-        /// Gets or sets the help button settings.
+        ///     Gets or sets the help button settings.
         /// </summary>
         /// <value>
-        /// The help button settings.
+        ///     The help button settings.
         /// </value>
         [Category("Button Settings")]
         [Description("The Help button settings.")]
@@ -296,18 +284,14 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the settings
                 return _helpButtonSettings;
             }
-
-            set
-            {
-                _helpButtonSettings = value;
-            }
+            set { _helpButtonSettings = value; }
         }
 
         /// <summary>
-        /// Gets or sets the next button settings.
+        ///     Gets or sets the next button settings.
         /// </summary>
         /// <value>
-        /// The next button settings.
+        ///     The next button settings.
         /// </value>
         [Category("Button Settings")]
         [Description("The Next button settings.")]
@@ -329,11 +313,7 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the settings
                 return _nextButtonSettings;
             }
-
-            set
-            {
-                _nextButtonSettings = value;
-            }
+            set { _nextButtonSettings = value; }
         }
     }
 }

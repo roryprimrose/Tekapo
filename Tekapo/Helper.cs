@@ -1,79 +1,80 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.IO;
-using System.Xml.Serialization;
-
 namespace Tekapo
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Globalization;
+    using System.IO;
+    using System.Xml.Serialization;
+    using Tekapo.Properties;
+
     /// <summary>
-    /// The <see cref="Helper"/>
-    /// class is used to provide common functionality.
+    ///     The <see cref="Helper" />
+    ///     class is used to provide common functionality.
     /// </summary>
     internal static class Helper
     {
         /// <summary>
-        /// Stores the supported file types.
+        ///     Stores the supported file types.
         /// </summary>
-        private static List<String> _supportedFileTypes;
+        private static List<string> _supportedFileTypes;
 
         /// <summary>
-        /// Deserializes the list.
+        ///     Deserializes the list.
         /// </summary>
         /// <param name="serializedValue">
-        /// The serialized value.
+        ///     The serialized value.
         /// </param>
         /// <returns>
-        /// A <see cref="String"/> instance.
+        ///     A <see cref="string" /> instance.
         /// </returns>
-        public static BindingList<String> DeserializeList(String serializedValue)
+        public static BindingList<string> DeserializeList(string serializedValue)
         {
             // check if there is a value
-            if (String.IsNullOrEmpty(serializedValue))
+            if (string.IsNullOrEmpty(serializedValue))
             {
-                return new BindingList<String>();
+                return new BindingList<string>();
             }
 
-            using (StringReader reader = new StringReader(serializedValue))
+            using (var reader = new StringReader(serializedValue))
             {
                 // Create an instance of the XmlSerializer class;
                 // specify the type of Object to be deserialized.
-                XmlSerializer serializer = new XmlSerializer(typeof(BindingList<String>));
+                var serializer = new XmlSerializer(typeof(BindingList<string>));
 
-                return (BindingList<String>)serializer.Deserialize(reader);
+                return (BindingList<string>) serializer.Deserialize(reader);
             }
         }
 
         /// <summary>
-        /// Gets the file extension.
+        ///     Gets the file extension.
         /// </summary>
         /// <param name="path">
-        /// The path to process.
+        ///     The path to process.
         /// </param>
         /// <returns>
-        /// A <see cref="String"/> instance.
+        ///     A <see cref="string" /> instance.
         /// </returns>
-        public static String GetFileExtension(String path)
+        public static string GetFileExtension(string path)
         {
             // Get the extension of the path
-            String extension = Path.GetExtension(path);
+            var extension = Path.GetExtension(path);
 
-            if (String.IsNullOrEmpty(extension))
+            if (string.IsNullOrEmpty(extension))
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             return extension.ToLower(CultureInfo.CurrentCulture).Substring(1);
         }
 
         /// <summary>
-        /// Gets the supported file types.
+        ///     Gets the supported file types.
         /// </summary>
         /// <returns>
-        /// A <see cref="String"/> instance.
+        ///     A <see cref="string" /> instance.
         /// </returns>
-        public static List<String> GetSupportedFileTypes()
+        public static List<string> GetSupportedFileTypes()
         {
             // Check if the file types have already been calculated
             if (_supportedFileTypes != null)
@@ -81,27 +82,22 @@ namespace Tekapo
                 return _supportedFileTypes;
             }
 
-            String supportedTypesValue = Properties.Settings.Default.SupportedFileTypes;
+            var supportedTypesValue = Settings.Default.SupportedFileTypes;
 
             // Ensure that there is a value
-            if (String.IsNullOrEmpty(supportedTypesValue))
+            if (string.IsNullOrEmpty(supportedTypesValue))
             {
                 // Set the default value
-                supportedTypesValue = Properties.Resources.DefaultSupportedFileTypes;
+                supportedTypesValue = Resources.DefaultSupportedFileTypes;
             }
 
             supportedTypesValue = supportedTypesValue.ToLower(CultureInfo.CurrentCulture);
 
             // Load the supported file types
-            _supportedFileTypes = new List<String>(
-                supportedTypesValue.Split(
-                    new[]
-                        {
-                            ','
-                        }));
+            _supportedFileTypes = new List<string>(supportedTypesValue.Split(','));
 
             // Loop through each file type
-            for (Int32 typeIndex = 0; typeIndex < _supportedFileTypes.Count; typeIndex++)
+            for (var typeIndex = 0; typeIndex < _supportedFileTypes.Count; typeIndex++)
             {
                 // Ensure that the file type doesn't start with .
                 if (_supportedFileTypes[typeIndex].StartsWith(".", StringComparison.OrdinalIgnoreCase))
@@ -116,45 +112,45 @@ namespace Tekapo
         }
 
         /// <summary>
-        /// Determines whether [is file supported] [the specified path].
+        ///     Determines whether [is file supported] [the specified path].
         /// </summary>
         /// <param name="path">
-        /// The path to test.
+        ///     The path to test.
         /// </param>
         /// <returns>
-        /// <c>true</c>if [is file supported] [the specified path]; otherwise, <c>false</c>.
+        ///     <c>true</c>if [is file supported] [the specified path]; otherwise, <c>false</c>.
         /// </returns>
-        public static Boolean IsFileSupported(String path)
+        public static bool IsFileSupported(string path)
         {
-            String extension = GetFileExtension(path);
+            var extension = GetFileExtension(path);
 
             return GetSupportedFileTypes().Contains(extension);
         }
 
         /// <summary>
-        /// Serializes the list.
+        ///     Serializes the list.
         /// </summary>
         /// <param name="list">
-        /// The list to serialize.
+        ///     The list to serialize.
         /// </param>
         /// <returns>
-        /// A <see cref="String"/> instance.
+        ///     A <see cref="string" /> instance.
         /// </returns>
-        public static String SerializeList(BindingList<String> list)
+        public static string SerializeList(BindingList<string> list)
         {
             // Check if there is a list
             if (list == null)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
-            String serializedValue;
+            string serializedValue;
 
             // Create an instance of the XmlSerializer class;
             // specify the type of Object to serialize.
-            XmlSerializer serializer = new XmlSerializer(typeof(BindingList<String>));
+            var serializer = new XmlSerializer(typeof(BindingList<string>));
 
-            using (MemoryStream stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
                 // Serialize the purchase order, and close the TextWriter.
                 serializer.Serialize(stream, list);

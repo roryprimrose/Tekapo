@@ -1,14 +1,15 @@
-using System;
-
 namespace Neovolve.Windows.Forms.Test
 {
+    using System;
+    using Neovolve.Windows.Forms.Controls;
+
     /// <summary>
-    /// Timer page.
+    ///     Timer page.
     /// </summary>
-    public partial class TimerPage : Controls.WizardBannerPage
+    public partial class TimerPage : WizardBannerPage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TimerPage"/> class.
+        ///     Initializes a new instance of the <see cref="TimerPage" /> class.
         /// </summary>
         public TimerPage()
         {
@@ -16,18 +17,17 @@ namespace Neovolve.Windows.Forms.Test
         }
 
         /// <summary>
-        /// Handles the Tick event of the timer1 control.
+        ///     Handles the Tick event of the timer1 control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void Timer1_Tick(Object sender, EventArgs e)
+        private void Timer1_Tick(object sender, EventArgs e)
         {
-            if (progressBar1.Value + progressBar1.Step
-                <= progressBar1.Maximum)
+            if (progressBar1.Value + progressBar1.Step <= progressBar1.Maximum)
             {
                 progressBar1.Value += progressBar1.Step;
             }
@@ -39,29 +39,29 @@ namespace Neovolve.Windows.Forms.Test
         }
 
         /// <summary>
-        /// Handles the Closing event of the TimerPage control.
+        ///     Handles the Closing event of the TimerPage control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void TimerPage_Closing(Object sender, EventArgs e)
+        private void TimerPage_Closing(object sender, EventArgs e)
         {
             timer1.Enabled = false;
         }
 
         /// <summary>
-        /// Handles the Opened event of the TimerPage control.
+        ///     Handles the Opened event of the TimerPage control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void TimerPage_Opened(Object sender, EventArgs e)
+        private void TimerPage_Opened(object sender, EventArgs e)
         {
             progressBar1.Value = 0;
             timer1.Enabled = true;
