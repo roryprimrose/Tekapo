@@ -201,6 +201,11 @@ namespace Neovolve.Windows.Forms
         /// </param>
         protected virtual void NavigateCancel(WizardFormNavigationEventArgs e)
         {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             // Clear the dialog result
             DialogResult = DialogResult.None;
 
@@ -230,6 +235,11 @@ namespace Neovolve.Windows.Forms
         /// </param>
         protected virtual void NavigateCustom(WizardFormNavigationEventArgs e)
         {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             // Get the navigation key
             String navigationKey = e.NavigationKey;
 
@@ -264,6 +274,11 @@ namespace Neovolve.Windows.Forms
         /// </param>
         protected virtual void NavigateHelp(WizardFormNavigationEventArgs e)
         {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             // Get the navigation key
             String navigationKey = e.NavigationKey;
 
@@ -288,6 +303,11 @@ namespace Neovolve.Windows.Forms
         /// </param>
         protected virtual void NavigateNext(WizardFormNavigationEventArgs e)
         {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             // Get the navigation key
             String navigationKey = e.NavigationKey;
             WizardPage page;
@@ -326,6 +346,11 @@ namespace Neovolve.Windows.Forms
         /// </param>
         protected virtual void NavigatePrevious(WizardFormNavigationEventArgs e)
         {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             // Get the navigation key
             String navigationKey = e.NavigationKey;
             WizardPage page;
@@ -386,6 +411,11 @@ namespace Neovolve.Windows.Forms
         /// </param>
         protected virtual void OnNavigating(WizardFormNavigationEventArgs e)
         {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             // Check if the ignore navigation has been specified
             if (e.NavigationType
                 == WizardFormNavigationType.Ignore)

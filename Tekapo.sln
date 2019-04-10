@@ -1,12 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{90FE6B63-C633-46E7-ABDF-BA08EE3AE910}"
 	ProjectSection(SolutionItems) = preProject
+		Solution Items\Application.ruleset = Solution Items\Application.ruleset
 		Solution Items\CustomDictionary.xml = Solution Items\CustomDictionary.xml
-		Solution Items\Neovolve.snk = Solution Items\Neovolve.snk
 		Settings.StyleCop = Settings.StyleCop
 	EndProjectSection
 EndProject

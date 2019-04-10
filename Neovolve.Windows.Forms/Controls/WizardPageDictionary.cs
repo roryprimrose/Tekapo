@@ -105,6 +105,11 @@ namespace Neovolve.Windows.Forms.Controls
         /// </param>
         public void Add(String key, WizardPage page, WizardPageSettings settings)
         {
+            if (page == null)
+            {
+                throw new ArgumentNullException(nameof(page));
+            }
+
             // Add the settings to the page
             page.PageSettings = settings;
 
@@ -130,6 +135,11 @@ namespace Neovolve.Windows.Forms.Controls
         public void Add(
             String key, WizardPage page, WizardPageSettings settings, WizardPageNavigationSettings navigationSettings)
         {
+            if (page == null)
+            {
+                throw new ArgumentNullException(nameof(page));
+            }
+
             // Add the settings to the page
             page.PageSettings = settings;
             page.NavigationSettings = navigationSettings;

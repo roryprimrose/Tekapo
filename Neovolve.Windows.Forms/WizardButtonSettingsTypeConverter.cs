@@ -26,6 +26,11 @@ namespace Neovolve.Windows.Forms
         /// </returns>
         public override Boolean CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
+            if (sourceType == null)
+            {
+                throw new ArgumentNullException(nameof(sourceType));
+            }
+
             if (sourceType.Equals(typeof(String)))
             {
                 return true;
@@ -48,6 +53,11 @@ namespace Neovolve.Windows.Forms
         /// </returns>
         public override Boolean CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
+            if (destinationType == null)
+            {
+                throw new ArgumentNullException(nameof(destinationType));
+            }
+
             if (destinationType.Equals(typeof(String)))
             {
                 return true;
@@ -169,6 +179,11 @@ namespace Neovolve.Windows.Forms
         public override Object ConvertTo(
             ITypeDescriptorContext context, CultureInfo culture, Object value, Type destinationType)
         {
+            if (destinationType == null)
+            {
+                throw new ArgumentNullException(nameof(destinationType));
+            }
+
             if (destinationType.Equals(typeof(String)))
             {
                 WizardButtonSettings settings = (WizardButtonSettings)value;
