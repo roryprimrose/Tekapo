@@ -160,11 +160,7 @@ namespace Tekapo
                 using (TextReader reader = new StreamReader(stream))
                 {
                     serializedValue = reader.ReadToEnd();
-
-                    reader.Close();
                 }
-
-                stream.Close();
             }
 
             return serializedValue;

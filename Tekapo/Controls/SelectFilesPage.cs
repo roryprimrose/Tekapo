@@ -1,7 +1,6 @@
 namespace Tekapo.Controls
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
     using System.IO;
@@ -40,6 +39,11 @@ namespace Tekapo.Controls
         /// </returns>
         public override bool CanNavigate(WizardFormNavigationEventArgs e)
         {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             // Check if the user is clicking next
             if (e.NavigationType == WizardFormNavigationType.Next)
             {
@@ -337,6 +341,6 @@ namespace Tekapo.Controls
         /// <value>
         ///     The file list.
         /// </value>
-        public BindingList<string> FileList { get { return (BindingList<string>) State[Constants.FileListStateKey]; } }
+        public BindingList<string> FileList => (BindingList<string>) State[Constants.FileListStateKey];
     }
 }

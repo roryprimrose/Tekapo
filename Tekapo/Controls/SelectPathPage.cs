@@ -36,6 +36,11 @@ namespace Tekapo.Controls
         /// </returns>
         public override bool CanNavigate(WizardFormNavigationEventArgs e)
         {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             // Check if the user is clicking next
             if (e.NavigationType == WizardFormNavigationType.Next
                 && IsPageValid() == false)

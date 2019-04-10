@@ -1,6 +1,7 @@
 namespace Tekapo.Processing
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.Globalization;
@@ -30,6 +31,9 @@ namespace Tekapo.Processing
         /// <returns>
         ///     A <see cref="DateTime" /> instance.
         /// </returns>
+        [SuppressMessage("Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "A generic catch is required as part of the fallback strategy.")]
         public static DateTime GetPictureTaken(string filePath)
         {
             DateTime pictureTaken = default;

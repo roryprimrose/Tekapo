@@ -28,6 +28,11 @@ namespace Tekapo.Processing
         /// </param>
         public void AddFailedResult(FileResult result, string errorMessage)
         {
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+
             result.IsSuccessful = false;
             result.ErrorMessage = errorMessage;
             FilesProcessed++;
@@ -44,6 +49,11 @@ namespace Tekapo.Processing
         /// </param>
         public void AddSuccessfulResult(FileResult result)
         {
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+
             result.IsSuccessful = true;
             FilesProcessed++;
             FilesSucceeded++;

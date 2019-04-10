@@ -68,7 +68,7 @@ namespace Neovolve.Windows.Forms
         /// <value>
         ///     The current page.
         /// </value>
-        public WizardPage CurrentPage { get { return _currentPage; } }
+        public WizardPage CurrentPage => _currentPage;
 
         /// <summary>
         ///     Gets or sets the navigation key.

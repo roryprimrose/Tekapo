@@ -50,10 +50,15 @@ namespace Neovolve.Windows.Forms
         /// </summary>
         public WizardForm()
         {
+            components = new Container();
+
             InitializeComponent();
 
             // Create the collections
             _pages = new WizardPageDictionary();
+
+            components.Add(_pages);
+
             _pageHistory = new Stack<WizardPage>();
             _state = new StateCollection();
 
@@ -61,7 +66,7 @@ namespace Neovolve.Windows.Forms
             _pages.PageAdded += PageAdded;
             _pages.PageRemoved += PageRemoved;
         }
-
+        
         /// <summary>
         ///     Defines the delegate used to close the wizard.
         /// </summary>
@@ -888,7 +893,7 @@ namespace Neovolve.Windows.Forms
         [Category("Behaviour")]
         [Description("Determines whether control tab ordering is automatically calculated based on positioning.")]
         [DefaultValue(true)]
-        public bool AutoTabOrdering { get { return _autoTabOrdering; } set { _autoTabOrdering = value; } }
+        public bool AutoTabOrdering { get => _autoTabOrdering; set => _autoTabOrdering = value; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether [confirm cancel].
@@ -906,7 +911,7 @@ namespace Neovolve.Windows.Forms
         [Category("Behaviour")]
         [Description("Determines whether the user will be asked to confirm a cancel action.")]
         [DefaultValue(true)]
-        public bool ConfirmCancel { get { return _confirmCancel; } set { _confirmCancel = value; } }
+        public bool ConfirmCancel { get => _confirmCancel; set => _confirmCancel = value; }
 
         /// <summary>
         ///     Gets or sets the current page.
@@ -1027,7 +1032,7 @@ namespace Neovolve.Windows.Forms
         ///     The pages.
         /// </value>
         [Browsable(false)]
-        public WizardPageDictionary Pages { get { return _pages; } }
+        public WizardPageDictionary Pages => _pages;
 
         /// <summary>
         ///     Gets the state.
@@ -1036,7 +1041,7 @@ namespace Neovolve.Windows.Forms
         ///     The state.
         /// </value>
         [Browsable(false)]
-        public StateCollection State { get { return _state; } }
+        public StateCollection State => _state;
 
         /// <summary>
         ///     Gets or sets a value indicating whether to ignore the cancel check.

@@ -1,9 +1,8 @@
 namespace Tekapo.Controls
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Drawing;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Threading;
     using System.Windows.Forms;
@@ -58,6 +57,11 @@ namespace Tekapo.Controls
         /// </returns>
         public override bool CanNavigate(WizardFormNavigationEventArgs e)
         {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             // Check if the user is clicking next
             if (e.NavigationType == WizardFormNavigationType.Next
                 && IsPageValid() == false)
@@ -122,7 +126,7 @@ namespace Tekapo.Controls
                     maxCollisionIncrement);
                 var exampleFormat = Resources.NameFormatExample.Replace("\\n", "\n");
 
-                exampleMessage = string.Format(CultureInfo.CurrentUICulture, exampleFormat, sourcePath, resultPath);
+                exampleMessage = string.Format(CultureInfo.CurrentCulture, exampleFormat, sourcePath, resultPath);
             }
 
             SetExampleValue(exampleMessage);
@@ -246,8 +250,11 @@ namespace Tekapo.Controls
         ///     The source of the event.
         /// </param>
         /// <param name="e">
-        ///     The <see cref="System.EventArgs" /> instance containing the event data.
+        ///     The <see cref="EventArgs" /> instance containing the event data.
         /// </param>
+        [SuppressMessage("Microsoft.Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "The instance lives beyond the scope of this method.")]
         private void NameFormatPage_Load(object sender, EventArgs e)
         {
             var formatMenu = new ContextMenu();
@@ -260,7 +267,7 @@ namespace Tekapo.Controls
                 var formatDescription = pair.Value;
 
                 renameMenuItem.Text = string.Format(
-                    CultureInfo.CurrentUICulture,
+                    CultureInfo.CurrentCulture,
                     "{0}  {1}",
                     formatValue,
                     formatDescription);

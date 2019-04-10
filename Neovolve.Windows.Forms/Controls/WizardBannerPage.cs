@@ -45,8 +45,8 @@ namespace Neovolve.Windows.Forms.Controls
         [Description("The image displayed in the background of the banner.")]
         public Image BannerImage
         {
-            get { return BannerPanel.BackgroundImage; }
-            set { BannerPanel.BackgroundImage = value; }
+            get => BannerPanel.BackgroundImage;
+            set => BannerPanel.BackgroundImage = value;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Neovolve.Windows.Forms.Controls
         /// </value>
         [Category("Banner")]
         [Description("The description displayed under the title in the banner.")]
-        public string Description { get { return DescriptionLabel.Text; } set { DescriptionLabel.Text = value; } }
+        public string Description { get => DescriptionLabel.Text; set => DescriptionLabel.Text = value; }
 
         /// <summary>
         ///     Gets or sets the title.
@@ -67,6 +67,6 @@ namespace Neovolve.Windows.Forms.Controls
         /// </value>
         [Category("Banner")]
         [Description("The title displayed in the banner.")]
-        public string Title { get { return TitleLabel.Text; } set { TitleLabel.Text = value; } }
+        public string Title { get => TitleLabel.Text; set => TitleLabel.Text = value; }
     }
 }

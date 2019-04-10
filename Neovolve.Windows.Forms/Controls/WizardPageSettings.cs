@@ -197,7 +197,7 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the settings
                 return _backButtonSettings;
             }
-            set { _backButtonSettings = value; }
+            set => _backButtonSettings = value;
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the settings
                 return _cancelButtonSettings;
             }
-            set { _cancelButtonSettings = value; }
+            set => _cancelButtonSettings = value;
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the settings
                 return _customButtonSettings;
             }
-            set { _customButtonSettings = value; }
+            set => _customButtonSettings = value;
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the settings
                 return _helpButtonSettings;
             }
-            set { _helpButtonSettings = value; }
+            set => _helpButtonSettings = value;
         }
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the settings
                 return _nextButtonSettings;
             }
-            set { _nextButtonSettings = value; }
+            set => _nextButtonSettings = value;
         }
     }
 }

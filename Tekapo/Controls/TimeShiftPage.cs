@@ -1,6 +1,7 @@
 namespace Tekapo.Controls
 {
     using System;
+    using System.Globalization;
     using Neovolve.Windows.Forms;
     using Neovolve.Windows.Forms.Controls;
     using Tekapo.Properties;
@@ -29,6 +30,11 @@ namespace Tekapo.Controls
         /// </returns>
         public override bool CanNavigate(WizardFormNavigationEventArgs e)
         {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             // Check if the user is clicking next
             if (e.NavigationType == WizardFormNavigationType.Next
                 && IsPageValid() == false)
@@ -53,18 +59,16 @@ namespace Tekapo.Controls
         {
             var stateValue = State[stateKey];
 
-            if (stateValue is decimal)
+            if (stateValue is decimal shiftValue)
             {
-                return (decimal) stateValue;
+                return shiftValue;
             }
 
-            var value = Convert.ToString(State[stateKey]);
-
-            decimal returnValue;
+            var value = Convert.ToString(State[stateKey], CultureInfo.CurrentCulture);
 
             // Check if the value is a decimal
             if (string.IsNullOrEmpty(value) == false
-                && decimal.TryParse(value, out returnValue))
+                && decimal.TryParse(value, out var returnValue))
             {
                 return returnValue;
             }

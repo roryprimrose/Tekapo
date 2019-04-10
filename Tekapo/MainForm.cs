@@ -4,6 +4,7 @@ namespace Tekapo
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Windows.Forms;
     using Neovolve.Windows.Forms;
@@ -40,6 +41,11 @@ namespace Tekapo
         /// </param>
         protected override void OnNavigate(WizardFormNavigationEventArgs e)
         {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             if (e.NavigationType == WizardFormNavigationType.Help)
             {
                 // Shell the help page
@@ -219,6 +225,9 @@ namespace Tekapo
         /// <summary>
         ///     Populates the wizard pages.
         /// </summary>
+        [SuppressMessage("Microsoft.Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Pages are disposed when the form is disposed.")]
         private void PopulateWizardPages()
         {
             // Create the Choose Task page

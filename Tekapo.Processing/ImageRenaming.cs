@@ -277,6 +277,6 @@ namespace Tekapo.Processing
         /// <value>
         ///     The rename formats.
         /// </value>
-        public static Dictionary<string, string> RenameFormats { get { return _formats; } }
+        public static Dictionary<string, string> RenameFormats => _formats;
     }
 }

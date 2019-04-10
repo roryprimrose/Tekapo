@@ -35,14 +35,14 @@ namespace Tekapo.Controls
             // Display the results
             var processingResults = (Results) State[Constants.ProcessResultsStateKey];
 
-            var message = string.Format(CultureInfo.CurrentUICulture,
+            var message = string.Format(CultureInfo.CurrentCulture,
                 Resources.SuccessfulProcessedResultsFormat,
                 processingResults.FilesSucceeded);
 
             // Check if there are failed results
             if (processingResults.FilesFailed > 0)
             {
-                message += Environment.NewLine + string.Format(CultureInfo.CurrentUICulture,
+                message += Environment.NewLine + string.Format(CultureInfo.CurrentCulture,
                                Resources.FailedProcessedResultsFormat,
                                processingResults.FilesFailed);
             }

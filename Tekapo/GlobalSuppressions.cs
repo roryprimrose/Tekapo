@@ -21,3 +21,7 @@ using System.Diagnostics.CodeAnalysis;
         MessageId = "System.Text.RegularExpressions.Regex",
         Scope = "member",
         Target = "Tekapo.Controls.SelectPathPage.#IsPageValid()")]
+[assembly: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Tekapo.Controls.SelectPathPage.#InitializeComponent()")]
+[assembly: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Tekapo.Controls.TimeShiftPage.#InitializeComponent()")]
+[assembly: SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "Tekapo.Controls.NameFormatPage.#InitializeComponent()")]
+

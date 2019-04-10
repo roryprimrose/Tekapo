@@ -3,6 +3,7 @@ namespace Neovolve.Windows.Forms.Controls
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using Neovolve.Windows.Forms.Properties;
 
     /// <summary>
@@ -10,7 +11,7 @@ namespace Neovolve.Windows.Forms.Controls
     ///     <see cref="WizardPage" />controls that are loaded by a
     ///     <see cref="Neovolve.Windows.Forms.WizardForm" />window.
     /// </summary>
-    public class WizardPageDictionary : IDictionary<string, WizardPage>
+    public class WizardPageDictionary : IDictionary<string, WizardPage>, IComponent
     {
         /// <summary>
         ///     Stores the collection of pages.
@@ -25,6 +26,9 @@ namespace Neovolve.Windows.Forms.Controls
             // Create the dictionary
             _store = new Dictionary<string, WizardPage>();
         }
+
+        /// <inheritdoc />
+        public event EventHandler Disposed;
 
         /// <summary>
         ///     Raised when a <see cref="WizardPage" /> control is added to the
@@ -281,6 +285,13 @@ namespace Neovolve.Windows.Forms.Controls
             }
         }
 
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         /// <summary>
         ///     Returns an enumerator that iterates through the collection.
         /// </summary>
@@ -454,6 +465,29 @@ namespace Neovolve.Windows.Forms.Controls
         }
 
         /// <summary>
+        ///     Disposes the instance.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> if disposing managed resources; otherwise <c>false</c>.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // free managed resources
+
+                foreach (var page in Values)
+                {
+                    page.Dispose();
+                }
+
+                Clear();
+
+                Disposed?.Invoke(this, EventArgs.Empty);
+            }
+
+            // free native resources if there are any.
+        }
+
+        /// <summary>
         ///     Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
         /// </summary>
         /// <value>
@@ -462,7 +496,7 @@ namespace Neovolve.Windows.Forms.Controls
         /// <returns>
         ///     The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
         /// </returns>
-        public int Count { get { return _store.Count; } }
+        public int Count => _store.Count;
 
         /// <summary>
         ///     Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only.
@@ -473,7 +507,7 @@ namespace Neovolve.Windows.Forms.Controls
         /// <returns>
         ///     True if the <see cref="T:System.Collections.Generic.ICollection`1"></see> is read-only; otherwise, false.
         /// </returns>
-        public bool IsReadOnly { get { return false; } }
+        public bool IsReadOnly => false;
 
         /// <summary>
         ///     Gets an <see cref="T:System.Collections.Generic.ICollection`1"></see> containing the keys of the
@@ -486,7 +520,10 @@ namespace Neovolve.Windows.Forms.Controls
         ///     An <see cref="T:System.Collections.Generic.ICollection`1"></see> containing the keys of the object that implements
         ///     <see cref="T:System.Collections.Generic.IDictionary`2"></see>.
         /// </returns>
-        public ICollection<string> Keys { get { return _store.Keys; } }
+        public ICollection<string> Keys => _store.Keys;
+
+        /// <inheritdoc />
+        public ISite Site { get; set; }
 
         /// <summary>
         ///     Gets an <see cref="T:System.Collections.Generic.ICollection`1"></see> containing the values in the
@@ -499,7 +536,7 @@ namespace Neovolve.Windows.Forms.Controls
         ///     An <see cref="T:System.Collections.Generic.ICollection`1"></see> containing the values in the object that
         ///     implements <see cref="T:System.Collections.Generic.IDictionary`2"></see>.
         /// </returns>
-        public ICollection<WizardPage> Values { get { return _store.Values; } }
+        public ICollection<WizardPage> Values => _store.Values;
 
         /// <summary>
         ///     Gets or sets the <see cref="WizardPage" /> with the specified key.
@@ -510,6 +547,6 @@ namespace Neovolve.Windows.Forms.Controls
         /// <value>
         ///     A <see cref="WizardPage" /> instance.
         /// </value>
-        public WizardPage this[string key] { get { return _store[key]; } set { _store[key] = value; } }
+        public WizardPage this[string key] { get => _store[key]; set => _store[key] = value; }
     }
 }

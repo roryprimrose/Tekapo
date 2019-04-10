@@ -39,7 +39,7 @@ namespace Neovolve.Windows.Forms.Controls
         /// <value>
         ///     The page key.
         /// </value>
-        public string Key { get { return _key; } }
+        public string Key => _key;
 
         /// <summary>
         ///     Gets the page.
@@ -47,6 +47,6 @@ namespace Neovolve.Windows.Forms.Controls
         /// <value>
         ///     The wizard page.
         /// </value>
-        public WizardPage Page { get { return _page; } }
+        public WizardPage Page => _page;
     }
 }

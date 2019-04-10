@@ -268,7 +268,7 @@ namespace Neovolve.Windows.Forms.Controls
         ///     The current navigation settings.
         /// </value>
         [Browsable(false)]
-        public virtual WizardPageNavigationSettings CurrentNavigationSettings { get { return NavigationSettings; } }
+        public virtual WizardPageNavigationSettings CurrentNavigationSettings => NavigationSettings;
 
         /// <summary>
         ///     Gets the current settings.
@@ -340,7 +340,7 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the value
                 return _navigationSettings;
             }
-            set { _navigationSettings = value; }
+            set => _navigationSettings = value;
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace Neovolve.Windows.Forms.Controls
                 // Return the settings
                 return _pageSettings;
             }
-            set { _pageSettings = value; }
+            set => _pageSettings = value;
         }
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace Neovolve.Windows.Forms.Controls
         [Browsable(false)]
         public bool WizardButtonsDisabled
         {
-            get { return _wizardButtonsDisabled; }
+            get => _wizardButtonsDisabled;
             set
             {
                 _wizardButtonsDisabled = value;

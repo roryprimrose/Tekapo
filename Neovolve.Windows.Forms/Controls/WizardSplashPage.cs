@@ -22,7 +22,7 @@ namespace Neovolve.Windows.Forms.Controls
         /// <value>
         ///     The description.
         /// </value>
-        public string Description { get { return DescriptionLabel.Text; } set { DescriptionLabel.Text = value; } }
+        public string Description { get => DescriptionLabel.Text; set => DescriptionLabel.Text = value; }
 
         /// <summary>
         ///     Gets or sets the splash image.
@@ -30,7 +30,7 @@ namespace Neovolve.Windows.Forms.Controls
         /// <value>
         ///     The splash image.
         /// </value>
-        public Image SplashImage { get { return SplashPicture.Image; } set { SplashPicture.Image = value; } }
+        public Image SplashImage { get => SplashPicture.Image; set => SplashPicture.Image = value; }
 
         /// <summary>
         ///     Gets or sets the title.
@@ -38,6 +38,6 @@ namespace Neovolve.Windows.Forms.Controls
         /// <value>
         ///     The title.
         /// </value>
-        public string Title { get { return TitleLabel.Text; } set { TitleLabel.Text = value; } }
+        public string Title { get => TitleLabel.Text; set => TitleLabel.Text = value; }
     }
 }

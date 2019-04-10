@@ -44,7 +44,7 @@
         /// <value>
         ///     An <see cref="object" /> instance or <c>null</c> if the key does not exist.
         /// </value>
-        public object this[string key] { get { return BaseGet(key); } set { BaseSet(key, value); } }
+        public object this[string key] { get => BaseGet(key); set => BaseSet(key, value); }
 
         /// <summary>
         ///     Gets or sets the <see cref="System.Object" /> at the specified index.
@@ -55,6 +55,6 @@
         /// <value>
         ///     An <see cref="object" /> instance.
         /// </value>
-        public object this[int index] { get { return BaseGet(index); } set { BaseSet(index, value); } }
+        public object this[int index] { get => BaseGet(index); set => BaseSet(index, value); }
     }
 }

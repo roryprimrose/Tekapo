@@ -95,7 +95,7 @@ namespace Tekapo.Controls
             }
 
             // Set the progress status
-            var progressMessage = string.Format(CultureInfo.CurrentUICulture,
+            var progressMessage = string.Format(CultureInfo.CurrentCulture,
                 Resources.RenameProcessFormat,
                 path,
                 displayPath);
@@ -162,7 +162,7 @@ namespace Tekapo.Controls
         {
             // Set the progress status
             var progressMessage =
-                string.Format(CultureInfo.CurrentUICulture, Resources.TimeShiftProcessFormat, path);
+                string.Format(CultureInfo.CurrentCulture, Resources.TimeShiftProcessFormat, path);
             SetProgressStatus(progressMessage);
 
             // Get the current time of the file
@@ -210,6 +210,6 @@ namespace Tekapo.Controls
         /// <value>
         ///     The process results.
         /// </value>
-        private Results ProcessResults { get { return (Results) State[Constants.ProcessResultsStateKey]; } }
+        private Results ProcessResults => (Results) State[Constants.ProcessResultsStateKey];
     }
 }

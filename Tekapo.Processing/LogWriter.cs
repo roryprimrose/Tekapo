@@ -57,12 +57,7 @@ namespace Tekapo.Processing
                         // Read the xml and close the reader
                         stream.Position = 0;
                         xml = reader.ReadToEnd();
-                        reader.Close();
                     }
-
-                    // Close the writer and the stream
-                    writer.Close();
-                    stream.Close();
                 }
             }
 
@@ -101,12 +96,7 @@ namespace Tekapo.Processing
                     {
                         stream.Position = 0;
                         html = reader.ReadToEnd();
-                        reader.Close();
                     }
-
-                    // Close the writer and the stream
-                    stream.Close();
-                    writer.Close();
                 }
             }
 

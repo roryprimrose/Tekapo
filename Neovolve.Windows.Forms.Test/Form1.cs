@@ -1,5 +1,6 @@
 namespace Neovolve.Windows.Forms.Test
 {
+    using System.Diagnostics.CodeAnalysis;
     using Neovolve.Windows.Forms.Controls;
 
     /// <summary>
@@ -21,24 +22,29 @@ namespace Neovolve.Windows.Forms.Test
         /// <summary>
         ///     Create wizard.
         /// </summary>
+        [SuppressMessage("Microsoft.Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Pages are disposed when the form is disposed.")]
         private void CreateWizard()
         {
-            var splash = new WizardSplashPage();
-            splash.Title = "A great title";
-            splash.Description = "A description that would\nbe value for something this app does.";
+            var splash = new WizardSplashPage
+            {
+                Title = "A great title",
+                Description = "A description that would\nbe value for something this app does."
+            };
 
             // splash.SplashImage = Image.FromFile("C:\\TestA.png");
-            var banner = new WizardBannerPage();
-            banner.Title = "Some title";
-            banner.Description =
-                "Some description that tells you about this page\nwith a lot more information to display.";
+            var banner = new WizardBannerPage
+            {
+                Title = "Some title",
+                Description =
+                    "Some description that tells you about this page\nwith a lot more information to display."
+            };
 
             // banner.BannerImage = Image.FromFile("C:\\TestB.png");
-            var banner2 = new WizardBannerPage();
-            banner2.Title = "Banner 2";
+            var banner2 = new WizardBannerPage {Title = "Banner 2"};
 
-            var banner3 = new WizardBannerPage();
-            banner3.Title = "Banner 3";
+            var banner3 = new WizardBannerPage {Title = "Banner 3"};
 
             Pages.Add("Page 1", new WizardPage());
             Pages.Add("Test banner", new TestBannerPage());

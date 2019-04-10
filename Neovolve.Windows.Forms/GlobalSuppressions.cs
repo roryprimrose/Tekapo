@@ -19,3 +19,5 @@ using System.Diagnostics.CodeAnalysis;
         "CA1035:ICollectionImplementationsHaveStronglyTypedMembers",
         Scope = "type",
         Target = "Neovolve.Windows.Forms.StateCollection")]
+[assembly: SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Scope = "member", Target = "Neovolve.Windows.Forms.Controls.WizardPage.#Contents")]
+
