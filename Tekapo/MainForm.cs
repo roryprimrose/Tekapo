@@ -7,23 +7,30 @@ namespace Tekapo
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Windows.Forms;
+    using Autofac;
     using Neovolve.Windows.Forms;
     using Neovolve.Windows.Forms.Controls;
     using Tekapo.Controls;
+    using Tekapo.Processing;
     using Tekapo.Properties;
+    using IContainer = Autofac.IContainer;
 
     /// <summary>
     ///     The <see cref="MainForm" /> class is the main application window for Tekapo. It hosts the pages in the wizard
     ///     process that allows
-    ///     the user to either rename or timeshift image files.
+    ///     the user to either rename or time-shift image files.
     /// </summary>
     public partial class MainForm : WizardForm
     {
+        private readonly IContainer _container;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainForm" /> class.
         /// </summary>
         public MainForm()
         {
+            _container = BuildContainer();
+
             InitializeComponent();
 
             // Populate the state
@@ -120,6 +127,16 @@ namespace Tekapo
 
             // No directory was found
             return string.Empty;
+        }
+
+        private IContainer BuildContainer()
+        {
+            var builder = new ContainerBuilder();
+
+            builder.RegisterModule<TekapoModule>();
+            builder.RegisterModule<ProcessingModule>();
+
+            return builder.Build();
         }
 
         /// <summary>
@@ -231,57 +248,65 @@ namespace Tekapo
         private void PopulateWizardPages()
         {
             // Create the Choose Task page
-            Pages.Add(Constants.ChooseNavigationKey, new ChooseTaskPage());
+            var chooseTaskPage = _container.Resolve<ChooseTaskPage>();
+
+            Pages.Add(Constants.ChooseNavigationKey, chooseTaskPage);
 
             // Create the Select Path page
+            var selectPathPage = _container.Resolve<SelectPathPage>();
             var selectPathSkipButtonSettings = new WizardButtonSettings(Resources.SkipButtonText);
-            var selectPathPageSettings = new WizardPageSettings(
-                null,
-                null,
-                null,
-                null,
-                selectPathSkipButtonSettings);
+            var selectPathPageSettings = new WizardPageSettings(null, null, null, null, selectPathSkipButtonSettings);
             var selectPathNavigationSettings = new WizardPageNavigationSettings(
                 null,
                 null,
                 null,
                 null,
                 Constants.SelectFilesNavigationKey);
+
             Pages.Add(Constants.SelectPathNavigationKey,
-                new SelectPathPage(),
+                selectPathPage,
                 selectPathPageSettings,
                 selectPathNavigationSettings);
 
             // Create the File Search page
-            Pages.Add(Constants.FileSearchNavigationKey, new FileSearchPage());
+            var fileSearchPage = _container.Resolve<FileSearchPage>();
+
+            Pages.Add(Constants.FileSearchNavigationKey, fileSearchPage);
 
             // Create the Select Files page
+            var selectFilesPage = _container.Resolve<SelectFilesPage>();
             var selectFilesNavigationSettings =
                 new WizardPageNavigationSettings(null, Constants.SelectPathNavigationKey);
-            Pages.Add(Constants.SelectFilesNavigationKey, new SelectFilesPage(), null, selectFilesNavigationSettings);
+
+            Pages.Add(Constants.SelectFilesNavigationKey, selectFilesPage, null, selectFilesNavigationSettings);
 
             // Declare the finish page settings
+            var nameFormatPage = _container.Resolve<NameFormatPage>();
             var finishButton = new WizardButtonSettings(Resources.Finish);
             var finishPageSettings = new WizardPageSettings(finishButton);
-            var finishNavigationSettings =
-                new WizardPageNavigationSettings(Constants.ProcessFilesNavigationKey);
+            var finishNavigationSettings = new WizardPageNavigationSettings(Constants.ProcessFilesNavigationKey);
 
             // Create the Naming Format page
             Pages.Add(Constants.NameFormatNavigationKey,
-                new NameFormatPage(),
+                nameFormatPage,
                 finishPageSettings,
                 finishNavigationSettings);
 
             // Create the Time Shift page
+            var timeShiftPage = _container.Resolve<TimeShiftPage>();
+
             Pages.Add(Constants.TimeShiftNavigationKey,
-                new TimeShiftPage(),
+                timeShiftPage,
                 finishPageSettings,
                 finishNavigationSettings);
 
             // Create the Progress page
-            Pages.Add(Constants.ProcessFilesNavigationKey, new ProcessFilesPage());
+            var processFilesPage = _container.Resolve<ProcessFilesPage>();
 
-            var completedPage = new CompletedPage();
+            Pages.Add(Constants.ProcessFilesNavigationKey, processFilesPage);
+
+            var completedPage = _container.Resolve<CompletedPage>();
+
             completedPage.PageSettings.BackButtonSettings.Visible = false;
             completedPage.PageSettings.NextButtonSettings.Text = Resources.Close;
             completedPage.PageSettings.CancelButtonSettings.Visible = false;

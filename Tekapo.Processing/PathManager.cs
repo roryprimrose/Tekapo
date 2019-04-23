@@ -6,32 +6,9 @@ namespace Tekapo.Processing
     using System.IO;
     using System.Text.RegularExpressions;
 
-    /// <summary>
-    ///     The <see cref="ImageRenaming" /> class is used to process image renaming based on format masks.
-    /// </summary>
-    public static class ImageRenaming
+    public class PathManager : IPathManager
     {
-        /// <summary>
-        ///     Stores the renaming formats.
-        /// </summary>
-        private static readonly Dictionary<string, string> _formats = GenerateFormats();
-
-        /// <summary>
-        ///     Creates the file path with increment.
-        /// </summary>
-        /// <param name="path">
-        ///     The path to process.
-        /// </param>
-        /// <param name="increment">
-        ///     The increment.
-        /// </param>
-        /// <param name="maxCollisionIncrement">
-        ///     The max collision increment.
-        /// </param>
-        /// <returns>
-        ///     A <see cref="System.String" /> that contains the path modified with an increment.
-        /// </returns>
-        public static string CreateFilePathWithIncrement(string path, int increment, int maxCollisionIncrement)
+        public string CreateFilePathWithIncrement(string path, int increment, int maxCollisionIncrement)
         {
             // Store the parts of the path
             var baseFilePath = Path.GetDirectoryName(path);
@@ -41,8 +18,7 @@ namespace Tekapo.Processing
             var maxPaddingCount = maxCollisionIncrement.ToString(CultureInfo.InvariantCulture).Length;
 
             // Build the incremented path
-            var incrementValue =
-                "-" + increment.ToString(CultureInfo.InvariantCulture).PadLeft(maxPaddingCount, '0');
+            var incrementValue = "-" + increment.ToString(CultureInfo.InvariantCulture).PadLeft(maxPaddingCount, '0');
 
             // Combine the path with the increment value at the end of the new filename
             var incrementedFileName = string.Format(CultureInfo.CurrentCulture,
@@ -55,36 +31,14 @@ namespace Tekapo.Processing
             return incrementedPath;
         }
 
-        /// <summary>
-        ///     Gets the renamed path.
-        /// </summary>
-        /// <param name="renamingFormat">
-        ///     The renaming format.
-        /// </param>
-        /// <param name="pictureTakenDate">
-        ///     The picture taken date.
-        /// </param>
-        /// <param name="originalFilePath">
-        ///     The original file path.
-        /// </param>
-        /// <param name="incrementOnCollision">
-        ///     If set to <c>true</c> add an increment to the filename on collision.
-        /// </param>
-        /// <param name="maxCollisionIncrement">
-        ///     The max collision increment.
-        /// </param>
-        /// <returns>
-        ///     An absolute or relative file path that has been renamed based on the date the picture was taken and a renaming
-        ///     format.
-        /// </returns>
-        public static string GetRenamedPath(
+        public string GetRenamedPath(
             string renamingFormat,
-            DateTime pictureTakenDate,
+            DateTime mediaCreatedDate,
             string originalFilePath,
             bool incrementOnCollision,
             int maxCollisionIncrement)
         {
-            var newName = ProcessFormat(renamingFormat, pictureTakenDate);
+            var newName = ProcessFormat(renamingFormat, mediaCreatedDate);
 
             // Strip leading and trailing slashes
             newName = StripSlashes(newName);
@@ -131,20 +85,11 @@ namespace Tekapo.Processing
             return newName;
         }
 
-        /// <summary>
-        ///     Determines whether the specified naming format is valid.
-        /// </summary>
-        /// <param name="renamingFormat">
-        ///     The renaming format.
-        /// </param>
-        /// <returns>
-        ///     <c>true</c>if the specified format is valid; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool IsFormatValid(string renamingFormat)
+        public bool IsFormatValid(string renamingFormat)
         {
             var formatTest = renamingFormat;
 
-            foreach (var key in _formats.Keys)
+            foreach (var key in RenameFormats.Keys)
             {
                 formatTest = formatTest.Replace("<" + key + ">", string.Empty);
             }
@@ -164,12 +109,6 @@ namespace Tekapo.Processing
             return true;
         }
 
-        /// <summary>
-        ///     Generates the formats.
-        /// </summary>
-        /// <returns>
-        ///     A <see cref="Dictionary{String, String}" /> instance.
-        /// </returns>
         private static Dictionary<string, string> GenerateFormats()
         {
             var formats = new Dictionary<string, string>();
@@ -202,40 +141,19 @@ namespace Tekapo.Processing
             return formats;
         }
 
-        /// <summary>
-        ///     Processes the format.
-        /// </summary>
-        /// <param name="renamingFormat">
-        ///     The renaming format.
-        /// </param>
-        /// <param name="pictureTakenDate">
-        ///     The picture taken date.
-        /// </param>
-        /// <returns>
-        ///     A <see cref="String" /> instance.
-        /// </returns>
-        private static string ProcessFormat(string renamingFormat, DateTime pictureTakenDate)
+        private static string ProcessFormat(string renamingFormat, DateTime mediaCreatedDate)
         {
             var renameFormat = renamingFormat;
 
-            foreach (var key in _formats.Keys)
+            foreach (var key in RenameFormats.Keys)
             {
                 renameFormat = renameFormat.Replace("<" + key + ">", "{0:" + key + "}");
             }
 
             // Return the formatted path
-            return string.Format(CultureInfo.InvariantCulture, renameFormat, pictureTakenDate);
+            return string.Format(CultureInfo.InvariantCulture, renameFormat, mediaCreatedDate);
         }
 
-        /// <summary>
-        ///     Strips the slashes.
-        /// </summary>
-        /// <param name="path">
-        ///     The path to process.
-        /// </param>
-        /// <returns>
-        ///     A path with the leading a trailing slashes removed as required.
-        /// </returns>
         private static string StripSlashes(string path)
         {
             if (string.IsNullOrEmpty(path))
@@ -271,12 +189,6 @@ namespace Tekapo.Processing
             return returnPath;
         }
 
-        /// <summary>
-        ///     Gets the rename formats.
-        /// </summary>
-        /// <value>
-        ///     The rename formats.
-        /// </value>
-        public static Dictionary<string, string> RenameFormats => _formats;
+        public static Dictionary<string, string> RenameFormats { get; } = GenerateFormats();
     }
 }

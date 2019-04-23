@@ -7,23 +7,19 @@ namespace Tekapo.Controls
     using Tekapo.Processing;
     using Tekapo.Properties;
 
-    /// <summary>
-    ///     The <see cref="ProcessFilesPage" /> is a wizard page used to display the progress of processing the files
-    ///     specified by the user.
-    /// </summary>
     public partial class ProcessFilesPage : ProgressPage
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ProcessFilesPage" /> class.
-        /// </summary>
-        public ProcessFilesPage()
+        private readonly IMediaManager _mediaManager;
+        private readonly IPathManager _pathManager;
+
+        public ProcessFilesPage(IMediaManager mediaManager, IPathManager pathManager)
         {
+            _mediaManager = mediaManager;
+            _pathManager = pathManager;
+
             InitializeComponent();
         }
 
-        /// <summary>
-        ///     Processes the task.
-        /// </summary>
         protected override void ProcessTask()
         {
             var items = (BindingList<string>) State[Constants.FileListStateKey];
@@ -62,20 +58,14 @@ namespace Tekapo.Controls
             }
         }
 
-        /// <summary>
-        ///     Processes the rename.
-        /// </summary>
-        /// <param name="path">
-        ///     The path to process.
-        /// </param>
         private void ProcessRename(string path)
         {
             // Calculate the new path
             var renameFormat = (string) State[Constants.NameFormatStateKey];
             var incrementOnCollision = (bool) State[Constants.IncrementOnCollisionStateKey];
             var maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
-            var currentTime = JpegInformation.GetPictureTaken(path);
-            var newPath = ImageRenaming.GetRenamedPath(renameFormat,
+            var currentTime = _mediaManager.ReadMediaCreatedDate(path);
+            var newPath = _pathManager.GetRenamedPath(renameFormat,
                 currentTime,
                 path,
                 incrementOnCollision,
@@ -120,12 +110,12 @@ namespace Tekapo.Controls
                     if (incrementOnCollision)
                     {
                         // Get the file named without an increment and the path with the first increment
-                        var newPathWithoutIncrement = ImageRenaming.GetRenamedPath(renameFormat,
+                        var newPathWithoutIncrement = _pathManager.GetRenamedPath(renameFormat,
                             currentTime,
                             path,
                             false,
                             maxCollisionIncrement);
-                        var firstIncrementPath = ImageRenaming.CreateFilePathWithIncrement(
+                        var firstIncrementPath = _pathManager.CreateFilePathWithIncrement(
                             newPathWithoutIncrement,
                             1,
                             maxCollisionIncrement);
@@ -152,21 +142,14 @@ namespace Tekapo.Controls
             }
         }
 
-        /// <summary>
-        ///     Processes the time shift.
-        /// </summary>
-        /// <param name="path">
-        ///     The path to process.
-        /// </param>
         private void ProcessTimeShift(string path)
         {
             // Set the progress status
-            var progressMessage =
-                string.Format(CultureInfo.CurrentCulture, Resources.TimeShiftProcessFormat, path);
+            var progressMessage = string.Format(CultureInfo.CurrentCulture, Resources.TimeShiftProcessFormat, path);
             SetProgressStatus(progressMessage);
 
             // Get the current time of the file
-            var currentTime = JpegInformation.GetPictureTaken(path);
+            var currentTime = _mediaManager.ReadMediaCreatedDate(path);
 
             // Shift the time
             var newTime =
@@ -184,16 +167,16 @@ namespace Tekapo.Controls
             // Store the results
             var result = new FileResult();
             result.OriginalPath = path;
-            result.OriginalPictureTakenDate = string.Concat(
+            result.OriginalMediaCreatedDate = string.Concat(
                 currentTime.ToLongDateString(),
                 ", ",
                 currentTime.ToShortTimeString());
-            result.NewPictureTakenDate = string.Concat(newTime.ToLongDateString(), ", ", newTime.ToShortTimeString());
+            result.NewMediaCreatedDate = string.Concat(newTime.ToLongDateString(), ", ", newTime.ToShortTimeString());
 
             try
             {
                 // Store the new time in the file
-                JpegInformation.SetPictureTaken(path, newTime);
+                _mediaManager.SetMediaCreatedDate(path, newTime);
 
                 ProcessResults.AddSuccessfulResult(result);
             }
@@ -204,12 +187,6 @@ namespace Tekapo.Controls
             }
         }
 
-        /// <summary>
-        ///     Gets the process results.
-        /// </summary>
-        /// <value>
-        ///     The process results.
-        /// </value>
         private Results ProcessResults => (Results) State[Constants.ProcessResultsStateKey];
     }
 }
