@@ -1,19 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Text.RegularExpressions;
-using Tekapo.Properties;
-
 namespace Tekapo.Controls
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.IO;
+    using System.Text.RegularExpressions;
+    using Tekapo.Properties;
+
     /// <summary>
-    /// The <see cref="FileSearchPage"/> class is a Wizard page that displays progress to the user as files are being searched.
+    ///     The <see cref="FileSearchPage" /> class is a Wizard page that displays progress to the user as files are being
+    ///     searched.
     /// </summary>
     public partial class FileSearchPage : ProgressPage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileSearchPage"/> class.
+        ///     Initializes a new instance of the <see cref="FileSearchPage" /> class.
         /// </summary>
         public FileSearchPage()
         {
@@ -21,26 +22,26 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Processes the task.
+        ///     Processes the task.
         /// </summary>
         protected override void ProcessTask()
         {
             // Get the search criteria
-            String basePath = (String)State[Constants.SearchPathStateKey];
-            Boolean recurseDirectories = (Boolean)State[Constants.SearchSubDirectoriesStateKey];
-            SearchFilterType filterType = (SearchFilterType)State[Constants.SearchFilterTypeStateKey];
-            String wildcardPattern = (String)State[Constants.SearchFilterWildcardStateKey];
-            String regularExpressionPattern = (String)State[Constants.SearchFilterRegularExpressionStateKey];
+            var basePath = (string) State[Constants.SearchPathStateKey];
+            var recurseDirectories = (bool) State[Constants.SearchSubDirectoriesStateKey];
+            var filterType = (SearchFilterType) State[Constants.SearchFilterTypeStateKey];
+            var wildcardPattern = (string) State[Constants.SearchFilterWildcardStateKey];
+            var regularExpressionPattern = (string) State[Constants.SearchFilterRegularExpressionStateKey];
 
             // Run the first search stage
             // Get the list of directories involved
-            List<String> directories = new List<String>();
+            var directories = new List<string>();
             SetStepTitle(Resources.FileSearchDirectoryTitle);
             FindDirectories(basePath, recurseDirectories, directories);
 
             // Run the second search stage
             // Get list of files involved
-            List<String> files = new List<String>();
+            var files = new List<string>();
             SetStepTitle(Resources.FileSearchFileTitle);
             FindFiles(directories, files, filterType, wildcardPattern);
 
@@ -49,7 +50,7 @@ namespace Tekapo.Controls
 
             // Run the third search stage
             // Filter the files involved
-            BindingList<String> filteredFiles = new BindingList<String>();
+            var filteredFiles = new BindingList<string>();
             SetStepTitle(Resources.FileSearchFileFilterTitle);
             FilterFiles(files, filteredFiles, filterType, regularExpressionPattern);
 
@@ -61,34 +62,34 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Filters the files.
+        ///     Filters the files.
         /// </summary>
         /// <param name="files">
-        /// The files.
+        ///     The files.
         /// </param>
         /// <param name="filteredFiles">
-        /// The filtered files.
+        ///     The filtered files.
         /// </param>
         /// <param name="filterType">
-        /// Type of the filter.
+        ///     Type of the filter.
         /// </param>
         /// <param name="regularExpressionPattern">
-        /// The regular expression pattern.
+        ///     The regular expression pattern.
         /// </param>
         private void FilterFiles(
-            IList<String> files,
-            ICollection<String> filteredFiles,
+            IList<string> files,
+            ICollection<string> filteredFiles,
             SearchFilterType filterType,
-            String regularExpressionPattern)
+            string regularExpressionPattern)
         {
-            Regex expressionTest = new Regex(regularExpressionPattern, RegexOptions.Singleline);
-            Int32 totalCount = files.Count;
+            var expressionTest = new Regex(regularExpressionPattern, RegexOptions.Singleline);
+            var totalCount = files.Count;
 
             // Loop through each file
-            for (Int32 index = 0; index < totalCount; index++)
+            for (var index = 0; index < totalCount; index++)
             {
                 // Get the path
-                String path = files[index];
+                var path = files[index];
 
                 // Update the progress percentage
                 SetProgressPercentage(index + 1, totalCount);
@@ -99,7 +100,7 @@ namespace Tekapo.Controls
                 // Check if the file is a supported type
                 if (Helper.IsFileSupported(path))
                 {
-                    if ((filterType != SearchFilterType.RegularExpression)
+                    if (filterType != SearchFilterType.RegularExpression
                         || expressionTest.IsMatch(path))
                     {
                         // Add the item
@@ -110,29 +111,29 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Finds the directories.
+        ///     Finds the directories.
         /// </summary>
         /// <param name="path">
-        /// The path to search.
+        ///     The path to search.
         /// </param>
         /// <param name="recurseDirectories">
-        /// If set to <c>true</c>, the method will be called recursively.
+        ///     If set to <c>true</c>, the method will be called recursively.
         /// </param>
         /// <param name="directories">
-        /// The directories.
+        ///     The directories.
         /// </param>
-        private void FindDirectories(String path, Boolean recurseDirectories, ICollection<String> directories)
+        private void FindDirectories(string path, bool recurseDirectories, ICollection<string> directories)
         {
             // Add the current path to the list
             directories.Add(path);
 
             // Get the subdirectory paths
-            String[] newPaths = Directory.GetDirectories(path);
+            var newPaths = Directory.GetDirectories(path);
 
             // Loop through each directory path
-            for (Int32 index = 0; index < newPaths.Length; index++)
+            for (var index = 0; index < newPaths.Length; index++)
             {
-                String newPath = newPaths[index];
+                var newPath = newPaths[index];
 
                 // Update the progress message
                 SetProgressStatus(newPath);
@@ -147,30 +148,33 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Finds the files.
+        ///     Finds the files.
         /// </summary>
         /// <param name="directories">
-        /// The directories.
+        ///     The directories.
         /// </param>
         /// <param name="files">
-        /// The files.
+        ///     The files.
         /// </param>
         /// <param name="filterType">
-        /// Type of the filter.
+        ///     Type of the filter.
         /// </param>
         /// <param name="wildcardPattern">
-        /// The wildcard pattern.
+        ///     The wildcard pattern.
         /// </param>
         private void FindFiles(
-            IList<String> directories, List<String> files, SearchFilterType filterType, String wildcardPattern)
+            IList<string> directories,
+            List<string> files,
+            SearchFilterType filterType,
+            string wildcardPattern)
         {
-            Int32 totalCount = directories.Count;
+            var totalCount = directories.Count;
 
             // Loop through each directory
-            for (Int32 index = 0; index < totalCount; index++)
+            for (var index = 0; index < totalCount; index++)
             {
                 // Get the directory
-                String directory = directories[index];
+                var directory = directories[index];
 
                 // Update the progress percentage
                 SetProgressPercentage(index + 1, totalCount);
@@ -179,7 +183,7 @@ namespace Tekapo.Controls
                 SetProgressStatus(directory);
 
                 // Get the files for the directory
-                String[] newFiles;
+                string[] newFiles;
 
                 switch (filterType)
                 {
@@ -206,21 +210,21 @@ namespace Tekapo.Controls
             }
 
             // Check if the command line arguments have been processed
-            if ((Boolean)State[Constants.CommandLineArgumentsProcessedStateKey] == false)
+            if ((bool) State[Constants.CommandLineArgumentsProcessedStateKey] == false)
             {
                 // Update the status
                 SetProgressStatus(Resources.ParseCommandLineArguments);
 
-                String[] arguments = Environment.GetCommandLineArgs();
+                var arguments = Environment.GetCommandLineArgs();
 
                 // Loop through each argument
-                for (Int32 index = 0; index < arguments.Length; index++)
+                for (var index = 0; index < arguments.Length; index++)
                 {
-                    String argument = arguments[index];
+                    var argument = arguments[index];
 
                     // Check if the item is a file path
                     if (File.Exists(argument)
-                        && (files.Contains(argument) == false))
+                        && files.Contains(argument) == false)
                     {
                         // Add the file to the list
                         files.Add(argument);
@@ -233,20 +237,17 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Sets the step title.
+        ///     Sets the step title.
         /// </summary>
         /// <param name="value">
-        /// The value.
+        ///     The value.
         /// </param>
-        private void SetStepTitle(String value)
+        private void SetStepTitle(string value)
         {
             // Check if a thread switch is required
             if (StepTitle.InvokeRequired)
             {
-                Object[] args = new Object[]
-                                    {
-                                        value
-                                    };
+                object[] args = {value};
 
                 StepTitle.Invoke(new StringThreadSwitch(SetStepTitle), args);
 

@@ -1,27 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.IO;
-using System.Windows.Forms;
-using Neovolve.Windows.Forms;
-using Neovolve.Windows.Forms.Controls;
-
 namespace Tekapo.Controls
 {
+    using System;
+    using System.ComponentModel;
+    using System.Globalization;
+    using System.IO;
+    using System.Windows.Forms;
+    using Neovolve.Windows.Forms;
+    using Neovolve.Windows.Forms.Controls;
+    using Tekapo.Properties;
+
     /// <summary>
-    /// The <see cref="SelectFilesPage"/> class is a Wizard page that allows the user to add and remove images that have
-    /// been found through the <see cref="FileSearchPage"/>.
+    ///     The <see cref="SelectFilesPage" /> class is a Wizard page that allows the user to add and remove images that have
+    ///     been found through the <see cref="FileSearchPage" />.
     /// </summary>
     public partial class SelectFilesPage : WizardBannerPage
     {
         /// <summary>
-        /// Stores the last directory path viewed.
+        ///     Stores the last directory path viewed.
         /// </summary>
-        private String _lastDirectoryPath;
+        private string _lastDirectoryPath;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SelectFilesPage"/> class.
+        ///     Initializes a new instance of the <see cref="SelectFilesPage" /> class.
         /// </summary>
         public SelectFilesPage()
         {
@@ -29,19 +29,23 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Determines whether this instance can navigate the specified e.
+        ///     Determines whether this instance can navigate the specified e.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         /// <returns>
-        /// <c>true</c>if this instance can navigate the specified e; otherwise, <c>false</c>.
+        ///     <c>true</c>if this instance can navigate the specified e; otherwise, <c>false</c>.
         /// </returns>
-        public override Boolean CanNavigate(WizardFormNavigationEventArgs e)
+        public override bool CanNavigate(WizardFormNavigationEventArgs e)
         {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             // Check if the user is clicking next
-            if (e.NavigationType
-                == WizardFormNavigationType.Next)
+            if (e.NavigationType == WizardFormNavigationType.Next)
             {
                 if (IsPageValid() == false)
                 {
@@ -50,8 +54,7 @@ namespace Tekapo.Controls
                 }
 
                 // Define what the next navigation will go to
-                if ((String)State[Constants.TaskStateKey]
-                    == Constants.RenameTask)
+                if ((string) State[Constants.TaskStateKey] == Constants.RenameTask)
                 {
                     e.NavigationKey = Constants.NameFormatNavigationKey;
                 }
@@ -65,20 +68,20 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Builds the filter.
+        ///     Builds the filter.
         /// </summary>
         /// <returns>
-        /// A <see cref="String"/> value.
+        ///     A <see cref="string" /> value.
         /// </returns>
-        private static String BuildFilter()
+        private static string BuildFilter()
         {
-            List<String> supportedFileTypes = Helper.GetSupportedFileTypes();
-            String filterValue = String.Empty;
+            var supportedFileTypes = Helper.GetSupportedFileTypes();
+            var filterValue = string.Empty;
 
             // Loop through each supported file type
-            for (Int32 index = 0; index < supportedFileTypes.Count; index++)
+            for (var index = 0; index < supportedFileTypes.Count; index++)
             {
-                String fileType = supportedFileTypes[index];
+                var fileType = supportedFileTypes[index];
 
                 filterValue += "|" + fileType.ToUpper(CultureInfo.CurrentCulture) + " files (*." + fileType + ")|*."
                                + fileType;
@@ -92,17 +95,17 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the Click event of the AddFiles control.
+        ///     Handles the Click event of the AddFiles control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void AddFiles_Click(Object sender, EventArgs e)
+        private void AddFiles_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog dialog = new OpenFileDialog())
+            using (var dialog = new OpenFileDialog())
             {
                 dialog.Title = "Select files to add.";
                 dialog.AddExtension = true;
@@ -115,12 +118,11 @@ namespace Tekapo.Controls
                 dialog.InitialDirectory = _lastDirectoryPath;
 
                 // Check if the user clicked Ok
-                if (dialog.ShowDialog(this)
-                    == DialogResult.OK)
+                if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    for (Int32 index = 0; index < dialog.FileNames.Length; index++)
+                    for (var index = 0; index < dialog.FileNames.Length; index++)
                     {
-                        String newPath = dialog.FileNames[index];
+                        var newPath = dialog.FileNames[index];
 
                         if (FileList.Contains(newPath) == false)
                         {
@@ -136,30 +138,31 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the DragDrop event of the Files control.
+        ///     Handles the DragDrop event of the Files control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.Windows.Forms.DragEventArgs"/> instance containing the event data.
+        ///     The <see cref="System.Windows.Forms.DragEventArgs" /> instance containing the event data.
         /// </param>
-        private void Files_DragDrop(Object sender, DragEventArgs e)
+        private void Files_DragDrop(object sender, DragEventArgs e)
         {
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 // Get the list of files
-                String[] files = (String[])e.Data.GetData(DataFormats.FileDrop);
+                var files = (string[]) e.Data.GetData(DataFormats.FileDrop);
 
                 // Loop through each item being dragged
-                for (Int32 index = 0; index < files.Length; index++)
+                for (var index = 0; index < files.Length; index++)
                 {
-                    String item = files[index];
+                    var item = files[index];
 
                     // Check that the item is a file which is supported, but not yet in the list
-                    if (File.Exists(item) && Helper.IsFileSupported(item)
-                        && (FileList.Contains(item) == false))
+                    if (File.Exists(item)
+                        && Helper.IsFileSupported(item)
+                        && FileList.Contains(item) == false)
                     {
                         // Add the file to the list
                         FileList.Add(item);
@@ -169,30 +172,31 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the DragEnter event of the Files control.
+        ///     Handles the DragEnter event of the Files control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.Windows.Forms.DragEventArgs"/> instance containing the event data.
+        ///     The <see cref="System.Windows.Forms.DragEventArgs" /> instance containing the event data.
         /// </param>
-        private void Files_DragEnter(Object sender, DragEventArgs e)
+        private void Files_DragEnter(object sender, DragEventArgs e)
         {
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 // Get the list of files
-                String[] files = (String[])e.Data.GetData(DataFormats.FileDrop);
+                var files = (string[]) e.Data.GetData(DataFormats.FileDrop);
 
                 // Loop through each item being dragged
-                for (Int32 index = 0; index < files.Length; index++)
+                for (var index = 0; index < files.Length; index++)
                 {
-                    String item = files[index];
+                    var item = files[index];
 
                     // Check that the item is a file which is supported, but not yet in the list
-                    if (File.Exists(item) && Helper.IsFileSupported(item)
-                        && (FileList.Contains(item) == false))
+                    if (File.Exists(item)
+                        && Helper.IsFileSupported(item)
+                        && FileList.Contains(item) == false)
                     {
                         // Determine whether this item is a valid extension
                         e.Effect = DragDropEffects.Link;
@@ -206,29 +210,28 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the KeyUp event of the Files control.
+        ///     Handles the KeyUp event of the Files control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.Windows.Forms.KeyEventArgs"/> instance containing the event data.
+        ///     The <see cref="System.Windows.Forms.KeyEventArgs" /> instance containing the event data.
         /// </param>
-        private void Files_KeyUp(Object sender, KeyEventArgs e)
+        private void Files_KeyUp(object sender, KeyEventArgs e)
         {
             // Check if the key is Delete
-            if (e.KeyCode
-                == Keys.Delete)
+            if (e.KeyCode == Keys.Delete)
             {
                 RemoveSelectedFiles();
             }
             else if (e.Control
-                     && (e.KeyCode == Keys.A))
+                     && e.KeyCode == Keys.A)
             {
                 // Select all the files
 
                 // Loop through each index
-                for (Int32 index = 0; index < Files.Items.Count; index++)
+                for (var index = 0; index < Files.Items.Count; index++)
                 {
                     // Select the file by its index
                     Files.SetSelected(index, true);
@@ -237,14 +240,14 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Determines whether the page is valid.
+        ///     Determines whether the page is valid.
         /// </summary>
         /// <returns>
-        /// <c>true</c>if the page is valid; otherwise, <c>false</c>.
+        ///     <c>true</c>if the page is valid; otherwise, <c>false</c>.
         /// </returns>
-        private Boolean IsPageValid()
+        private bool IsPageValid()
         {
-            Boolean result = true;
+            var result = true;
 
             // Clear the error provider
             ErrorDisplay.Clear();
@@ -252,7 +255,7 @@ namespace Tekapo.Controls
             if (Files.Items.Count == 0)
             {
                 // Set the error provider
-                ErrorDisplay.SetError(Files, Properties.Resources.ErrorNoFilesSelected);
+                ErrorDisplay.SetError(Files, Resources.ErrorNoFilesSelected);
 
                 // There is no wildcard value
                 result = false;
@@ -263,41 +266,41 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the Click event of the RemoveAll control.
+        ///     Handles the Click event of the RemoveAll control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void RemoveAll_Click(Object sender, EventArgs e)
+        private void RemoveAll_Click(object sender, EventArgs e)
         {
             // Clear all the items
             FileList.Clear();
         }
 
         /// <summary>
-        /// Handles the Click event of the RemoveSelected control.
+        ///     Handles the Click event of the RemoveSelected control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void RemoveSelected_Click(Object sender, EventArgs e)
+        private void RemoveSelected_Click(object sender, EventArgs e)
         {
             RemoveSelectedFiles();
         }
 
         /// <summary>
-        /// Removes the selected files.
+        ///     Removes the selected files.
         /// </summary>
         private void RemoveSelectedFiles()
         {
             // Create an array to hold the selected items
-            String[] items = new String[Files.SelectedItems.Count];
+            var items = new string[Files.SelectedItems.Count];
 
             // Copy the selected items across to the array
             Files.SelectedItems.CopyTo(items, 0);
@@ -306,9 +309,9 @@ namespace Tekapo.Controls
             Files.DataSource = null;
 
             // Loop through each item in the array
-            for (Int32 index = 0; index < items.Length; index++)
+            for (var index = 0; index < items.Length; index++)
             {
-                String item = items[index];
+                var item = items[index];
 
                 // Remove the item
                 FileList.Remove(item);
@@ -318,32 +321,26 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the Opening event of the SelectFiles control.
+        ///     Handles the Opening event of the SelectFiles control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void SelectFiles_Opening(Object sender, EventArgs e)
+        private void SelectFiles_Opening(object sender, EventArgs e)
         {
             Files.DataSource = State[Constants.FileListStateKey];
-            _lastDirectoryPath = (String)State[Constants.SearchPathStateKey];
+            _lastDirectoryPath = (string) State[Constants.SearchPathStateKey];
         }
 
         /// <summary>
-        /// Gets the file list.
+        ///     Gets the file list.
         /// </summary>
         /// <value>
-        /// The file list.
+        ///     The file list.
         /// </value>
-        public BindingList<String> FileList
-        {
-            get
-            {
-                return (BindingList<String>)State[Constants.FileListStateKey];
-            }
-        }
+        public BindingList<string> FileList => (BindingList<string>) State[Constants.FileListStateKey];
     }
 }

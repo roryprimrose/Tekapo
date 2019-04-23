@@ -1,105 +1,120 @@
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-
 namespace Tekapo.Processing
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using ExifLibrary;
+
     /// <summary>
-    /// The <see cref="Tekapo.Processing.JpegInformation"/> class is used to load and update the date and time a picture was taken.
+    ///     The <see cref="Tekapo.Processing.JpegInformation" /> class is used to load and update the date and time a picture
+    ///     was taken.
     /// </summary>
     public static class JpegInformation
     {
         /// <summary>
-        /// Defines the Id used to reference the Picture Taken value from a Jpeg meta data.
+        ///     Defines the Id used to reference the Picture Taken value from a Jpeg meta data.
         /// </summary>
-        private const Int32 PictureTakenId = 0x9003;
+        private const int PictureTakenId = 0x9003;
 
         /// <summary>
-        /// Gets the picture taken.
+        ///     Gets the picture taken.
         /// </summary>
         /// <param name="filePath">
-        /// The file path.
+        ///     The file path.
         /// </param>
         /// <returns>
-        /// A <see cref="DateTime"/> instance.
+        ///     A <see cref="DateTime" /> instance.
         /// </returns>
-        public static DateTime GetPictureTaken(String filePath)
+        [SuppressMessage("Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "A generic catch is required as part of the fallback strategy.")]
+        public static DateTime GetPictureTaken(string filePath)
         {
-            DateTime pictureTaken = DateTime.Now;
+            DateTime pictureTaken = default;
 
             // Check if the file exists
             if (File.Exists(filePath) == false)
             {
-                return pictureTaken;
+                return DateTime.Now;
             }
 
             try
             {
-                String pictureTakenValue;
+                string pictureTakenValue;
 
-                // Load the image
-                using (Image picture = Image.FromFile(filePath))
+                var source = ImageFile.FromFile(filePath);
+
+                var dateTakenProperty = source.Properties.FirstOrDefault(x => x.Tag == ExifTag.DateTimeOriginal);
+
+                if (dateTakenProperty.Value is DateTime)
                 {
-                    // Get the picture taken date
-                    PropertyItem propertyValue = picture.GetPropertyItem(PictureTakenId);
-                    pictureTakenValue = Encoding.ASCII.GetString(propertyValue.Value);
+                    pictureTaken = (DateTime) dateTakenProperty.Value;
                 }
-
-                Regex dateCheck = new Regex(@"[0-9]{4}:[0-9]{2}:[0-9]{2}\s{1}[0-9]{2}:[0-9]{2}:[0-9]{2}");
-
-                // Check if the date value matches the expression
-                if (dateCheck.IsMatch(pictureTakenValue))
+                else
                 {
-                    // Convert the date separators
-                    pictureTakenValue = dateCheck.Match(pictureTakenValue).Value.Replace(" ", ":");
+                    pictureTakenValue = dateTakenProperty.Value.ToString();
 
-                    // Split the string using : as a delimiter
-                    String[] textArray1 = pictureTakenValue.Split(
-                        new[]
-                            {
-                                ':'
-                            });
+                    var dateCheck = new Regex(@"[0-9]{4}:[0-9]{2}:[0-9]{2}\s{1}[0-9]{2}:[0-9]{2}:[0-9]{2}");
 
-                    // Determine the month value
-                    Int32 monthValue = Int32.Parse(textArray1[1], CultureInfo.InvariantCulture) - 1;
-                    String abbreviatedMonth =
-                        CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames[monthValue];
+                    // Check if the date value matches the expression
+                    if (dateCheck.IsMatch(pictureTakenValue))
+                    {
+                        // Convert the date separators
+                        pictureTakenValue = dateCheck.Match(pictureTakenValue).Value.Replace(" ", ":");
 
-                    // Reconstruct the string
-                    pictureTakenValue = String.Format(
-                        CultureInfo.CurrentCulture,
-                        "{0}:{1}:{2} {3}/{4}/{5}",
-                        textArray1[3],
-                        textArray1[4],
-                        textArray1[5],
-                        textArray1[2],
-                        abbreviatedMonth,
-                        textArray1[0]);
-                }
+                        // Split the string using : as a delimiter
+                        var textArray1 = pictureTakenValue.Split(':');
 
-                // Check if a date can be correctly parsed from the string
-                if (DateTime.TryParse(pictureTakenValue, out pictureTaken) == false)
-                {
-                    // The data stored in the image is not a valid date
+                        // Determine the month value
+                        var monthValue = int.Parse(textArray1[1], CultureInfo.InvariantCulture) - 1;
+                        var abbreviatedMonth =
+                            CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames[monthValue];
 
-                    // Take the file created date as the current date
-                    FileInfo fileDetails = new FileInfo(filePath);
-                    pictureTaken = fileDetails.CreationTime;
+                        // Reconstruct the string
+                        pictureTakenValue = string.Format(CultureInfo.CurrentCulture,
+                            "{0}:{1}:{2} {3}/{4}/{5}",
+                            textArray1[3],
+                            textArray1[4],
+                            textArray1[5],
+                            textArray1[2],
+                            abbreviatedMonth,
+                            textArray1[0]);
+                    }
+
+                    if (DateTime.TryParse(pictureTakenValue, out pictureTaken) == false)
+                    {
+                        pictureTaken = default;
+                    }
                 }
             }
-            catch (IOException)
+            catch (Exception)
             {
-                // Default to the current date
-                pictureTaken = DateTime.Now;
+                // Fall through to default handling below
             }
-            catch (ArgumentException)
+
+            if (pictureTaken == default)
             {
-                // Default to the current date
-                pictureTaken = DateTime.Now;
+                // The data stored in the image is not a valid date or no value is stored
+
+                // Take the file created or last modified date as the picture taken date, whichever is earlier
+                var fileDetails = new FileInfo(filePath);
+                var creationTime = fileDetails.CreationTime;
+                var lastWriteTime = fileDetails.LastWriteTimeUtc;
+
+                if (creationTime < lastWriteTime)
+                {
+                    pictureTaken = creationTime;
+                }
+                else
+                {
+                    pictureTaken = lastWriteTime;
+                }
             }
 
             // Return the date calculated
@@ -107,15 +122,15 @@ namespace Tekapo.Processing
         }
 
         /// <summary>
-        /// Sets the picture taken.
+        ///     Sets the picture taken.
         /// </summary>
         /// <param name="filePath">
-        /// The file path.
+        ///     The file path.
         /// </param>
         /// <param name="value">
-        /// The value.
+        ///     The value.
         /// </param>
-        public static void SetPictureTaken(String filePath, DateTime value)
+        public static void SetPictureTaken(string filePath, DateTime value)
         {
             // Exit if the file doesn't exist
             if (File.Exists(filePath) == false)
@@ -124,14 +139,14 @@ namespace Tekapo.Processing
             }
 
             // Create a temporary file
-            String temporaryPath = Path.GetTempFileName();
+            var temporaryPath = Path.GetTempFileName();
 
             try
             {
                 // Copy the file to the temporary location
                 File.Copy(filePath, temporaryPath, true);
 
-                using (Image picture = Image.FromFile(temporaryPath))
+                using (var picture = Image.FromFile(temporaryPath))
                 {
                     // Ensure that the image has properties
                     if (picture.PropertyItems.Length > 0)
@@ -158,7 +173,9 @@ namespace Tekapo.Processing
                         }
 
                         // Get the date value as an array of bytes
-                        Byte[] buffer1 = Encoding.ASCII.GetBytes(value.ToString("yyyy:MM:dd HH:mm:ss", CultureInfo.InvariantCulture));
+                        var buffer1 =
+                            Encoding.ASCII.GetBytes(value.ToString("yyyy:MM:dd HH:mm:ss",
+                                CultureInfo.InvariantCulture));
 
                         // Assign the property values
                         propertyValue.Id = 0x9003;

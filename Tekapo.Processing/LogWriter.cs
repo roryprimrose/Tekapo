@@ -1,55 +1,55 @@
-using System;
-using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
-using System.Xml.Xsl;
-
 namespace Tekapo.Processing
 {
+    using System.IO;
+    using System.Xml;
+    using System.Xml.Serialization;
+    using System.Xml.Xsl;
+    using Tekapo.Processing.Properties;
+
     /// <summary>
-    /// The <see cref="Tekapo.Processing.LogWriter"/> class is used to convert log information into an html report.
+    ///     The <see cref="Tekapo.Processing.LogWriter" /> class is used to convert log information into an html report.
     /// </summary>
     public static class LogWriter
     {
         /// <summary>
-        /// Saves the results log.
+        ///     Saves the results log.
         /// </summary>
         /// <param name="document">
-        /// The document.
+        ///     The document.
         /// </param>
         /// <param name="filePath">
-        /// The file path.
+        ///     The file path.
         /// </param>
-        public static void SaveResultsLog(Results document, String filePath)
+        public static void SaveResultsLog(Results document, string filePath)
         {
-            String xml = ConvertResultsToXml(document);
+            var xml = ConvertResultsToXml(document);
 
             // Transform the xml
-            String html = TransformXmlToHtml(xml);
+            var html = TransformXmlToHtml(xml);
 
             // Save the html to the file path
             File.WriteAllText(filePath, html);
         }
 
         /// <summary>
-        /// Converts the results to XML.
+        ///     Converts the results to XML.
         /// </summary>
         /// <param name="document">
-        /// The document.
+        ///     The document.
         /// </param>
         /// <returns>
-        /// A <see cref="String"/> instance.
+        ///     A <see cref="string" /> instance.
         /// </returns>
-        private static String ConvertResultsToXml(Results document)
+        private static string ConvertResultsToXml(Results document)
         {
-            String xml;
+            string xml;
 
-            using (MemoryStream stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
-                using (StreamWriter writer = new StreamWriter(stream))
+                using (var writer = new StreamWriter(stream))
                 {
                     // Serialize the document
-                    XmlSerializer serializer = new XmlSerializer(typeof(Results));
+                    var serializer = new XmlSerializer(typeof(Results));
                     serializer.Serialize(writer, document);
 
                     using (TextReader reader = new StreamReader(stream))
@@ -57,12 +57,7 @@ namespace Tekapo.Processing
                         // Read the xml and close the reader
                         stream.Position = 0;
                         xml = reader.ReadToEnd();
-                        reader.Close();
                     }
-
-                    // Close the writer and the stream
-                    writer.Close();
-                    stream.Close();
                 }
             }
 
@@ -70,30 +65,30 @@ namespace Tekapo.Processing
         }
 
         /// <summary>
-        /// Transforms the XML to HTML.
+        ///     Transforms the XML to HTML.
         /// </summary>
         /// <param name="xml">
-        /// The XML to convert.
+        ///     The XML to convert.
         /// </param>
         /// <returns>
-        /// A <see cref="String"/> instance.
+        ///     A <see cref="string" /> instance.
         /// </returns>
-        private static String TransformXmlToHtml(String xml)
+        private static string TransformXmlToHtml(string xml)
         {
-            String xslt = Properties.Resources.ResultsLog;
-            String html;
+            var xslt = Resources.ResultsLog;
+            string html;
 
-            XmlDocument xsltDocument = new XmlDocument();
+            var xsltDocument = new XmlDocument();
             xsltDocument.LoadXml(xslt);
 
-            XmlDocument document = new XmlDocument();
+            var document = new XmlDocument();
             document.LoadXml(xml);
 
-            using (MemoryStream stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
-                using (StreamWriter writer = new StreamWriter(stream))
+                using (var writer = new StreamWriter(stream))
                 {
-                    XslCompiledTransform transform = new XslCompiledTransform();
+                    var transform = new XslCompiledTransform();
                     transform.Load(xsltDocument);
                     transform.Transform(document, null, writer);
 
@@ -101,12 +96,7 @@ namespace Tekapo.Processing
                     {
                         stream.Position = 0;
                         html = reader.ReadToEnd();
-                        reader.Close();
                     }
-
-                    // Close the writer and the stream
-                    stream.Close();
-                    writer.Close();
                 }
             }
 

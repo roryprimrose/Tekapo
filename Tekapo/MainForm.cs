@@ -1,24 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Windows.Forms;
-using Neovolve.Windows.Forms;
-using Neovolve.Windows.Forms.Controls;
-using Tekapo.Controls;
-using Tekapo.Properties;
-
 namespace Tekapo
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.IO;
+    using System.Windows.Forms;
+    using Neovolve.Windows.Forms;
+    using Neovolve.Windows.Forms.Controls;
+    using Tekapo.Controls;
+    using Tekapo.Properties;
+
     /// <summary>
-    /// The <see cref="MainForm"/> class is the main application window for Tekapo. It hosts the pages in the wizard process that allows
-    /// the user to either rename or timeshift image files.
+    ///     The <see cref="MainForm" /> class is the main application window for Tekapo. It hosts the pages in the wizard
+    ///     process that allows
+    ///     the user to either rename or timeshift image files.
     /// </summary>
     public partial class MainForm : WizardForm
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainForm"/> class.
+        ///     Initializes a new instance of the <see cref="MainForm" /> class.
         /// </summary>
         public MainForm()
         {
@@ -32,15 +34,19 @@ namespace Tekapo
         }
 
         /// <summary>
-        /// Raises the <see cref="WizardForm.Navigating"/> and <see cref="WizardForm.Navigated"/> events.
+        ///     Raises the <see cref="WizardForm.Navigating" /> and <see cref="WizardForm.Navigated" /> events.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         protected override void OnNavigate(WizardFormNavigationEventArgs e)
         {
-            if (e.NavigationType
-                == WizardFormNavigationType.Help)
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
+            if (e.NavigationType == WizardFormNavigationType.Help)
             {
                 // Shell the help page
                 Process.Start(Resources.HelpAddress);
@@ -52,18 +58,18 @@ namespace Tekapo
         }
 
         /// <summary>
-        /// Adds the item to MRU.
+        ///     Adds the item to MRU.
         /// </summary>
         /// <param name="list">
-        /// The list to add the item to.
+        ///     The list to add the item to.
         /// </param>
         /// <param name="newItem">
-        /// The new item.
+        ///     The new item.
         /// </param>
         /// <param name="maxListSize">
-        /// Size of the max list.
+        ///     Size of the max list.
         /// </param>
-        private static void AddItemToMru(IList<String> list, String newItem, Int32 maxListSize)
+        private static void AddItemToMru(IList<string> list, string newItem, int maxListSize)
         {
             if (list.Contains(newItem))
             {
@@ -83,27 +89,27 @@ namespace Tekapo
         }
 
         /// <summary>
-        /// Gets the directory from arguments.
+        ///     Gets the directory from arguments.
         /// </summary>
         /// <param name="arguments">
-        /// The arguments.
+        ///     The arguments.
         /// </param>
         /// <returns>
-        /// A <see cref="String"/> instance.
+        ///     A <see cref="string" /> instance.
         /// </returns>
-        private static String GetDirectoryFromArguments(String[] arguments)
+        private static string GetDirectoryFromArguments(string[] arguments)
         {
             // Exit if there are no values to process
-            if ((arguments == null)
-                || (arguments.Length == 0))
+            if (arguments == null
+                || arguments.Length == 0)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             // Loop through each string
-            for (Int32 index = 0; index < arguments.Length; index++)
+            for (var index = 0; index < arguments.Length; index++)
             {
-                String item = arguments[index];
+                var item = arguments[index];
 
                 // Check if the item is a directory path
                 if (Directory.Exists(item))
@@ -113,27 +119,27 @@ namespace Tekapo
             }
 
             // No directory was found
-            return String.Empty;
+            return string.Empty;
         }
 
         /// <summary>
-        /// Handles the FormClosing event of the MainForm control.
+        ///     Handles the FormClosing event of the MainForm control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.Windows.Forms.FormClosingEventArgs"/> instance containing the event data.
+        ///     The <see cref="System.Windows.Forms.FormClosingEventArgs" /> instance containing the event data.
         /// </param>
-        private void MainForm_FormClosing(Object sender, FormClosingEventArgs e)
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Store state
             StoreStateValues();
 
             // Attempt to delete the log path if it exists
-            String path = (String)State[Constants.ResultsLogPathStateKey];
+            var path = (string) State[Constants.ResultsLogPathStateKey];
 
-            if ((String.IsNullOrEmpty(path) == false)
+            if (string.IsNullOrEmpty(path) == false
                 && File.Exists(path))
             {
                 File.Delete(path);
@@ -141,22 +147,22 @@ namespace Tekapo
         }
 
         /// <summary>
-        /// Handles the Load event of the MainForm control.
+        ///     Handles the Load event of the MainForm control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void MainForm_Load(Object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
             // Assign the window title using the application name and version
             Text = Application.ProductName;
         }
 
         /// <summary>
-        /// Populates the state.
+        ///     Populates the state.
         /// </summary>
         private void PopulateState()
         {
@@ -164,15 +170,15 @@ namespace Tekapo
             State[Constants.TaskStateKey] = Constants.RenameTask;
 
             // Determine whether there is a directory path in the commandline arguments
-            String lastSearchPath = GetDirectoryFromArguments(Environment.GetCommandLineArgs());
+            var lastSearchPath = GetDirectoryFromArguments(Environment.GetCommandLineArgs());
 
             // Check if there is a search path
-            if (String.IsNullOrEmpty(lastSearchPath))
+            if (string.IsNullOrEmpty(lastSearchPath))
             {
                 lastSearchPath = Settings.Default.LastSearchDirectory;
 
                 // Check if there is a search path
-                if (String.IsNullOrEmpty(lastSearchPath))
+                if (string.IsNullOrEmpty(lastSearchPath))
                 {
                     // Set the search path to the personal directory
                     lastSearchPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
@@ -185,21 +191,22 @@ namespace Tekapo
             try
             {
                 State[Constants.SearchFilterTypeStateKey] = Enum.Parse(
-                    typeof(SearchFilterType), Settings.Default.SearchFilterType);
+                    typeof(SearchFilterType),
+                    Settings.Default.SearchFilterType);
             }
             catch (ArgumentException)
             {
                 // An invalid enum value was defined
-                State[Constants.SearchFilterTypeStateKey] = Tekapo.Controls.SearchFilterType.None;
+                State[Constants.SearchFilterTypeStateKey] = SearchFilterType.None;
             }
 
             State[Constants.SearchFilterRegularExpressionStateKey] = Settings.Default.RegularExpressionSearchFilter;
             State[Constants.SearchFilterWildcardStateKey] = Settings.Default.WildcardSearchFilter;
 
-            String lastNameFormat = Settings.Default.NameFormat;
+            var lastNameFormat = Settings.Default.NameFormat;
 
             // Check if there is a name format
-            if (String.IsNullOrEmpty(lastNameFormat))
+            if (string.IsNullOrEmpty(lastNameFormat))
             {
                 // Set a default name format
                 lastNameFormat = Resources.DefaultRenameFormat;
@@ -216,21 +223,31 @@ namespace Tekapo
         }
 
         /// <summary>
-        /// Populates the wizard pages.
+        ///     Populates the wizard pages.
         /// </summary>
+        [SuppressMessage("Microsoft.Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Pages are disposed when the form is disposed.")]
         private void PopulateWizardPages()
         {
             // Create the Choose Task page
             Pages.Add(Constants.ChooseNavigationKey, new ChooseTaskPage());
 
             // Create the Select Path page
-            WizardButtonSettings selectPathSkipButtonSettings = new WizardButtonSettings(Resources.SkipButtonText);
-            WizardPageSettings selectPathPageSettings = new WizardPageSettings(
-                null, null, null, null, selectPathSkipButtonSettings);
-            WizardPageNavigationSettings selectPathNavigationSettings = new WizardPageNavigationSettings(
-                null, null, null, null, Constants.SelectFilesNavigationKey);
-            Pages.Add(
-                Constants.SelectPathNavigationKey,
+            var selectPathSkipButtonSettings = new WizardButtonSettings(Resources.SkipButtonText);
+            var selectPathPageSettings = new WizardPageSettings(
+                null,
+                null,
+                null,
+                null,
+                selectPathSkipButtonSettings);
+            var selectPathNavigationSettings = new WizardPageNavigationSettings(
+                null,
+                null,
+                null,
+                null,
+                Constants.SelectFilesNavigationKey);
+            Pages.Add(Constants.SelectPathNavigationKey,
                 new SelectPathPage(),
                 selectPathPageSettings,
                 selectPathNavigationSettings);
@@ -239,63 +256,68 @@ namespace Tekapo
             Pages.Add(Constants.FileSearchNavigationKey, new FileSearchPage());
 
             // Create the Select Files page
-            WizardPageNavigationSettings selectFilesNavigationSettings = new WizardPageNavigationSettings(
-                null, Constants.SelectPathNavigationKey);
+            var selectFilesNavigationSettings =
+                new WizardPageNavigationSettings(null, Constants.SelectPathNavigationKey);
             Pages.Add(Constants.SelectFilesNavigationKey, new SelectFilesPage(), null, selectFilesNavigationSettings);
 
             // Declare the finish page settings
-            WizardButtonSettings finishButton = new WizardButtonSettings(Resources.Finish);
-            WizardPageSettings finishPageSettings = new WizardPageSettings(finishButton);
-            WizardPageNavigationSettings finishNavigationSettings =
+            var finishButton = new WizardButtonSettings(Resources.Finish);
+            var finishPageSettings = new WizardPageSettings(finishButton);
+            var finishNavigationSettings =
                 new WizardPageNavigationSettings(Constants.ProcessFilesNavigationKey);
 
             // Create the Naming Format page
-            Pages.Add(
-                Constants.NameFormatNavigationKey, new NameFormatPage(), finishPageSettings, finishNavigationSettings);
+            Pages.Add(Constants.NameFormatNavigationKey,
+                new NameFormatPage(),
+                finishPageSettings,
+                finishNavigationSettings);
 
             // Create the Time Shift page
-            Pages.Add(
-                Constants.TimeShiftNavigationKey, new TimeShiftPage(), finishPageSettings, finishNavigationSettings);
+            Pages.Add(Constants.TimeShiftNavigationKey,
+                new TimeShiftPage(),
+                finishPageSettings,
+                finishNavigationSettings);
 
             // Create the Progress page
             Pages.Add(Constants.ProcessFilesNavigationKey, new ProcessFilesPage());
 
-            CompletedPage completedPage = new CompletedPage();
+            var completedPage = new CompletedPage();
             completedPage.PageSettings.BackButtonSettings.Visible = false;
             completedPage.PageSettings.NextButtonSettings.Text = Resources.Close;
             completedPage.PageSettings.CancelButtonSettings.Visible = false;
             completedPage.PageSettings.CustomButtonSettings.Text = Resources.Restart;
             completedPage.PageSettings.CustomButtonSettings.Visible = true;
             completedPage.NavigationSettings.CustomPageKey = Constants.ChooseNavigationKey;
-            
+
             Pages.Add(Constants.CompletedNavigationKey, completedPage);
         }
 
         /// <summary>
-        /// Stores the state values.
+        ///     Stores the state values.
         /// </summary>
         private void StoreStateValues()
         {
             // SelectPathPage state values
-            Settings.Default.LastSearchDirectory = (String)State[Constants.SearchPathStateKey];
-            Settings.Default.SearchSubDirectories = (Boolean)State[Constants.SearchSubDirectoriesStateKey];
+            Settings.Default.LastSearchDirectory = (string) State[Constants.SearchPathStateKey];
+            Settings.Default.SearchSubDirectories = (bool) State[Constants.SearchSubDirectoriesStateKey];
             Settings.Default.SearchFilterType = State[Constants.SearchFilterTypeStateKey].ToString();
             Settings.Default.RegularExpressionSearchFilter =
-                (String)State[Constants.SearchFilterRegularExpressionStateKey];
-            Settings.Default.WildcardSearchFilter = (String)State[Constants.SearchFilterWildcardStateKey];
+                (string) State[Constants.SearchFilterRegularExpressionStateKey];
+            Settings.Default.WildcardSearchFilter = (string) State[Constants.SearchFilterWildcardStateKey];
 
             // NameFormatPage state values
-            Settings.Default.NameFormat = (String)State[Constants.NameFormatStateKey];
-            Settings.Default.IncrementOnCollision = (Boolean)State[Constants.IncrementOnCollisionStateKey];
+            Settings.Default.NameFormat = (string) State[Constants.NameFormatStateKey];
+            Settings.Default.IncrementOnCollision = (bool) State[Constants.IncrementOnCollisionStateKey];
 
             // Store the search directory MRU
-            BindingList<String> searchDirectoryMRU = (BindingList<String>)State[Constants.SearchDirectoryMRUStateKey];
-            AddItemToMru(
-                searchDirectoryMRU, Settings.Default.LastSearchDirectory, Settings.Default.MaxSearchDirectoryMRUItems);
+            var searchDirectoryMRU = (BindingList<string>) State[Constants.SearchDirectoryMRUStateKey];
+            AddItemToMru(searchDirectoryMRU,
+                Settings.Default.LastSearchDirectory,
+                Settings.Default.MaxSearchDirectoryMRUItems);
             Settings.Default.SearchDirectoryMRU = Helper.SerializeList(searchDirectoryMRU);
 
             // Store the name format MRU
-            BindingList<String> nameFormatMRU = (BindingList<String>)State[Constants.NameFormatMRUStateKey];
+            var nameFormatMRU = (BindingList<string>) State[Constants.NameFormatMRUStateKey];
             AddItemToMru(nameFormatMRU, Settings.Default.NameFormat, Settings.Default.MaxNameFormatMRUItems);
             Settings.Default.NameFormatMRU = Helper.SerializeList(nameFormatMRU);
 

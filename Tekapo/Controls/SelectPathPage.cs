@@ -1,23 +1,24 @@
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using Neovolve.Windows.Forms;
-using Neovolve.Windows.Forms.Controls;
-
 namespace Tekapo.Controls
 {
+    using System;
+    using System.ComponentModel;
+    using System.Globalization;
+    using System.IO;
+    using System.Text.RegularExpressions;
+    using System.Windows.Forms;
+    using Neovolve.Windows.Forms;
+    using Neovolve.Windows.Forms.Controls;
+    using Tekapo.Properties;
+
     /// <summary>
-    /// The <see cref="Tekapo.Controls.SelectPathPage"/> class is a Wizard page that allows the user to select a path to search for
-    /// images to process.
+    ///     The <see cref="Tekapo.Controls.SelectPathPage" /> class is a Wizard page that allows the user to select a path to
+    ///     search for
+    ///     images to process.
     /// </summary>
     public partial class SelectPathPage : WizardBannerPage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Tekapo.Controls.SelectPathPage"/> class.
+        ///     Initializes a new instance of the <see cref="Tekapo.Controls.SelectPathPage" /> class.
         /// </summary>
         public SelectPathPage()
         {
@@ -25,19 +26,24 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Determines whether this instance can navigate the specified e.
+        ///     Determines whether this instance can navigate the specified e.
         /// </summary>
         /// <param name="e">
-        /// The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs"/> instance containing the event data.
+        ///     The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
         /// </param>
         /// <returns>
-        /// <c>true</c>if this instance can navigate the specified e; otherwise, <c>false</c>.
+        ///     <c>true</c>if this instance can navigate the specified e; otherwise, <c>false</c>.
         /// </returns>
-        public override Boolean CanNavigate(WizardFormNavigationEventArgs e)
+        public override bool CanNavigate(WizardFormNavigationEventArgs e)
         {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             // Check if the user is clicking next
-            if ((e.NavigationType == WizardFormNavigationType.Next)
-                && (IsPageValid() == false))
+            if (e.NavigationType == WizardFormNavigationType.Next
+                && IsPageValid() == false)
             {
                 // The page isn't valid
                 return false;
@@ -47,25 +53,24 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the Click event of the Browse control.
+        ///     Handles the Click event of the Browse control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void Browse_Click(Object sender, EventArgs e)
+        private void Browse_Click(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+            using (var dialog = new FolderBrowserDialog())
             {
-                dialog.SelectedPath = (String)State[Constants.SearchPathStateKey];
-                dialog.Description = Properties.Resources.SelectPathDescription;
+                dialog.SelectedPath = (string) State[Constants.SearchPathStateKey];
+                dialog.Description = Resources.SelectPathDescription;
                 dialog.ShowNewFolderButton = false;
 
                 // Check if the user clicked OK
-                if (dialog.ShowDialog(this)
-                    == DialogResult.OK)
+                if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
                     // Store the path
                     SearchPath.Text = dialog.SelectedPath;
@@ -74,22 +79,22 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Determines whether the page is valid.
+        ///     Determines whether the page is valid.
         /// </summary>
         /// <returns>
-        /// <c>true</c>if the page is valid; otherwise, <c>false</c>.
+        ///     <c>true</c>if the page is valid; otherwise, <c>false</c>.
         /// </returns>
-        private Boolean IsPageValid()
+        private bool IsPageValid()
         {
-            Boolean result = true;
+            var result = true;
 
             // Clear the error provider
             errProvider.Clear();
 
-            if (String.IsNullOrEmpty(SearchPath.Text))
+            if (string.IsNullOrEmpty(SearchPath.Text))
             {
                 // Set the error provider
-                errProvider.SetError(SearchPath, Properties.Resources.ErrorNoSearchPathProvided);
+                errProvider.SetError(SearchPath, Resources.ErrorNoSearchPathProvided);
 
                 // There is no path
                 result = false;
@@ -97,17 +102,17 @@ namespace Tekapo.Controls
             else if (Directory.Exists(SearchPath.Text) == false)
             {
                 // Set the error provider
-                errProvider.SetError(SearchPath, Properties.Resources.ErrorSearchPathDoesNotExist);
+                errProvider.SetError(SearchPath, Resources.ErrorSearchPathDoesNotExist);
 
                 // The directory specified doesn't exist
                 result = false;
             }
 
             if (UseWildcard.Checked
-                && String.IsNullOrEmpty(Wildcard.Text))
+                && string.IsNullOrEmpty(Wildcard.Text))
             {
                 // Set the error provider
-                errProvider.SetError(Wildcard, Properties.Resources.ErrorNoWildcardProvided);
+                errProvider.SetError(Wildcard, Resources.ErrorNoWildcardProvided);
 
                 // There is no wildcard value
                 result = false;
@@ -115,10 +120,10 @@ namespace Tekapo.Controls
 
             if (UseRegularExpression.Checked)
             {
-                if (String.IsNullOrEmpty(Expression.Text))
+                if (string.IsNullOrEmpty(Expression.Text))
                 {
                     // Set the error provider
-                    errProvider.SetError(Expression, Properties.Resources.ErrorNoRegularExpressionProvided);
+                    errProvider.SetError(Expression, Resources.ErrorNoRegularExpressionProvided);
 
                     // There is no regexp value
                     result = false;
@@ -135,8 +140,9 @@ namespace Tekapo.Controls
                     catch (ArgumentException ex)
                     {
                         // Set the error provider
-                        String format = String.Format(
-                            CultureInfo.CurrentCulture, Properties.Resources.ErrorRegularExpressionInvalid, ex.Message);
+                        var format = string.Format(CultureInfo.CurrentCulture,
+                            Resources.ErrorRegularExpressionInvalid,
+                            ex.Message);
 
                         errProvider.SetError(Expression, format);
                     }
@@ -148,28 +154,27 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the Closing event of the SelectPathPage control.
+        ///     Handles the Closing event of the SelectPathPage control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void SelectPathPage_Closing(Object sender, EventArgs e)
+        private void SelectPathPage_Closing(object sender, EventArgs e)
         {
             // Check if the path should have \ appended to it
-            if ((String.IsNullOrEmpty(SearchPath.Text) == false)
-                &&
-                (SearchPath.Text.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.CurrentCulture)
-                 == false))
+            if (string.IsNullOrEmpty(SearchPath.Text) == false
+                && SearchPath.Text.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.CurrentCulture)
+                == false)
             {
                 // Update the path
                 SearchPath.Text += Path.DirectorySeparatorChar;
             }
 
             // Store a new file list in state
-            State[Constants.FileListStateKey] = new BindingList<String>();
+            State[Constants.FileListStateKey] = new BindingList<string>();
 
             // Store the settings in state
             State[Constants.SearchPathStateKey] = SearchPath.Text;
@@ -193,40 +198,40 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the Opening event of the SelectPathPage control.
+        ///     Handles the Opening event of the SelectPathPage control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void SelectPathPage_Opening(Object sender, EventArgs e)
+        private void SelectPathPage_Opening(object sender, EventArgs e)
         {
             // Populate the wizard
-            SearchPath.Text = (String)State[Constants.SearchPathStateKey];
+            SearchPath.Text = (string) State[Constants.SearchPathStateKey];
             SearchPath.DataSource = State[Constants.SearchDirectoryMRUStateKey];
-            Recurse.Checked = (Boolean)State[Constants.SearchSubDirectoriesStateKey];
+            Recurse.Checked = (bool) State[Constants.SearchSubDirectoriesStateKey];
 
-            SearchFilterType filterType = (SearchFilterType)State[Constants.SearchFilterTypeStateKey];
+            var filterType = (SearchFilterType) State[Constants.SearchFilterTypeStateKey];
 
             UseNoFilter.Checked = filterType == SearchFilterType.None;
             UseRegularExpression.Checked = filterType == SearchFilterType.RegularExpression;
-            Expression.Text = (String)State[Constants.SearchFilterRegularExpressionStateKey];
+            Expression.Text = (string) State[Constants.SearchFilterRegularExpressionStateKey];
             UseWildcard.Checked = filterType == SearchFilterType.Wildcard;
-            Wildcard.Text = (String)State[Constants.SearchFilterWildcardStateKey];
+            Wildcard.Text = (string) State[Constants.SearchFilterWildcardStateKey];
         }
 
         /// <summary>
-        /// Handles the CheckedChanged event of the UseRegularExpression control.
+        ///     Handles the CheckedChanged event of the UseRegularExpression control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void UseRegularExpression_CheckedChanged(Object sender, EventArgs e)
+        private void UseRegularExpression_CheckedChanged(object sender, EventArgs e)
         {
             Expression.Enabled = UseRegularExpression.Checked;
 
@@ -238,15 +243,15 @@ namespace Tekapo.Controls
         }
 
         /// <summary>
-        /// Handles the CheckedChanged event of the UseWildcard control.
+        ///     Handles the CheckedChanged event of the UseWildcard control.
         /// </summary>
         /// <param name="sender">
-        /// The source of the event.
+        ///     The source of the event.
         /// </param>
         /// <param name="e">
-        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        private void UseWildcard_CheckedChanged(Object sender, EventArgs e)
+        private void UseWildcard_CheckedChanged(object sender, EventArgs e)
         {
             Wildcard.Enabled = UseWildcard.Checked;
 

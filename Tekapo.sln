@@ -1,42 +1,24 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{90FE6B63-C633-46E7-ABDF-BA08EE3AE910}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\Application.ruleset = Solution Items\Application.ruleset
+		Solution Items\CustomDictionary.xml = Solution Items\CustomDictionary.xml
+		Settings.StyleCop = Settings.StyleCop
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tekapo", "Tekapo\Tekapo.csproj", "{106EAA95-2C57-4545-935E-7302160C1574}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tekapo.Processing", "Tekapo.Processing\Tekapo.Processing.csproj", "{08AC03A4-5267-46F5-989F-B115D9AA3B61}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Tekapo.Setup", "Tekapo.Setup\Tekapo.Setup.vdproj", "{E31A9C6B-AF07-48B7-A05D-39F9E6C58A5C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neovolve.Windows.Forms", "Neovolve.Windows.Forms\Neovolve.Windows.Forms.csproj", "{19C1EA4E-AA54-4354-B2FA-D7504F8CF722}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{90FE6B63-C633-46E7-ABDF-BA08EE3AE910}"
-	ProjectSection(SolutionItems) = preProject
-		Solution Items\CustomDictionary.xml = Solution Items\CustomDictionary.xml
-		Solution Items\Neovolve.snk = Solution Items\Neovolve.snk
-		Settings.StyleCop = Settings.StyleCop
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References", "References", "{FB93BFE2-4BAF-4335-9911-AB1FD01483AB}"
-	ProjectSection(SolutionItems) = preProject
-		Tekapo\Referenced Assemblies\Neovolve.Windows.Forms.dll = Tekapo\Referenced Assemblies\Neovolve.Windows.Forms.dll
-		Tekapo\Referenced Assemblies\Neovolve.Windows.Forms.pdb = Tekapo\Referenced Assemblies\Neovolve.Windows.Forms.pdb
-		Tekapo\Referenced Assemblies\Neovolve.Windows.Forms.XML = Tekapo\Referenced Assemblies\Neovolve.Windows.Forms.XML
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neovolve.Windows.Forms.Test", "Neovolve.Windows.Forms.Test\Neovolve.Windows.Forms.Test.csproj", "{0B0E8789-C3CE-475F-B912-62BD156DA605}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs01.codeplex.com/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Tekapo\\Tekapo.csproj
-		SccProjectName1 = Tekapo
-		SccLocalPath1 = Tekapo
-		SccProjectUniqueName2 = Tekapo.Processing\\Tekapo.Processing.csproj
-		SccProjectName2 = Tekapo.Processing
-		SccLocalPath2 = Tekapo.Processing
-		SccProjectUniqueName3 = Tekapo.Setup\\Tekapo.Setup.vdproj
-		SccProjectName3 = Tekapo.Setup
-		SccLocalPath3 = Tekapo.Setup
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -50,10 +32,19 @@ Global
 		{08AC03A4-5267-46F5-989F-B115D9AA3B61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08AC03A4-5267-46F5-989F-B115D9AA3B61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08AC03A4-5267-46F5-989F-B115D9AA3B61}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E31A9C6B-AF07-48B7-A05D-39F9E6C58A5C}.Debug|Any CPU.ActiveCfg = Debug
-		{E31A9C6B-AF07-48B7-A05D-39F9E6C58A5C}.Release|Any CPU.ActiveCfg = Release
+		{19C1EA4E-AA54-4354-B2FA-D7504F8CF722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19C1EA4E-AA54-4354-B2FA-D7504F8CF722}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19C1EA4E-AA54-4354-B2FA-D7504F8CF722}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19C1EA4E-AA54-4354-B2FA-D7504F8CF722}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B0E8789-C3CE-475F-B912-62BD156DA605}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B0E8789-C3CE-475F-B912-62BD156DA605}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B0E8789-C3CE-475F-B912-62BD156DA605}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B0E8789-C3CE-475F-B912-62BD156DA605}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {205BCFA2-5D07-45F1-8D08-52F50D0FE672}
 	EndGlobalSection
 EndGlobal
