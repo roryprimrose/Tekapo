@@ -11,30 +11,12 @@ namespace Tekapo.Processing
     using System.Text.RegularExpressions;
     using ExifLibrary;
 
-    /// <summary>
-    ///     The <see cref="Tekapo.Processing.JpegInformation" /> class is used to load and update the date and time a picture
-    ///     was taken.
-    /// </summary>
     public static class JpegInformation
     {
-        /// <summary>
-        ///     Defines the Id used to reference the Picture Taken value from a Jpeg meta data.
-        /// </summary>
-        private const int PictureTakenId = 0x9003;
-
-        /// <summary>
-        ///     Gets the picture taken.
-        /// </summary>
-        /// <param name="filePath">
-        ///     The file path.
-        /// </param>
-        /// <returns>
-        ///     A <see cref="DateTime" /> instance.
-        /// </returns>
         [SuppressMessage("Microsoft.Design",
             "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "A generic catch is required as part of the fallback strategy.")]
-        public static DateTime GetPictureTaken(string filePath)
+        public static DateTime ReadMediaCreatedDate(string filePath)
         {
             DateTime pictureTaken = default;
 
@@ -46,8 +28,6 @@ namespace Tekapo.Processing
 
             try
             {
-                string pictureTakenValue;
-
                 var source = ImageFile.FromFile(filePath);
 
                 var dateTakenProperty = source.Properties.FirstOrDefault(x => x.Tag == ExifTag.DateTimeOriginal);
@@ -58,7 +38,7 @@ namespace Tekapo.Processing
                 }
                 else
                 {
-                    pictureTakenValue = dateTakenProperty.Value.ToString();
+                    var pictureTakenValue = dateTakenProperty.Value.ToString();
 
                     var dateCheck = new Regex(@"[0-9]{4}:[0-9]{2}:[0-9]{2}\s{1}[0-9]{2}:[0-9]{2}:[0-9]{2}");
 
@@ -121,16 +101,7 @@ namespace Tekapo.Processing
             return pictureTaken;
         }
 
-        /// <summary>
-        ///     Sets the picture taken.
-        /// </summary>
-        /// <param name="filePath">
-        ///     The file path.
-        /// </param>
-        /// <param name="value">
-        ///     The value.
-        /// </param>
-        public static void SetPictureTaken(string filePath, DateTime value)
+        public static void SetMediaCreatedDate(string filePath, DateTime value)
         {
             // Exit if the file doesn't exist
             if (File.Exists(filePath) == false)
@@ -160,7 +131,7 @@ namespace Tekapo.Processing
                         }
                         catch (ArgumentException)
                         {
-                            // Destory the Object should it exist
+                            // Destroy the Object should it exist
                             propertyValue = null;
                         }
 

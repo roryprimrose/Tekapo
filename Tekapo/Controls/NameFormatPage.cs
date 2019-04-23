@@ -116,7 +116,7 @@ namespace Tekapo.Controls
                 // A name format is specified and is valid
                 // Generate the example
                 var sourcePath = ((BindingList<string>) State[Constants.FileListStateKey])[0];
-                var pictureTaken = JpegInformation.GetPictureTaken(sourcePath);
+                var pictureTaken = JpegInformation.ReadMediaCreatedDate(sourcePath);
                 var incrementOnCollision = IncrementOnCollision.Checked;
                 var maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
                 var resultPath = ImageRenaming.GetRenamedPath(renameFormat,

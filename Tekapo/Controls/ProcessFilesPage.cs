@@ -74,7 +74,7 @@ namespace Tekapo.Controls
             var renameFormat = (string) State[Constants.NameFormatStateKey];
             var incrementOnCollision = (bool) State[Constants.IncrementOnCollisionStateKey];
             var maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
-            var currentTime = JpegInformation.GetPictureTaken(path);
+            var currentTime = JpegInformation.ReadMediaCreatedDate(path);
             var newPath = ImageRenaming.GetRenamedPath(renameFormat,
                 currentTime,
                 path,
@@ -166,7 +166,7 @@ namespace Tekapo.Controls
             SetProgressStatus(progressMessage);
 
             // Get the current time of the file
-            var currentTime = JpegInformation.GetPictureTaken(path);
+            var currentTime = JpegInformation.ReadMediaCreatedDate(path);
 
             // Shift the time
             var newTime =
@@ -193,7 +193,7 @@ namespace Tekapo.Controls
             try
             {
                 // Store the new time in the file
-                JpegInformation.SetPictureTaken(path, newTime);
+                JpegInformation.SetMediaCreatedDate(path, newTime);
 
                 ProcessResults.AddSuccessfulResult(result);
             }

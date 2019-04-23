@@ -130,8 +130,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileMediaManager.cs" />
     <Compile Include="FileResult.cs" />
     <Compile Include="ImageRenaming.cs" />
+    <Compile Include="IMediaManager.cs" />
     <Compile Include="JpegInformation.cs" />
     <Compile Include="LogWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
