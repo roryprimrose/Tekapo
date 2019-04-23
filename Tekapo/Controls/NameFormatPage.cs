@@ -11,50 +11,23 @@ namespace Tekapo.Controls
     using Tekapo.Processing;
     using Tekapo.Properties;
 
-    /// <summary>
-    ///     The <see cref="NameFormatPage" /> class is a Wizard page that allows the user to specify a format to use when
-    ///     renaming images.
-    /// </summary>
     public partial class NameFormatPage : WizardBannerPage
     {
-        /// <summary>
-        ///     Stores the thread used to calculate the rename example.
-        /// </summary>
         private Thread _exampleThread;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="NameFormatPage" /> class.
-        /// </summary>
-        public NameFormatPage()
+        private readonly IMediaManager _mediaManager;
+
+        public NameFormatPage(IMediaManager mediaManager)
         {
+            _mediaManager = mediaManager;
+
             InitializeComponent();
         }
 
-        /// <summary>
-        ///     Get format value delegate.
-        /// </summary>
-        /// <returns>
-        ///     A <see cref="string" /> value.
-        /// </returns>
         private delegate string GetFormatValueDelegate();
 
-        /// <summary>
-        ///     Set example value delegate.
-        /// </summary>
-        /// <param name="example">
-        ///     The example.
-        /// </param>
         private delegate void SetExampleValueDelegate(string example);
 
-        /// <summary>
-        ///     Determines whether this instance can navigate the specified e.
-        /// </summary>
-        /// <param name="e">
-        ///     The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
-        /// </param>
-        /// <returns>
-        ///     <c>true</c>if this instance can navigate the specified e; otherwise, <c>false</c>.
-        /// </returns>
         public override bool CanNavigate(WizardFormNavigationEventArgs e)
         {
             if (e == null)
@@ -73,9 +46,6 @@ namespace Tekapo.Controls
             return base.CanNavigate(e);
         }
 
-        /// <summary>
-        ///     Updates the example.
-        /// </summary>
         private void BuildExample()
         {
             if (_exampleThread != null
@@ -93,9 +63,6 @@ namespace Tekapo.Controls
             _exampleThread.Start();
         }
 
-        /// <summary>
-        ///     Calculates the example value.
-        /// </summary>
         private void CalculateExampleValue()
         {
             var renameFormat = GetFormatValue();
@@ -116,7 +83,7 @@ namespace Tekapo.Controls
                 // A name format is specified and is valid
                 // Generate the example
                 var sourcePath = ((BindingList<string>) State[Constants.FileListStateKey])[0];
-                var pictureTaken = JpegInformation.ReadMediaCreatedDate(sourcePath);
+                var pictureTaken = _mediaManager.ReadMediaCreatedDate(sourcePath);
                 var incrementOnCollision = IncrementOnCollision.Checked;
                 var maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
                 var resultPath = ImageRenaming.GetRenamedPath(renameFormat,
@@ -132,12 +99,6 @@ namespace Tekapo.Controls
             SetExampleValue(exampleMessage);
         }
 
-        /// <summary>
-        ///     Gets the format value.
-        /// </summary>
-        /// <returns>
-        ///     The format value.
-        /// </returns>
         private string GetFormatValue()
         {
             if (NameFormat.InvokeRequired)
@@ -148,29 +109,11 @@ namespace Tekapo.Controls
             return NameFormat.Text;
         }
 
-        /// <summary>
-        ///     Handles the CheckedChanged event of the IncrementOnCollision control.
-        /// </summary>
-        /// <param name="sender">
-        ///     The source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     The <see cref="System.EventArgs" /> instance containing the event data.
-        /// </param>
         private void IncrementOnCollision_CheckedChanged(object sender, EventArgs e)
         {
             BuildExample();
         }
 
-        /// <summary>
-        ///     Handles the Click event of the InsertFormat control.
-        /// </summary>
-        /// <param name="sender">
-        ///     The source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     The <see cref="System.EventArgs" /> instance containing the event data.
-        /// </param>
         private void InsertFormat_Click(object sender, EventArgs e)
         {
             var menuLocation = InsertFormat.Location;
@@ -180,12 +123,6 @@ namespace Tekapo.Controls
             InsertFormat.ContextMenu.Show(InsertFormat.Parent, menuLocation);
         }
 
-        /// <summary>
-        ///     Determines whether the page is valid.
-        /// </summary>
-        /// <returns>
-        ///     <c>true</c>if the page is valid; otherwise, <c>false</c>.
-        /// </returns>
         private bool IsPageValid()
         {
             var result = true;
@@ -214,44 +151,17 @@ namespace Tekapo.Controls
             return result;
         }
 
-        /// <summary>
-        ///     Handles the TextChanged event of the NameFormat control.
-        /// </summary>
-        /// <param name="sender">
-        ///     The source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     The <see cref="System.EventArgs" /> instance containing the event data.
-        /// </param>
         private void NameFormat_TextChanged(object sender, EventArgs e)
         {
             BuildExample();
         }
 
-        /// <summary>
-        ///     Handles the Closing event of the NameFormatPage control.
-        /// </summary>
-        /// <param name="sender">
-        ///     The source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     The <see cref="System.EventArgs" /> instance containing the event data.
-        /// </param>
         private void NameFormatPage_Closing(object sender, EventArgs e)
         {
             State[Constants.NameFormatStateKey] = NameFormat.Text;
             State[Constants.IncrementOnCollisionStateKey] = IncrementOnCollision.Checked;
         }
 
-        /// <summary>
-        ///     Handles the Load event of the NameFormatPage control.
-        /// </summary>
-        /// <param name="sender">
-        ///     The source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     The <see cref="EventArgs" /> instance containing the event data.
-        /// </param>
         [SuppressMessage("Microsoft.Reliability",
             "CA2000:Dispose objects before losing scope",
             Justification = "The instance lives beyond the scope of this method.")]
@@ -281,15 +191,6 @@ namespace Tekapo.Controls
             InsertFormat.ContextMenu = formatMenu;
         }
 
-        /// <summary>
-        ///     Handles the Opening event of the NameFormatPage control.
-        /// </summary>
-        /// <param name="sender">
-        ///     The source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     The <see cref="System.EventArgs" /> instance containing the event data.
-        /// </param>
         private void NameFormatPage_Opening(object sender, EventArgs e)
         {
             // Load the state values
@@ -301,12 +202,6 @@ namespace Tekapo.Controls
             BuildExample();
         }
 
-        /// <summary>
-        ///     Sets the example value.
-        /// </summary>
-        /// <param name="example">
-        ///     The example.
-        /// </param>
         private void SetExampleValue(string example)
         {
             if (Example.InvokeRequired)

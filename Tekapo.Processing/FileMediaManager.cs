@@ -1,12 +1,22 @@
 ﻿namespace Tekapo.Processing
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
 
     public abstract class FileMediaManager : IMediaManager
     {
+        [SuppressMessage("Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This is a fallback strategy which must cater for any type of failure.")]
         public virtual DateTime ReadMediaCreatedDate(string filePath)
         {
+            // Check if the file exists
+            if (File.Exists(filePath) == false)
+            {
+                return DateTime.Now;
+            }
+
             DateTime? mediaCreatedDate = null;
 
             try
@@ -37,8 +47,8 @@
             return lastWriteTime;
         }
 
-        protected abstract DateTime? ResolveMediaCreatedDate(string filePath);
-
         public abstract void SetMediaCreatedDate(string filePath, DateTime createdAt);
+
+        protected abstract DateTime? ResolveMediaCreatedDate(string filePath);
     }
 }

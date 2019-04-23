@@ -7,23 +7,17 @@ namespace Tekapo.Controls
     using Tekapo.Processing;
     using Tekapo.Properties;
 
-    /// <summary>
-    ///     The <see cref="ProcessFilesPage" /> is a wizard page used to display the progress of processing the files
-    ///     specified by the user.
-    /// </summary>
     public partial class ProcessFilesPage : ProgressPage
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ProcessFilesPage" /> class.
-        /// </summary>
-        public ProcessFilesPage()
+        private readonly IMediaManager _mediaManager;
+
+        public ProcessFilesPage(IMediaManager mediaManager)
         {
+            _mediaManager = mediaManager;
+
             InitializeComponent();
         }
 
-        /// <summary>
-        ///     Processes the task.
-        /// </summary>
         protected override void ProcessTask()
         {
             var items = (BindingList<string>) State[Constants.FileListStateKey];
@@ -62,19 +56,13 @@ namespace Tekapo.Controls
             }
         }
 
-        /// <summary>
-        ///     Processes the rename.
-        /// </summary>
-        /// <param name="path">
-        ///     The path to process.
-        /// </param>
         private void ProcessRename(string path)
         {
             // Calculate the new path
             var renameFormat = (string) State[Constants.NameFormatStateKey];
             var incrementOnCollision = (bool) State[Constants.IncrementOnCollisionStateKey];
             var maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
-            var currentTime = JpegInformation.ReadMediaCreatedDate(path);
+            var currentTime = _mediaManager.ReadMediaCreatedDate(path);
             var newPath = ImageRenaming.GetRenamedPath(renameFormat,
                 currentTime,
                 path,
@@ -152,21 +140,14 @@ namespace Tekapo.Controls
             }
         }
 
-        /// <summary>
-        ///     Processes the time shift.
-        /// </summary>
-        /// <param name="path">
-        ///     The path to process.
-        /// </param>
         private void ProcessTimeShift(string path)
         {
             // Set the progress status
-            var progressMessage =
-                string.Format(CultureInfo.CurrentCulture, Resources.TimeShiftProcessFormat, path);
+            var progressMessage = string.Format(CultureInfo.CurrentCulture, Resources.TimeShiftProcessFormat, path);
             SetProgressStatus(progressMessage);
 
             // Get the current time of the file
-            var currentTime = JpegInformation.ReadMediaCreatedDate(path);
+            var currentTime = _mediaManager.ReadMediaCreatedDate(path);
 
             // Shift the time
             var newTime =
@@ -193,7 +174,7 @@ namespace Tekapo.Controls
             try
             {
                 // Store the new time in the file
-                JpegInformation.SetMediaCreatedDate(path, newTime);
+                _mediaManager.SetMediaCreatedDate(path, newTime);
 
                 ProcessResults.AddSuccessfulResult(result);
             }
@@ -204,12 +185,6 @@ namespace Tekapo.Controls
             }
         }
 
-        /// <summary>
-        ///     Gets the process results.
-        /// </summary>
-        /// <value>
-        ///     The process results.
-        /// </value>
         private Results ProcessResults => (Results) State[Constants.ProcessResultsStateKey];
     }
 }
