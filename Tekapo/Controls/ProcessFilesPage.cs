@@ -165,11 +165,11 @@ namespace Tekapo.Controls
             // Store the results
             var result = new FileResult();
             result.OriginalPath = path;
-            result.OriginalPictureTakenDate = string.Concat(
+            result.OriginalMediaCreatedDate = string.Concat(
                 currentTime.ToLongDateString(),
                 ", ",
                 currentTime.ToShortTimeString());
-            result.NewPictureTakenDate = string.Concat(newTime.ToLongDateString(), ", ", newTime.ToShortTimeString());
+            result.NewMediaCreatedDate = string.Concat(newTime.ToLongDateString(), ", ", newTime.ToShortTimeString());
 
             try
             {

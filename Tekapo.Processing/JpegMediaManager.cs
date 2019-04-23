@@ -95,30 +95,30 @@
                 return null;
             }
 
-            if (dateTakenProperty.Value is DateTime pictureTakenDate)
+            if (dateTakenProperty.Value is DateTime mediaCreatedDate)
             {
-                return pictureTakenDate;
+                return mediaCreatedDate;
             }
 
-            var pictureTakenValue = dateTakenProperty.Value.ToString();
+            var mediaCreatedValue = dateTakenProperty.Value.ToString();
 
             var dateCheck = new Regex(@"[0-9]{4}:[0-9]{2}:[0-9]{2}\s{1}[0-9]{2}:[0-9]{2}:[0-9]{2}");
 
             // Check if the date value matches the expression
-            if (dateCheck.IsMatch(pictureTakenValue))
+            if (dateCheck.IsMatch(mediaCreatedValue))
             {
                 // Convert the date separators
-                pictureTakenValue = dateCheck.Match(pictureTakenValue).Value.Replace(" ", ":");
+                mediaCreatedValue = dateCheck.Match(mediaCreatedValue).Value.Replace(" ", ":");
 
                 // Split the string using : as a delimiter
-                var textArray1 = pictureTakenValue.Split(':');
+                var textArray1 = mediaCreatedValue.Split(':');
 
                 // Determine the month value
                 var monthValue = int.Parse(textArray1[1], CultureInfo.InvariantCulture) - 1;
                 var abbreviatedMonth = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames[monthValue];
 
                 // Reconstruct the string
-                pictureTakenValue = string.Format(CultureInfo.CurrentCulture,
+                mediaCreatedValue = string.Format(CultureInfo.CurrentCulture,
                     "{0}:{1}:{2} {3}/{4}/{5}",
                     textArray1[3],
                     textArray1[4],
@@ -128,9 +128,9 @@
                     textArray1[0]);
             }
 
-            if (DateTime.TryParse(pictureTakenValue, out var pictureTaken))
+            if (DateTime.TryParse(mediaCreatedValue, out var mediaCreated))
             {
-                return pictureTaken;
+                return mediaCreated;
             }
 
             return null;

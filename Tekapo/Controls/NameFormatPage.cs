@@ -83,11 +83,11 @@ namespace Tekapo.Controls
                 // A name format is specified and is valid
                 // Generate the example
                 var sourcePath = ((BindingList<string>) State[Constants.FileListStateKey])[0];
-                var pictureTaken = _mediaManager.ReadMediaCreatedDate(sourcePath);
+                var mediaCreatedDate = _mediaManager.ReadMediaCreatedDate(sourcePath);
                 var incrementOnCollision = IncrementOnCollision.Checked;
                 var maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
                 var resultPath = ImageRenaming.GetRenamedPath(renameFormat,
-                    pictureTaken,
+                    mediaCreatedDate,
                     sourcePath,
                     incrementOnCollision,
                     maxCollisionIncrement);

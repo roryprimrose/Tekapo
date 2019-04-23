@@ -106,9 +106,9 @@
           <xsl:otherwise>
             <dd>
               Shift time from
-              <xsl:value-of select="OriginalPictureTakenDate" />
+              <xsl:value-of select="OriginalMediaCreatedDate" />
               to
-              <xsl:value-of select="NewPictureTakenDate" />
+              <xsl:value-of select="NewMediaCreatedDate" />
             </dd>
           </xsl:otherwise>
         </xsl:choose>
