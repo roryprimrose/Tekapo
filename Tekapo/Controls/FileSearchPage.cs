@@ -5,25 +5,20 @@ namespace Tekapo.Controls
     using System.ComponentModel;
     using System.IO;
     using System.Text.RegularExpressions;
+    using Tekapo.Processing;
     using Tekapo.Properties;
 
-    /// <summary>
-    ///     The <see cref="FileSearchPage" /> class is a Wizard page that displays progress to the user as files are being
-    ///     searched.
-    /// </summary>
     public partial class FileSearchPage : ProgressPage
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="FileSearchPage" /> class.
-        /// </summary>
-        public FileSearchPage()
+        private readonly IMediaManager _mediaManager;
+
+        public FileSearchPage(IMediaManager mediaManager)
         {
+            _mediaManager = mediaManager;
+
             InitializeComponent();
         }
 
-        /// <summary>
-        ///     Processes the task.
-        /// </summary>
         protected override void ProcessTask()
         {
             // Get the search criteria
@@ -61,21 +56,6 @@ namespace Tekapo.Controls
             State[Constants.FileListStateKey] = filteredFiles;
         }
 
-        /// <summary>
-        ///     Filters the files.
-        /// </summary>
-        /// <param name="files">
-        ///     The files.
-        /// </param>
-        /// <param name="filteredFiles">
-        ///     The filtered files.
-        /// </param>
-        /// <param name="filterType">
-        ///     Type of the filter.
-        /// </param>
-        /// <param name="regularExpressionPattern">
-        ///     The regular expression pattern.
-        /// </param>
         private void FilterFiles(
             IList<string> files,
             ICollection<string> filteredFiles,
@@ -98,7 +78,7 @@ namespace Tekapo.Controls
                 SetProgressStatus(path);
 
                 // Check if the file is a supported type
-                if (Helper.IsFileSupported(path))
+                if (_mediaManager.IsSupported(path))
                 {
                     if (filterType != SearchFilterType.RegularExpression
                         || expressionTest.IsMatch(path))
@@ -110,24 +90,12 @@ namespace Tekapo.Controls
             }
         }
 
-        /// <summary>
-        ///     Finds the directories.
-        /// </summary>
-        /// <param name="path">
-        ///     The path to search.
-        /// </param>
-        /// <param name="recurseDirectories">
-        ///     If set to <c>true</c>, the method will be called recursively.
-        /// </param>
-        /// <param name="directories">
-        ///     The directories.
-        /// </param>
         private void FindDirectories(string path, bool recurseDirectories, ICollection<string> directories)
         {
             // Add the current path to the list
             directories.Add(path);
 
-            // Get the subdirectory paths
+            // Get the sub-directory paths
             var newPaths = Directory.GetDirectories(path);
 
             // Loop through each directory path
@@ -147,21 +115,6 @@ namespace Tekapo.Controls
             }
         }
 
-        /// <summary>
-        ///     Finds the files.
-        /// </summary>
-        /// <param name="directories">
-        ///     The directories.
-        /// </param>
-        /// <param name="files">
-        ///     The files.
-        /// </param>
-        /// <param name="filterType">
-        ///     Type of the filter.
-        /// </param>
-        /// <param name="wildcardPattern">
-        ///     The wildcard pattern.
-        /// </param>
         private void FindFiles(
             IList<string> directories,
             List<string> files,
@@ -236,12 +189,6 @@ namespace Tekapo.Controls
             }
         }
 
-        /// <summary>
-        ///     Sets the step title.
-        /// </summary>
-        /// <param name="value">
-        ///     The value.
-        /// </param>
         private void SetStepTitle(string value)
         {
             // Check if a thread switch is required

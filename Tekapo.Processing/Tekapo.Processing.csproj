@@ -134,8 +134,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompositeMediaManager.cs" />
     <Compile Include="FileMediaManager.cs" />
     <Compile Include="FileResult.cs" />
+    <Compile Include="MediaManagerExtensions.cs" />
     <Compile Include="PathManager.cs" />
     <Compile Include="IMediaManager.cs" />
     <Compile Include="IPathManager.cs" />

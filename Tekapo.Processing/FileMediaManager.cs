@@ -1,11 +1,14 @@
 ﻿namespace Tekapo.Processing
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
 
     public abstract class FileMediaManager : IMediaManager
     {
+        public abstract IEnumerable<string> GetSupportedFileTypes();
+
         [SuppressMessage("Microsoft.Design",
             "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "This is a fallback strategy which must cater for any type of failure.")]

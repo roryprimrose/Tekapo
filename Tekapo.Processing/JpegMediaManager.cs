@@ -1,6 +1,7 @@
 ﻿namespace Tekapo.Processing
 {
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.Globalization;
@@ -12,6 +13,12 @@
 
     public class JpegMediaManager : FileMediaManager
     {
+        public override IEnumerable<string> GetSupportedFileTypes()
+        {
+            yield return ".jpg";
+            yield return ".jpeg";
+        }
+
         public override void SetMediaCreatedDate(string filePath, DateTime createdAt)
         {
             // Exit if the file doesn't exist

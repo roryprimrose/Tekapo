@@ -1,12 +1,8 @@
 namespace Tekapo
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Globalization;
     using System.IO;
     using System.Xml.Serialization;
-    using Tekapo.Properties;
 
     /// <summary>
     ///     The <see cref="Helper" />
@@ -14,11 +10,6 @@ namespace Tekapo
     /// </summary>
     internal static class Helper
     {
-        /// <summary>
-        ///     Stores the supported file types.
-        /// </summary>
-        private static List<string> _supportedFileTypes;
-
         /// <summary>
         ///     Deserializes the list.
         /// </summary>
@@ -44,87 +35,6 @@ namespace Tekapo
 
                 return (BindingList<string>) serializer.Deserialize(reader);
             }
-        }
-
-        /// <summary>
-        ///     Gets the file extension.
-        /// </summary>
-        /// <param name="path">
-        ///     The path to process.
-        /// </param>
-        /// <returns>
-        ///     A <see cref="string" /> instance.
-        /// </returns>
-        public static string GetFileExtension(string path)
-        {
-            // Get the extension of the path
-            var extension = Path.GetExtension(path);
-
-            if (string.IsNullOrEmpty(extension))
-            {
-                return string.Empty;
-            }
-
-            return extension.ToLower(CultureInfo.CurrentCulture).Substring(1);
-        }
-
-        /// <summary>
-        ///     Gets the supported file types.
-        /// </summary>
-        /// <returns>
-        ///     A <see cref="string" /> instance.
-        /// </returns>
-        public static List<string> GetSupportedFileTypes()
-        {
-            // Check if the file types have already been calculated
-            if (_supportedFileTypes != null)
-            {
-                return _supportedFileTypes;
-            }
-
-            var supportedTypesValue = Settings.Default.SupportedFileTypes;
-
-            // Ensure that there is a value
-            if (string.IsNullOrEmpty(supportedTypesValue))
-            {
-                // Set the default value
-                supportedTypesValue = Resources.DefaultSupportedFileTypes;
-            }
-
-            supportedTypesValue = supportedTypesValue.ToLower(CultureInfo.CurrentCulture);
-
-            // Load the supported file types
-            _supportedFileTypes = new List<string>(supportedTypesValue.Split(','));
-
-            // Loop through each file type
-            for (var typeIndex = 0; typeIndex < _supportedFileTypes.Count; typeIndex++)
-            {
-                // Ensure that the file type doesn't start with .
-                if (_supportedFileTypes[typeIndex].StartsWith(".", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Strip the leading . character
-                    _supportedFileTypes[typeIndex] = _supportedFileTypes[typeIndex].Substring(1);
-                }
-            }
-
-            // Return the supported types
-            return _supportedFileTypes;
-        }
-
-        /// <summary>
-        ///     Determines whether [is file supported] [the specified path].
-        /// </summary>
-        /// <param name="path">
-        ///     The path to test.
-        /// </param>
-        /// <returns>
-        ///     <c>true</c>if [is file supported] [the specified path]; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool IsFileSupported(string path)
-        {
-            var extension = GetFileExtension(path);
-
-            return GetSupportedFileTypes().Contains(extension);
         }
 
         /// <summary>
