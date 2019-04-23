@@ -16,10 +16,12 @@ namespace Tekapo.Controls
         private Thread _exampleThread;
 
         private readonly IMediaManager _mediaManager;
+        private readonly IPathManager _pathManager;
 
-        public NameFormatPage(IMediaManager mediaManager)
+        public NameFormatPage(IMediaManager mediaManager, IPathManager pathManager)
         {
             _mediaManager = mediaManager;
+            _pathManager = pathManager;
 
             InitializeComponent();
         }
@@ -73,7 +75,7 @@ namespace Tekapo.Controls
             {
                 exampleMessage = Resources.NameFormatExampleNoFormatAvailable.Replace("\\n", "\n");
             }
-            else if (ImageRenaming.IsFormatValid(renameFormat) == false)
+            else if (_pathManager.IsFormatValid(renameFormat) == false)
             {
                 // The rename format specified is valid
                 exampleMessage = Resources.NameFormatExampleInvalidFormat.Replace("\\n", "\n");
@@ -86,7 +88,7 @@ namespace Tekapo.Controls
                 var mediaCreatedDate = _mediaManager.ReadMediaCreatedDate(sourcePath);
                 var incrementOnCollision = IncrementOnCollision.Checked;
                 var maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
-                var resultPath = ImageRenaming.GetRenamedPath(renameFormat,
+                var resultPath = _pathManager.GetRenamedPath(renameFormat,
                     mediaCreatedDate,
                     sourcePath,
                     incrementOnCollision,
@@ -138,7 +140,7 @@ namespace Tekapo.Controls
                 // There is no name format
                 result = false;
             }
-            else if (ImageRenaming.IsFormatValid(NameFormat.Text) == false)
+            else if (_pathManager.IsFormatValid(NameFormat.Text) == false)
             {
                 // Set the error provider
                 ErrorDisplay.SetError(NameFormat, Resources.ErrorNameFormatInvalid);
@@ -170,7 +172,7 @@ namespace Tekapo.Controls
             var formatMenu = new ContextMenu();
 
             // Populate the rename formats into the context menu
-            foreach (var pair in ImageRenaming.RenameFormats)
+            foreach (var pair in PathManager.RenameFormats)
             {
                 var renameMenuItem = new MenuItem();
                 var formatValue = string.Concat("<", pair.Key, ">");

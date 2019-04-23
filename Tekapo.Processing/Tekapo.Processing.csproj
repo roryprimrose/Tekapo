@@ -136,8 +136,9 @@
   <ItemGroup>
     <Compile Include="FileMediaManager.cs" />
     <Compile Include="FileResult.cs" />
-    <Compile Include="ImageRenaming.cs" />
+    <Compile Include="PathManager.cs" />
     <Compile Include="IMediaManager.cs" />
+    <Compile Include="IPathManager.cs" />
     <Compile Include="JpegMediaManager.cs" />
     <Compile Include="LogWriter.cs" />
     <Compile Include="ProcessingModule.cs" />

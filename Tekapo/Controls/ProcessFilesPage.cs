@@ -10,10 +10,12 @@ namespace Tekapo.Controls
     public partial class ProcessFilesPage : ProgressPage
     {
         private readonly IMediaManager _mediaManager;
+        private readonly IPathManager _pathManager;
 
-        public ProcessFilesPage(IMediaManager mediaManager)
+        public ProcessFilesPage(IMediaManager mediaManager, IPathManager pathManager)
         {
             _mediaManager = mediaManager;
+            _pathManager = pathManager;
 
             InitializeComponent();
         }
@@ -63,7 +65,7 @@ namespace Tekapo.Controls
             var incrementOnCollision = (bool) State[Constants.IncrementOnCollisionStateKey];
             var maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
             var currentTime = _mediaManager.ReadMediaCreatedDate(path);
-            var newPath = ImageRenaming.GetRenamedPath(renameFormat,
+            var newPath = _pathManager.GetRenamedPath(renameFormat,
                 currentTime,
                 path,
                 incrementOnCollision,
@@ -108,12 +110,12 @@ namespace Tekapo.Controls
                     if (incrementOnCollision)
                     {
                         // Get the file named without an increment and the path with the first increment
-                        var newPathWithoutIncrement = ImageRenaming.GetRenamedPath(renameFormat,
+                        var newPathWithoutIncrement = _pathManager.GetRenamedPath(renameFormat,
                             currentTime,
                             path,
                             false,
                             maxCollisionIncrement);
-                        var firstIncrementPath = ImageRenaming.CreateFilePathWithIncrement(
+                        var firstIncrementPath = _pathManager.CreateFilePathWithIncrement(
                             newPathWithoutIncrement,
                             1,
                             maxCollisionIncrement);

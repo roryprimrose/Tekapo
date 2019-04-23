@@ -6,11 +6,9 @@ namespace Tekapo.Processing
     using System.IO;
     using System.Text.RegularExpressions;
 
-    public static class ImageRenaming
+    public class PathManager : IPathManager
     {
-        private static readonly Dictionary<string, string> _formats = GenerateFormats();
-
-        public static string CreateFilePathWithIncrement(string path, int increment, int maxCollisionIncrement)
+        public string CreateFilePathWithIncrement(string path, int increment, int maxCollisionIncrement)
         {
             // Store the parts of the path
             var baseFilePath = Path.GetDirectoryName(path);
@@ -20,8 +18,7 @@ namespace Tekapo.Processing
             var maxPaddingCount = maxCollisionIncrement.ToString(CultureInfo.InvariantCulture).Length;
 
             // Build the incremented path
-            var incrementValue =
-                "-" + increment.ToString(CultureInfo.InvariantCulture).PadLeft(maxPaddingCount, '0');
+            var incrementValue = "-" + increment.ToString(CultureInfo.InvariantCulture).PadLeft(maxPaddingCount, '0');
 
             // Combine the path with the increment value at the end of the new filename
             var incrementedFileName = string.Format(CultureInfo.CurrentCulture,
@@ -34,7 +31,7 @@ namespace Tekapo.Processing
             return incrementedPath;
         }
 
-        public static string GetRenamedPath(
+        public string GetRenamedPath(
             string renamingFormat,
             DateTime mediaCreatedDate,
             string originalFilePath,
@@ -88,11 +85,11 @@ namespace Tekapo.Processing
             return newName;
         }
 
-        public static bool IsFormatValid(string renamingFormat)
+        public bool IsFormatValid(string renamingFormat)
         {
             var formatTest = renamingFormat;
 
-            foreach (var key in _formats.Keys)
+            foreach (var key in RenameFormats.Keys)
             {
                 formatTest = formatTest.Replace("<" + key + ">", string.Empty);
             }
@@ -148,7 +145,7 @@ namespace Tekapo.Processing
         {
             var renameFormat = renamingFormat;
 
-            foreach (var key in _formats.Keys)
+            foreach (var key in RenameFormats.Keys)
             {
                 renameFormat = renameFormat.Replace("<" + key + ">", "{0:" + key + "}");
             }
@@ -192,6 +189,6 @@ namespace Tekapo.Processing
             return returnPath;
         }
 
-        public static Dictionary<string, string> RenameFormats => _formats;
+        public static Dictionary<string, string> RenameFormats { get; } = GenerateFormats();
     }
 }
