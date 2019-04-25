@@ -15,13 +15,7 @@
         private static readonly Regex _dateTimeExpression =
             new Regex(@"[0-9]{4}:[0-9]{2}:[0-9]{2}\s{1}[0-9]{2}:[0-9]{2}:[0-9]{2}");
 
-        public IEnumerable<string> GetSupportedFileTypes()
-        {
-            yield return ".jpg";
-            yield return ".jpeg";
-        }
-
-        public bool IsSupported(Stream stream)
+        public bool CanProcess(Stream stream)
         {
             var image = ImageFile.FromStream(stream);
 
@@ -31,6 +25,12 @@
             }
 
             return false;
+        }
+
+        public IEnumerable<string> GetSupportedFileTypes()
+        {
+            yield return ".jpg";
+            yield return ".jpeg";
         }
 
         public DateTime? ReadMediaCreatedDate(Stream stream)

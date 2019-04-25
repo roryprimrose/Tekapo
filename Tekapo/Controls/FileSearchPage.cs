@@ -76,18 +76,15 @@ namespace Tekapo.Controls
 
                 // Update the search status
                 SetProgressStatus(path);
-
-                using (var stream = File.Open(path, FileMode.Open, FileAccess.Read))
+                
+                // Check if the file is a supported type
+                if (_mediaManager.IsSupported(path))
                 {
-                    // Check if the file is a supported type
-                    if (_mediaManager.IsSupported(stream))
+                    if (filterType != SearchFilterType.RegularExpression
+                        || expressionTest.IsMatch(path))
                     {
-                        if (filterType != SearchFilterType.RegularExpression
-                            || expressionTest.IsMatch(path))
-                        {
-                            // Add the item
-                            filteredFiles.Add(path);
-                        }
+                        // Add the item
+                        filteredFiles.Add(path);
                     }
                 }
             }

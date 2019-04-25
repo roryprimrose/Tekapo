@@ -14,12 +14,7 @@
             _managers = managers.ToList();
         }
 
-        public IEnumerable<string> GetSupportedFileTypes()
-        {
-            return _managers.SelectMany(x => x.GetSupportedFileTypes()).Distinct();
-        }
-
-        public bool IsSupported(Stream stream)
+        public bool CanProcess(Stream stream)
         {
             var manager = GetSupportingManager(stream);
 
@@ -29,6 +24,11 @@
             }
 
             return true;
+        }
+
+        public IEnumerable<string> GetSupportedFileTypes()
+        {
+            return _managers.SelectMany(x => x.GetSupportedFileTypes()).Distinct();
         }
 
         public DateTime? ReadMediaCreatedDate(Stream stream)
@@ -57,7 +57,7 @@
 
         private IMediaManager GetSupportingManager(Stream stream)
         {
-            return _managers.FirstOrDefault(x => x.IsSupported(stream));
+            return _managers.FirstOrDefault(x => x.CanProcess(stream));
         }
     }
 }

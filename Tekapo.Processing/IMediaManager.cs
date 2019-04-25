@@ -6,9 +6,9 @@
 
     public interface IMediaManager
     {
-        IEnumerable<string> GetSupportedFileTypes();
+        bool CanProcess(Stream stream);
 
-        bool IsSupported(Stream stream);
+        IEnumerable<string> GetSupportedFileTypes();
 
         DateTime? ReadMediaCreatedDate(Stream stream);
 

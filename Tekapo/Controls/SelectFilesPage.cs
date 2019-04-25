@@ -136,15 +136,12 @@ namespace Tekapo.Controls
                     {
                         continue;
                     }
-
-                    using (var stream = File.Open(item, FileMode.Open, FileAccess.Read))
+                    
+                    // Check that the item is a file which is supported, but not yet in the list
+                    if (_mediaManager.IsSupported(item))
                     {
-                        // Check that the item is a file which is supported, but not yet in the list
-                        if (_mediaManager.IsSupported(stream))
-                        {
-                            // Add the file to the list
-                            FileList.Add(item);
-                        }
+                        // Add the file to the list
+                        FileList.Add(item);
                     }
                 }
             }
@@ -173,16 +170,13 @@ namespace Tekapo.Controls
                         continue;
                     }
                     
-                    using (var stream = File.Open(item, FileMode.Open, FileAccess.Read))
+                    // Check that the item is a file which is supported, but not yet in the list
+                    if (_mediaManager.IsSupported(item))
                     {
-                        // Check that the item is a file which is supported, but not yet in the list
-                        if (_mediaManager.IsSupported(stream))
-                        {
-                            // Determine whether this item is a valid extension
-                            e.Effect = DragDropEffects.Link;
+                        // Determine whether this item is a valid extension
+                        e.Effect = DragDropEffects.Link;
 
-                            return;
-                        }
+                        return;
                     }
                 }
             }
