@@ -241,6 +241,15 @@ namespace Tekapo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Example:\n\n{0}\n\nNo valid files found for processing..
+        /// </summary>
+        internal static string NameFormatExampleNoValidFile {
+            get {
+                return ResourceManager.GetString("NameFormatExampleNoValidFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parsing command line arguments..
         /// </summary>
         internal static string ParseCommandLineArguments {

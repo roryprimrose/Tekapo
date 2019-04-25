@@ -2,13 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
 
     public interface IMediaManager
     {
         IEnumerable<string> GetSupportedFileTypes();
 
-        DateTime ReadMediaCreatedDate(string filePath);
+        bool IsSupported(Stream stream);
 
-        void SetMediaCreatedDate(string filePath, DateTime createdAt);
+        DateTime? ReadMediaCreatedDate(Stream stream);
+
+        Stream SetMediaCreatedDate(Stream stream, DateTime createdAt);
     }
 }

@@ -127,13 +127,24 @@ namespace Tekapo.Controls
                 {
                     var item = files[index];
 
-                    // Check that the item is a file which is supported, but not yet in the list
-                    if (File.Exists(item)
-                        && _mediaManager.IsSupported(item)
-                        && FileList.Contains(item) == false)
+                    if (File.Exists(item) == false)
                     {
-                        // Add the file to the list
-                        FileList.Add(item);
+                        continue;
+                    }
+
+                    if (FileList.Contains(item))
+                    {
+                        continue;
+                    }
+
+                    using (var stream = File.Open(item, FileMode.Open, FileAccess.Read))
+                    {
+                        // Check that the item is a file which is supported, but not yet in the list
+                        if (_mediaManager.IsSupported(stream))
+                        {
+                            // Add the file to the list
+                            FileList.Add(item);
+                        }
                     }
                 }
             }
@@ -151,16 +162,27 @@ namespace Tekapo.Controls
                 for (var index = 0; index < files.Length; index++)
                 {
                     var item = files[index];
-
-                    // Check that the item is a file which is supported, but not yet in the list
-                    if (File.Exists(item)
-                        && _mediaManager.IsSupported(item)
-                        && FileList.Contains(item) == false)
+                    
+                    if (File.Exists(item) == false)
                     {
-                        // Determine whether this item is a valid extension
-                        e.Effect = DragDropEffects.Link;
+                        continue;
+                    }
 
-                        return;
+                    if (FileList.Contains(item))
+                    {
+                        continue;
+                    }
+                    
+                    using (var stream = File.Open(item, FileMode.Open, FileAccess.Read))
+                    {
+                        // Check that the item is a file which is supported, but not yet in the list
+                        if (_mediaManager.IsSupported(stream))
+                        {
+                            // Determine whether this item is a valid extension
+                            e.Effect = DragDropEffects.Link;
+
+                            return;
+                        }
                     }
                 }
             }
