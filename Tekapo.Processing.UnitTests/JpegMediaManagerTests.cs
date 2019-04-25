@@ -24,7 +24,7 @@ namespace Tekapo.Processing.UnitTests
         [Fact]
         public void ReadMediaCreatedDateReturnsValueForStreamContainingExifData()
         {
-            var expected = new DateTime(2019, 4, 25, 0, 0, 0);
+            var expected = new DateTime(2019, 4, 25, 16, 58, 17);
 
             var sut = new JpegMediaManager();
 
