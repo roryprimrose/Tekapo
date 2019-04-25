@@ -2,19 +2,18 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
-    using System.Drawing.Imaging;
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Text;
     using System.Text.RegularExpressions;
     using ExifLibrary;
 
     public class JpegMediaManager : IMediaManager
     {
-        const int PictureTakenPropertyId = 0x9003;
-        private static readonly Regex _dateTimeExpression = new Regex(@"[0-9]{4}:[0-9]{2}:[0-9]{2}\s{1}[0-9]{2}:[0-9]{2}:[0-9]{2}");
+        private const int PictureTakenPropertyId = 0x9003;
+
+        private static readonly Regex _dateTimeExpression =
+            new Regex(@"[0-9]{4}:[0-9]{2}:[0-9]{2}\s{1}[0-9]{2}:[0-9]{2}:[0-9]{2}");
 
         public IEnumerable<string> GetSupportedFileTypes()
         {
@@ -37,7 +36,7 @@
         public DateTime? ReadMediaCreatedDate(Stream stream)
         {
             var source = ImageFile.FromStream(stream);
-            
+
             var dateTakenProperty = source.Properties?.FirstOrDefault(x => x.Tag == ExifTag.DateTimeOriginal);
 
             if (dateTakenProperty == null)

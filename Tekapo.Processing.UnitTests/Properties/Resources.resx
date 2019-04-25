@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="exif_jpg" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\exif.jpg.data;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="nopicturetaken_jpg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\nopicturetaken.jpg.data;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="noexif_jpg" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\noexif.jpg.data;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="picturetaken_jpg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\picturetaken.jpg.data;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

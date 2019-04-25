@@ -22,18 +22,71 @@ namespace Tekapo.Processing.UnitTests
         }
 
         [Fact]
-        public void ReadMediaCreatedDateReturnsValueForStreamContainingExifData()
+        public void ReadMediaCreatedDateReturnsNullWhenStreamDoesNotContainPictureTakenDate()
+        {
+            var sut = new JpegMediaManager();
+
+            using (var stream = new MemoryStream(Resources.nopicturetaken_jpg))
+            {
+                var actual = sut.ReadMediaCreatedDate(stream);
+
+                actual.Should().NotHaveValue();
+            }
+        }
+
+        [Fact]
+        public void ReadMediaCreatedDateReturnsValueWhenStreamContainsPictureTakenDate()
         {
             var expected = new DateTime(2019, 4, 25, 16, 58, 17);
 
             var sut = new JpegMediaManager();
 
-            using (var stream = new MemoryStream(Resources.exif_jpg))
+            using (var stream = new MemoryStream(Resources.picturetaken_jpg))
             {
                 var actual = sut.ReadMediaCreatedDate(stream);
 
                 actual.Should().HaveValue();
                 actual.Should().Be(expected);
+            }
+        }
+
+        [Fact]
+        public void SetMediaCreatedDateCanUpdateStreamAlreadyContainingPictureTakenDate()
+        {
+            var point = DateTime.Now;
+            var expected = new DateTime(point.Year, point.Month, point.Day, point.Hour, point.Minute, point.Second);
+
+            var sut = new JpegMediaManager();
+
+            using (var inputStream = new MemoryStream(Resources.picturetaken_jpg))
+            {
+                using (var outputStream = sut.SetMediaCreatedDate(inputStream, expected))
+                {
+                    var actual = sut.ReadMediaCreatedDate(outputStream);
+
+                    actual.Should().HaveValue();
+                    actual.Should().Be(expected);
+                }
+            }
+        }
+
+        [Fact]
+        public void SetMediaCreatedDateCanUpdateStreamNotContainingPictureTakenDate()
+        {
+            var point = DateTime.Now;
+            var expected = new DateTime(point.Year, point.Month, point.Day, point.Hour, point.Minute, point.Second);
+
+            var sut = new JpegMediaManager();
+
+            using (var inputStream = new MemoryStream(Resources.nopicturetaken_jpg))
+            {
+                using (var outputStream = sut.SetMediaCreatedDate(inputStream, expected))
+                {
+                    var actual = sut.ReadMediaCreatedDate(outputStream);
+
+                    actual.Should().HaveValue();
+                    actual.Should().Be(expected);
+                }
             }
         }
     }

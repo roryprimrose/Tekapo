@@ -63,9 +63,9 @@ namespace Tekapo.Processing.UnitTests.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] exif_jpg {
+        internal static byte[] nopicturetaken_jpg {
             get {
-                object obj = ResourceManager.GetObject("exif_jpg", resourceCulture);
+                object obj = ResourceManager.GetObject("nopicturetaken_jpg", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace Tekapo.Processing.UnitTests.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] noexif_jpg {
+        internal static byte[] picturetaken_jpg {
             get {
-                object obj = ResourceManager.GetObject("noexif_jpg", resourceCulture);
+                object obj = ResourceManager.GetObject("picturetaken_jpg", resourceCulture);
                 return ((byte[])(obj));
             }
         }
