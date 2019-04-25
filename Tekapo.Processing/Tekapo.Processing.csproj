@@ -136,6 +136,8 @@
   <ItemGroup>
     <Compile Include="CompositeMediaManager.cs" />
     <Compile Include="FileResult.cs" />
+    <Compile Include="MediaInfo.cs" />
+    <Compile Include="MediaManagerExtensions.cs" />
     <Compile Include="PathManager.cs" />
     <Compile Include="IMediaManager.cs" />
     <Compile Include="IPathManager.cs" />
@@ -149,6 +151,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Results.cs" />
+    <Compile Include="StreamExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
