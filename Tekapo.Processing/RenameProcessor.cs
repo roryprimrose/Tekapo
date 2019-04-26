@@ -28,7 +28,6 @@
 
             if (currentTime == null)
             {
-                result.IsSuccessful = false;
                 result.ErrorMessage =
                     "The date and time the media was created could not be determined, skipping this file.";
 
@@ -46,6 +45,9 @@
             // Check that the file paths are different
             if (filePath == newPath)
             {
+                result.ErrorMessage =
+                    "The calculated file path is the same as the original file path, skipping this file.";
+
                 return result;
             }
 
@@ -85,10 +87,11 @@
 
                 // Rename the file
                 File.Move(filePath, newPath);
+
+                result.IsSuccessful = true;
             }
             catch (IOException ex)
             {
-                result.IsSuccessful = false;
                 result.ErrorMessage = ex.Message;
             }
 

@@ -66,6 +66,14 @@ namespace Tekapo.Controls
         private void ProcessRename(string path, RenameConfiguration config)
         {
             var result = _renameProcessor.RenameFile(path, config);
+
+            ProcessResults.Add(result);
+
+            if (result.IsSuccessful == false)
+            {
+                return;
+            }
+
             var displayPath = result.NewPath;
 
             // Check if the new path is in the same directory
@@ -80,8 +88,6 @@ namespace Tekapo.Controls
                 path,
                 displayPath);
             SetProgressStatus(progressMessage);
-
-            ProcessResults.Add(result);
         }
 
         private void ProcessTimeShift(string path)
