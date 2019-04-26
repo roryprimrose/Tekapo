@@ -52,10 +52,10 @@ steps:
     ArtifactName: 'drop'
     
 - task: GitHubRelease@0
-  gitHubConnection: 'GitHub - roryprimrose'
-  isPreRelease: contains(variables['GitVersion.NuGetVersionV2'], '-')
   inputs:
+    gitHubConnection: 'GitHub - roryprimrose'
     action: 'create'
     target: '$(GitVersion.NuGetVersionV2)'
     title: 'v$(GitVersion.NuGetVersionV2)'
+    isPreRelease: contains(variables['GitVersion.NuGetVersionV2'], '-')
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
