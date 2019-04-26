@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -87,6 +88,9 @@
             return null;
         }
 
+        [SuppressMessage("Microsoft.Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "The stream is the value returned by the function and cannot be disposed here.")]
         public Stream SetMediaCreatedDate(Stream stream, DateTime createdAt)
         {
             var picture = ImageFile.FromStream(stream);

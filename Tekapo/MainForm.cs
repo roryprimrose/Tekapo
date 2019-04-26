@@ -95,6 +95,16 @@ namespace Tekapo
             }
         }
 
+        private static IContainer BuildContainer()
+        {
+            var builder = new ContainerBuilder();
+
+            builder.RegisterModule<TekapoModule>();
+            builder.RegisterModule<ProcessingModule>();
+
+            return builder.Build();
+        }
+
         /// <summary>
         ///     Gets the directory from arguments.
         /// </summary>
@@ -127,16 +137,6 @@ namespace Tekapo
 
             // No directory was found
             return string.Empty;
-        }
-
-        private IContainer BuildContainer()
-        {
-            var builder = new ContainerBuilder();
-
-            builder.RegisterModule<TekapoModule>();
-            builder.RegisterModule<ProcessingModule>();
-
-            return builder.Build();
         }
 
         /// <summary>
@@ -287,18 +287,12 @@ namespace Tekapo
             var finishNavigationSettings = new WizardPageNavigationSettings(Constants.ProcessFilesNavigationKey);
 
             // Create the Naming Format page
-            Pages.Add(Constants.NameFormatNavigationKey,
-                nameFormatPage,
-                finishPageSettings,
-                finishNavigationSettings);
+            Pages.Add(Constants.NameFormatNavigationKey, nameFormatPage, finishPageSettings, finishNavigationSettings);
 
             // Create the Time Shift page
             var timeShiftPage = _container.Resolve<TimeShiftPage>();
 
-            Pages.Add(Constants.TimeShiftNavigationKey,
-                timeShiftPage,
-                finishPageSettings,
-                finishNavigationSettings);
+            Pages.Add(Constants.TimeShiftNavigationKey, timeShiftPage, finishPageSettings, finishNavigationSettings);
 
             // Create the Progress page
             var processFilesPage = _container.Resolve<ProcessFilesPage>();

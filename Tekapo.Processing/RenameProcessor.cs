@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using EnsureThat;
 
     public class RenameProcessor : IRenameProcessor
     {
@@ -10,12 +11,18 @@
 
         public RenameProcessor(IMediaManager mediaManager, IPathManager pathManager)
         {
+            Ensure.Any.IsNotNull(mediaManager, nameof(mediaManager));
+            Ensure.Any.IsNotNull(pathManager, nameof(pathManager));
+
             _mediaManager = mediaManager;
             _pathManager = pathManager;
         }
 
         public FileResult RenameFile(string filePath, RenameConfiguration config)
         {
+            Ensure.String.IsNotEmptyOrWhitespace(filePath, nameof(filePath));
+            Ensure.Any.IsNotNull(config, nameof(config));
+
             // Calculate the new path
             var result = new FileResult {OriginalPath = filePath};
 

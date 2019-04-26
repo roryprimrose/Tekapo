@@ -2,6 +2,7 @@ namespace Tekapo.Processing
 {
     using System;
     using System.Collections.ObjectModel;
+    using EnsureThat;
 
     [Serializable]
     public class Results
@@ -13,6 +14,8 @@ namespace Tekapo.Processing
 
         public void Add(FileResult result)
         {
+            Ensure.Any.IsNotNull(result, nameof(result));
+
             FileResults.Add(result);
 
             FilesProcessed++;

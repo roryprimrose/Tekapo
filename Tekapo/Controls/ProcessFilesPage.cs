@@ -4,19 +4,21 @@ namespace Tekapo.Controls
     using System.ComponentModel;
     using System.Globalization;
     using System.IO;
+    using EnsureThat;
     using Tekapo.Processing;
     using Tekapo.Properties;
 
     public partial class ProcessFilesPage : ProgressPage
     {
         private readonly IMediaManager _mediaManager;
-        private readonly IPathManager _pathManager;
         private readonly IRenameProcessor _renameProcessor;
 
-        public ProcessFilesPage(IMediaManager mediaManager, IPathManager pathManager, IRenameProcessor renameProcessor)
+        public ProcessFilesPage(IMediaManager mediaManager, IRenameProcessor renameProcessor)
         {
+            Ensure.Any.IsNotNull(mediaManager, nameof(mediaManager));
+            Ensure.Any.IsNotNull(renameProcessor, nameof(renameProcessor));
+
             _mediaManager = mediaManager;
-            _pathManager = pathManager;
             _renameProcessor = renameProcessor;
 
             InitializeComponent();
