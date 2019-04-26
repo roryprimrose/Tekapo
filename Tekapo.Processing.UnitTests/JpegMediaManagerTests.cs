@@ -10,11 +10,62 @@ namespace Tekapo.Processing.UnitTests
     public class JpegMediaManagerTests
     {
         [Fact]
-        public void GetSupportedFileTypesReturnsCorrectFileExtensions()
+        public void CanProcessReturnsFalseForPngFile()
         {
             var sut = new JpegMediaManager();
 
-            var actual = sut.GetSupportedFileTypes().ToList();
+            using (var stream = new MemoryStream(Resources.example_png))
+            {
+                var actual = sut.CanProcess(stream);
+
+                actual.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public void CanProcessReturnsFalseForUnsupportedImageFile()
+        {
+            var sut = new JpegMediaManager();
+
+            using (var stream = new MemoryStream(Resources.example_bmp))
+            {
+                var actual = sut.CanProcess(stream);
+
+                actual.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public void CanProcessReturnsTrueForJpgFile()
+        {
+            var sut = new JpegMediaManager();
+
+            using (var stream = new MemoryStream(Resources.nopicturetaken_jpg))
+            {
+                var actual = sut.CanProcess(stream);
+
+                actual.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void CanProcessThrowsExceptionWithNullStream()
+        {
+            var sut = new JpegMediaManager();
+
+            Action action = () => sut.CanProcess(null);
+
+            action.Should().Throw<ArgumentNullException>();
+        }
+
+        [Theory]
+        [InlineData(MediaOperationType.Read)]
+        [InlineData(MediaOperationType.ReadWrite)]
+        public void GetSupportedFileTypesReturnsCorrectFileExtensions(MediaOperationType operationType)
+        {
+            var sut = new JpegMediaManager();
+
+            var actual = sut.GetSupportedFileTypes(operationType).ToList();
 
             actual.Should().HaveCount(2);
             actual.Should().Contain(".jpg");
@@ -48,6 +99,16 @@ namespace Tekapo.Processing.UnitTests
                 actual.Should().HaveValue();
                 actual.Should().Be(expected);
             }
+        }
+
+        [Fact]
+        public void ReadMediaCreatedDateThrowsExceptionWithNullStream()
+        {
+            var sut = new JpegMediaManager();
+
+            Action action = () => sut.ReadMediaCreatedDate(null);
+
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]

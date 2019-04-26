@@ -140,6 +140,7 @@
     <Compile Include="IRenameProcessor.cs" />
     <Compile Include="MediaInfo.cs" />
     <Compile Include="MediaManagerExtensions.cs" />
+    <Compile Include="MediaOperationType.cs" />
     <Compile Include="PathManager.cs" />
     <Compile Include="IMediaManager.cs" />
     <Compile Include="IPathManager.cs" />

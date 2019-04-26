@@ -8,7 +8,7 @@
     {
         bool CanProcess(Stream stream);
 
-        IEnumerable<string> GetSupportedFileTypes();
+        IEnumerable<string> GetSupportedFileTypes(MediaOperationType operationType);
 
         DateTime? ReadMediaCreatedDate(Stream stream);
 

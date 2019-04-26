@@ -64,6 +64,7 @@ namespace Tekapo.Controls
         {
             var expressionTest = new Regex(regularExpressionPattern, RegexOptions.Singleline);
             var totalCount = files.Count;
+            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.ReadWrite : MediaOperationType.Read;
 
             // Loop through each file
             for (var index = 0; index < totalCount; index++)
@@ -78,7 +79,7 @@ namespace Tekapo.Controls
                 SetProgressStatus(path);
                 
                 // Check if the file is a supported type
-                if (_mediaManager.IsSupported(path))
+                if (_mediaManager.IsSupported(path, operationType))
                 {
                     if (filterType != SearchFilterType.RegularExpression
                         || expressionTest.IsMatch(path))

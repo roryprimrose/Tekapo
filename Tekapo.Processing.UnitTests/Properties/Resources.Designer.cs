@@ -63,6 +63,26 @@ namespace Tekapo.Processing.UnitTests.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] example_bmp {
+            get {
+                object obj = ResourceManager.GetObject("example_bmp", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] example_png {
+            get {
+                object obj = ResourceManager.GetObject("example_png", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] nopicturetaken_jpg {
             get {
                 object obj = ResourceManager.GetObject("nopicturetaken_jpg", resourceCulture);
