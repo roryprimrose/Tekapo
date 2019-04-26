@@ -1,6 +1,7 @@
 namespace Tekapo
 {
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Xml.Serialization;
 
@@ -46,6 +47,9 @@ namespace Tekapo
         /// <returns>
         ///     A <see cref="string" /> instance.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage",
+            "CA2202:Do not dispose objects multiple times",
+            Justification = "There shouldn't be an assumption here that the StreamReader will dispose the stream.")]
         public static string SerializeList(BindingList<string> list)
         {
             // Check if there is a list

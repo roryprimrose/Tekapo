@@ -1,5 +1,6 @@
 namespace Tekapo.Processing
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Xml;
     using System.Xml.Serialization;
@@ -40,6 +41,9 @@ namespace Tekapo.Processing
         /// <returns>
         ///     A <see cref="string" /> instance.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage",
+            "CA2202:Do not dispose objects multiple times",
+            Justification = "There shouldn't be an assumption here that the StreamReader will dispose the stream.")]
         private static string ConvertResultsToXml(Results document)
         {
             string xml;
@@ -73,6 +77,9 @@ namespace Tekapo.Processing
         /// <returns>
         ///     A <see cref="string" /> instance.
         /// </returns>
+        [SuppressMessage("Microsoft.Usage",
+            "CA2202:Do not dispose objects multiple times",
+            Justification = "There shouldn't be an assumption here that the StreamReader will dispose the stream.")]
         private static string TransformXmlToHtml(string xml)
         {
             var xslt = Resources.ResultsLog;

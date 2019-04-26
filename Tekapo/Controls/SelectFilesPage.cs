@@ -1,7 +1,6 @@
 namespace Tekapo.Controls
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
@@ -42,7 +41,7 @@ namespace Tekapo.Controls
                 }
 
                 // Define what the next navigation will go to
-                if ((string)State[Constants.TaskStateKey] == Constants.RenameTask)
+                if ((string) State[Constants.TaskStateKey] == Constants.RenameTask)
                 {
                     e.NavigationKey = Constants.NameFormatNavigationKey;
                 }
@@ -53,6 +52,18 @@ namespace Tekapo.Controls
             }
 
             return base.CanNavigate(e);
+        }
+
+        private static string BuildFilter(IList<string> supportedFileTypes)
+        {
+            // Get the extensions without the leading .
+            var parts = supportedFileTypes.Select(x =>
+                x.ToUpper(CultureInfo.CurrentCulture) + " files (*." + x + ")|*." + x);
+
+            var filterValue = string.Join("|", parts);
+
+            // Return the filter value
+            return filterValue;
         }
 
         private void AddFiles_Click(object sender, EventArgs e)
@@ -103,24 +114,13 @@ namespace Tekapo.Controls
             }
         }
 
-        private string BuildFilter(IList<string> supportedFileTypes)
-        {
-            // Get the extensions without the leading .
-            var parts = supportedFileTypes.Select(x => x.ToUpper(CultureInfo.CurrentCulture) + " files (*." + x + ")|*." + x);
-
-            var filterValue = string.Join("|", parts);
-
-            // Return the filter value
-            return filterValue;
-        }
-
         private void Files_DragDrop(object sender, DragEventArgs e)
         {
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 // Get the list of files
-                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                var files = (string[]) e.Data.GetData(DataFormats.FileDrop);
 
                 // Loop through each item being dragged
                 for (var index = 0; index < files.Length; index++)
@@ -136,7 +136,7 @@ namespace Tekapo.Controls
                     {
                         continue;
                     }
-                    
+
                     // Check that the item is a file which is supported, but not yet in the list
                     if (_mediaManager.IsSupported(item))
                     {
@@ -153,13 +153,13 @@ namespace Tekapo.Controls
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 // Get the list of files
-                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                var files = (string[]) e.Data.GetData(DataFormats.FileDrop);
 
                 // Loop through each item being dragged
                 for (var index = 0; index < files.Length; index++)
                 {
                     var item = files[index];
-                    
+
                     if (File.Exists(item) == false)
                     {
                         continue;
@@ -169,7 +169,7 @@ namespace Tekapo.Controls
                     {
                         continue;
                     }
-                    
+
                     // Check that the item is a file which is supported, but not yet in the list
                     if (_mediaManager.IsSupported(item))
                     {
@@ -262,9 +262,9 @@ namespace Tekapo.Controls
         private void SelectFiles_Opening(object sender, EventArgs e)
         {
             Files.DataSource = State[Constants.FileListStateKey];
-            _lastDirectoryPath = (string)State[Constants.SearchPathStateKey];
+            _lastDirectoryPath = (string) State[Constants.SearchPathStateKey];
         }
 
-        public BindingList<string> FileList => (BindingList<string>)State[Constants.FileListStateKey];
+        public BindingList<string> FileList => (BindingList<string>) State[Constants.FileListStateKey];
     }
 }
