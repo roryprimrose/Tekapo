@@ -40,16 +40,9 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(Build.SourcesDirectory)'
-    Contents: '**Tekapo/bin/$(buildConfiguration)/*.*'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    flattenFolders: true
-    
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+    rootFolderOrFile: '$(Build.SourcesDirectory)/Tekapo/bin/$(buildConfiguration)/'
     includeRootFolder: false
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber).zip'
 
@@ -57,3 +50,12 @@ steps:
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber).zip'
     ArtifactName: 'drop'
+    
+- task: GitHubRelease@0
+  gitHubConnection: 'GitHub - roryprimrose'
+  isPreRelease: contains(variables['GitVersion.NuGetVersionV2'], '-')
+  inputs:
+    action: 'create'
+    target: '$(GitVersion.NuGetVersionV2)'
+    title: 'v$(GitVersion.NuGetVersionV2)'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
