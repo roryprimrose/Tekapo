@@ -17,9 +17,12 @@ steps:
   inputs:
     updateAssemblyInfo: true
 
-- script: echo The build version is $(GitVersion.NuGetVersionV2)
+- script: echo %Action%%BuildVersion%
   displayName: 'Set build version'
-
+    env:
+      Action: '##vso[build.updatebuildnumber]'
+      BuildVersion: $(GitVersion.NuGetVersionV2)
+   
 - task: NuGetToolInstaller@0
 
 - task: NuGetCommand@2
