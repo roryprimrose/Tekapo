@@ -12,7 +12,7 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: GitVersionTask@4
+- task: GitVersion@4
   displayName: 'GitVersion'
   inputs:
     updateAssemblyInfo: true
