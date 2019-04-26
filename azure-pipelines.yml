@@ -20,7 +20,8 @@ steps:
 - task: CmdLine@2
   displayName: 'Set build version'
   inputs:
-    script: 'echo ##vso[build.updatebuildnumber]'$(GitVersion_NuGetVersionV2)
+    script: 'echo ##vso[build.updatebuildnumber]%GitVersion_NuGetVersionV2%'
+    env: GitVersion_NuGetVersionV2: $(GitVersion_NuGetVersionV2)
 
 - task: NuGetToolInstaller@0
 
