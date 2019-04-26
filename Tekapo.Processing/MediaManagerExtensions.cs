@@ -7,7 +7,7 @@
 
     public static class MediaManagerExtensions
     {
-        public static bool IsSupported(this IMediaManager mediaManager, string filePath)
+        public static bool IsSupported(this IMediaManager mediaManager, string filePath, MediaOperationType operationType)
         {
             Ensure.Any.IsNotNull(mediaManager, nameof(mediaManager));
 
@@ -18,7 +18,7 @@
                 return false;
             }
 
-            var fileTypes = mediaManager.GetSupportedFileTypes();
+            var fileTypes = mediaManager.GetSupportedFileTypes(operationType);
 
             return fileTypes.Any(x => string.Equals(x, fileType, StringComparison.OrdinalIgnoreCase));
         }

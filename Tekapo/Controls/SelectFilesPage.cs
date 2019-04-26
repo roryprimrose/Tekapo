@@ -67,8 +67,9 @@ namespace Tekapo.Controls
         }
 
         private void AddFiles_Click(object sender, EventArgs e)
-        {
-            var supportedFileTypes = _mediaManager.GetSupportedFileTypes().Select(x => x.Substring(1)).ToList();
+        {            
+            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.ReadWrite : MediaOperationType.Read;
+            var supportedFileTypes = _mediaManager.GetSupportedFileTypes(operationType).Select(x => x.Substring(1)).ToList();
             var dialogFilter = BuildFilter(supportedFileTypes);
             var defaultExtension = "jpg";
 
@@ -116,6 +117,8 @@ namespace Tekapo.Controls
 
         private void Files_DragDrop(object sender, DragEventArgs e)
         {
+            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.ReadWrite : MediaOperationType.Read;
+            
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -138,7 +141,7 @@ namespace Tekapo.Controls
                     }
 
                     // Check that the item is a file which is supported, but not yet in the list
-                    if (_mediaManager.IsSupported(item))
+                    if (_mediaManager.IsSupported(item, operationType))
                     {
                         // Add the file to the list
                         FileList.Add(item);
@@ -149,6 +152,8 @@ namespace Tekapo.Controls
 
         private void Files_DragEnter(object sender, DragEventArgs e)
         {
+            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.ReadWrite : MediaOperationType.Read;
+            
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -171,7 +176,7 @@ namespace Tekapo.Controls
                     }
 
                     // Check that the item is a file which is supported, but not yet in the list
-                    if (_mediaManager.IsSupported(item))
+                    if (_mediaManager.IsSupported(item, operationType))
                     {
                         // Determine whether this item is a valid extension
                         e.Effect = DragDropEffects.Link;

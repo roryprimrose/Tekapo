@@ -26,9 +26,9 @@
             return true;
         }
 
-        public IEnumerable<string> GetSupportedFileTypes()
+        public IEnumerable<string> GetSupportedFileTypes(MediaOperationType operationType)
         {
-            return _managers.SelectMany(x => x.GetSupportedFileTypes()).Distinct();
+            return _managers.SelectMany(x => x.GetSupportedFileTypes(operationType)).Distinct();
         }
 
         public DateTime? ReadMediaCreatedDate(Stream stream)
