@@ -6,53 +6,52 @@
   <xsl:template match="/">
     <html>
       <head>
-        <style>
+          <link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/dark.css' />
+          <style>
 
-          body
-          {
-          font-family: Arial;
-          }
+            dl.header dt
+            {
+              float: left;
+              width: 150px;
+              clear: both;
+              margin-bottom: 5px;
+            }
 
-          h1
-          {
-          font-family: Verdana;
-          font-size: 18pt;
-          }
+            dl.header dd
+            {
+              margin-left: 0px;
+              padding-bottom: 5px;
+            }
 
-          dl.header dt
-          {
-          float: left;
-          width: 150px;
-          clear: both;
-          margin-bottom: 5px;
-          }
+            dl.items
+            {
+              border-top: 1px solid;
+            }
 
-          dl.items dt
-          {
-          margin-top: 40px;
-          border-top: 1px solid;
-          padding-top: 10px;
-          padding-bottom: 10px;
-          }
+            dl.items dt
+            {
+              padding-top: 10px;
+              padding-bottom: 10px;
+            }
 
-          dl.items dd
-          {
-          margin-left: 0px;
-          font-size: smaller;
-          padding-bottom: 5px;
-          }
+            dl.items dd
+            {
+              margin-left: 0px;
+              font-size: smaller;
+              padding-bottom: 5px;
+            }
 
-          .succeeded
-          {
-          color: green;
-          }
+            .succeeded
+            {
+              color: green;
+            }
 
-          .failed
-          {
-          color: red;
-          }
+            .failed
+            {
+              color: red;
+            }
 
-        </style>
+          </style>
       </head>
       <body>
         <h1>Tekapo Results Log</h1>

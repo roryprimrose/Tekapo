@@ -4,6 +4,7 @@ namespace Tekapo.Controls
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.IO;
     using System.Threading;
     using System.Windows.Forms;
     using Neovolve.Windows.Forms;
@@ -13,10 +14,9 @@ namespace Tekapo.Controls
 
     public partial class NameFormatPage : WizardBannerPage
     {
-        private Thread _exampleThread;
-
         private readonly IMediaManager _mediaManager;
         private readonly IPathManager _pathManager;
+        private Thread _exampleThread;
 
         public NameFormatPage(IMediaManager mediaManager, IPathManager pathManager)
         {
@@ -84,21 +84,54 @@ namespace Tekapo.Controls
             {
                 // A name format is specified and is valid
                 // Generate the example
-                var sourcePath = ((BindingList<string>) State[Constants.FileListStateKey])[0];
-                var mediaCreatedDate = _mediaManager.ReadMediaCreatedDate(sourcePath);
-                var incrementOnCollision = IncrementOnCollision.Checked;
-                var maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
-                var resultPath = _pathManager.GetRenamedPath(renameFormat,
-                    mediaCreatedDate,
-                    sourcePath,
-                    incrementOnCollision,
-                    maxCollisionIncrement);
-                var exampleFormat = Resources.NameFormatExample.Replace("\\n", "\n");
+                var exampleData = FindPictureTakenDate();
 
-                exampleMessage = string.Format(CultureInfo.CurrentCulture, exampleFormat, sourcePath, resultPath);
+                if (exampleData.CreatedAt == null)
+                {
+                    // No example data was resolved
+                    exampleMessage = Resources.NameFormatExampleNoValidFile;
+                }
+                else
+                {
+                    var incrementOnCollision = IncrementOnCollision.Checked;
+                    var maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
+                    var resultPath = _pathManager.GetRenamedPath(renameFormat,
+                        exampleData.CreatedAt.Value,
+                        exampleData.Path,
+                        incrementOnCollision,
+                        maxCollisionIncrement);
+                    var exampleFormat = Resources.NameFormatExample.Replace("\\n", "\n");
+
+                    exampleMessage = string.Format(CultureInfo.CurrentCulture,
+                        exampleFormat,
+                        exampleData.Path,
+                        resultPath);
+                }
             }
 
             SetExampleValue(exampleMessage);
+        }
+
+        private ExampleData FindPictureTakenDate()
+        {
+            var paths = (BindingList<string>) State[Constants.FileListStateKey];
+
+            foreach (var path in paths)
+            {
+                using (var stream = File.Open(path, FileMode.Open, FileAccess.Read))
+                {
+                    var mediaCreatedDate = _mediaManager.ReadMediaCreatedDate(stream);
+
+                    if (mediaCreatedDate == null)
+                    {
+                        continue;
+                    }
+
+                    return new ExampleData {CreatedAt = mediaCreatedDate, Path = path};
+                }
+            }
+
+            return default;
         }
 
         private string GetFormatValue()
@@ -216,6 +249,13 @@ namespace Tekapo.Controls
             }
 
             Example.Text = example;
+        }
+
+        private struct ExampleData
+        {
+            public string Path { get; set; }
+
+            public DateTime? CreatedAt { get; set; }
         }
     }
 }

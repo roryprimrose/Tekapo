@@ -127,10 +127,18 @@ namespace Tekapo.Controls
                 {
                     var item = files[index];
 
+                    if (File.Exists(item) == false)
+                    {
+                        continue;
+                    }
+
+                    if (FileList.Contains(item))
+                    {
+                        continue;
+                    }
+                    
                     // Check that the item is a file which is supported, but not yet in the list
-                    if (File.Exists(item)
-                        && _mediaManager.IsSupported(item)
-                        && FileList.Contains(item) == false)
+                    if (_mediaManager.IsSupported(item))
                     {
                         // Add the file to the list
                         FileList.Add(item);
@@ -151,11 +159,19 @@ namespace Tekapo.Controls
                 for (var index = 0; index < files.Length; index++)
                 {
                     var item = files[index];
+                    
+                    if (File.Exists(item) == false)
+                    {
+                        continue;
+                    }
 
+                    if (FileList.Contains(item))
+                    {
+                        continue;
+                    }
+                    
                     // Check that the item is a file which is supported, but not yet in the list
-                    if (File.Exists(item)
-                        && _mediaManager.IsSupported(item)
-                        && FileList.Contains(item) == false)
+                    if (_mediaManager.IsSupported(item))
                     {
                         // Determine whether this item is a valid extension
                         e.Effect = DragDropEffects.Link;

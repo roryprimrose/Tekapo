@@ -22,11 +22,11 @@ namespace Tekapo.Controls
         protected override void ProcessTask()
         {
             // Get the search criteria
-            var basePath = (string) State[Constants.SearchPathStateKey];
-            var recurseDirectories = (bool) State[Constants.SearchSubDirectoriesStateKey];
-            var filterType = (SearchFilterType) State[Constants.SearchFilterTypeStateKey];
-            var wildcardPattern = (string) State[Constants.SearchFilterWildcardStateKey];
-            var regularExpressionPattern = (string) State[Constants.SearchFilterRegularExpressionStateKey];
+            var basePath = (string)State[Constants.SearchPathStateKey];
+            var recurseDirectories = (bool)State[Constants.SearchSubDirectoriesStateKey];
+            var filterType = (SearchFilterType)State[Constants.SearchFilterTypeStateKey];
+            var wildcardPattern = (string)State[Constants.SearchFilterWildcardStateKey];
+            var regularExpressionPattern = (string)State[Constants.SearchFilterRegularExpressionStateKey];
 
             // Run the first search stage
             // Get the list of directories involved
@@ -76,7 +76,7 @@ namespace Tekapo.Controls
 
                 // Update the search status
                 SetProgressStatus(path);
-
+                
                 // Check if the file is a supported type
                 if (_mediaManager.IsSupported(path))
                 {
@@ -163,7 +163,7 @@ namespace Tekapo.Controls
             }
 
             // Check if the command line arguments have been processed
-            if ((bool) State[Constants.CommandLineArgumentsProcessedStateKey] == false)
+            if ((bool)State[Constants.CommandLineArgumentsProcessedStateKey] == false)
             {
                 // Update the status
                 SetProgressStatus(Resources.ParseCommandLineArguments);
@@ -194,7 +194,7 @@ namespace Tekapo.Controls
             // Check if a thread switch is required
             if (StepTitle.InvokeRequired)
             {
-                object[] args = {value};
+                object[] args = { value };
 
                 StepTitle.Invoke(new StringThreadSwitch(SetStepTitle), args);
 

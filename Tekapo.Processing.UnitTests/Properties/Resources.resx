@@ -117,88 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Close" xml:space="preserve">
-    <value>Close</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="nopicturetaken_jpg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\nopicturetaken.jpg.data;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="DefaultRenameFormat" xml:space="preserve">
-    <value>&lt;yyyy&gt;&lt;MM&gt;&lt;dd&gt;-&lt;hh&gt;&lt;mm&gt;&lt;ss&gt;</value>
-  </data>
-  <data name="ErrorNameFormatInvalid" xml:space="preserve">
-    <value>The name format specified is invalid.</value>
-  </data>
-  <data name="ErrorNoFilesSelected" xml:space="preserve">
-    <value>No files have been selected for processing.</value>
-  </data>
-  <data name="ErrorNoNameFormatProvided" xml:space="preserve">
-    <value>No name format has been specified.</value>
-  </data>
-  <data name="ErrorNoRegularExpressionProvided" xml:space="preserve">
-    <value>No regular expression format has been specified.</value>
-  </data>
-  <data name="ErrorNoSearchPathProvided" xml:space="preserve">
-    <value>No search path has been specified.</value>
-  </data>
-  <data name="ErrorNoTimeShiftProvided" xml:space="preserve">
-    <value>No time shift values have been specified. At least one of the fields must not equal 0.</value>
-  </data>
-  <data name="ErrorNoWildcardProvided" xml:space="preserve">
-    <value>No wildcard format has been specified.</value>
-  </data>
-  <data name="ErrorRegularExpressionInvalid" xml:space="preserve">
-    <value>The regular expression format specified is invalid.\n\n{0}</value>
-  </data>
-  <data name="ErrorSearchPathDoesNotExist" xml:space="preserve">
-    <value>The search path specified does not exist.</value>
-  </data>
-  <data name="FailedProcessedResultsFormat" xml:space="preserve">
-    <value>{0} files failed to be processed.</value>
-  </data>
-  <data name="FileSearchDirectoryTitle" xml:space="preserve">
-    <value>Step 1 of 3: Searching for directories</value>
-  </data>
-  <data name="FileSearchFileFilterTitle" xml:space="preserve">
-    <value>Step 3 of 3: Filtering files</value>
-  </data>
-  <data name="FileSearchFileTitle" xml:space="preserve">
-    <value>Step 2 of 3: Calculating files</value>
-  </data>
-  <data name="Finish" xml:space="preserve">
-    <value>Finish</value>
-  </data>
-  <data name="HelpAddress" xml:space="preserve">
-    <value>http://neovolve.com/</value>
-  </data>
-  <data name="NameFormatExample" xml:space="preserve">
-    <value>Example:\n\n{0}\n\nwill be renamed to \n\n{1}</value>
-  </data>
-  <data name="NameFormatExampleInvalidFormat" xml:space="preserve">
-    <value>Example:\n\nThe format specified is not valid.</value>
-  </data>
-  <data name="NameFormatExampleNoFormatAvailable" xml:space="preserve">
-    <value>Example:\n\nNo name format specified.</value>
-  </data>
-  <data name="NameFormatExampleNoValidFile" xml:space="preserve">
-    <value>Example:\n\n{0}\n\nNo valid files found for processing.</value>
-  </data>
-  <data name="ParseCommandLineArguments" xml:space="preserve">
-    <value>Parsing command line arguments.</value>
-  </data>
-  <data name="RenameProcessFormat" xml:space="preserve">
-    <value>Renamed {0} to {1}.</value>
-  </data>
-  <data name="Restart" xml:space="preserve">
-    <value>Restart</value>
-  </data>
-  <data name="SelectPathDescription" xml:space="preserve">
-    <value>Select a path to search.</value>
-  </data>
-  <data name="SkipButtonText" xml:space="preserve">
-    <value>Skip</value>
-  </data>
-  <data name="SuccessfulProcessedResultsFormat" xml:space="preserve">
-    <value>{0} files were successfully processed.</value>
-  </data>
-  <data name="TimeShiftProcessFormat" xml:space="preserve">
-    <value>Shifting time for {0}.</value>
+  <data name="picturetaken_jpg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\picturetaken.jpg.data;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

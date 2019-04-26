@@ -8,16 +8,27 @@
     {
         public static bool IsSupported(this IMediaManager mediaManager, string filePath)
         {
-            var extension = Path.GetExtension(filePath);
+            var fileType = Path.GetExtension(filePath);
 
-            if (string.IsNullOrWhiteSpace(extension))
+            if (string.IsNullOrWhiteSpace(fileType))
             {
                 return false;
             }
 
-            var supportedTypes = mediaManager.GetSupportedFileTypes();
+            var fileTypes = mediaManager.GetSupportedFileTypes();
 
-            return supportedTypes.Any(x => x.Equals(extension, StringComparison.OrdinalIgnoreCase));
+            return fileTypes.Any(x => string.Equals(x, fileType, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public static MediaInfo ReadMediaInfo(IMediaManager mediaManager, string filePath)
+        {
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                var mediaCreated = mediaManager.ReadMediaCreatedDate(stream);
+                var hash = stream.CalculateHash();
+
+                return new MediaInfo {FilePath = filePath, Hash = hash, MediaCreated = mediaCreated};
+            }
         }
     }
 }

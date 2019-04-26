@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
 
     public class CompositeMediaManager : IMediaManager
@@ -13,43 +14,50 @@
             _managers = managers.ToList();
         }
 
+        public bool CanProcess(Stream stream)
+        {
+            var manager = GetSupportingManager(stream);
+
+            if (manager == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public IEnumerable<string> GetSupportedFileTypes()
         {
             return _managers.SelectMany(x => x.GetSupportedFileTypes()).Distinct();
         }
 
-        public bool IsSupported(string filePath)
+        public DateTime? ReadMediaCreatedDate(Stream stream)
         {
-            return _managers.Any(x => x.IsSupported(filePath));
-        }
-
-        public DateTime ReadMediaCreatedDate(string filePath)
-        {
-            var manager = GetSupportingManager(filePath);
+            var manager = GetSupportingManager(stream);
 
             if (manager == null)
             {
                 throw new InvalidOperationException("The file specified is not supported.");
             }
 
-            return manager.ReadMediaCreatedDate(filePath);
+            return manager.ReadMediaCreatedDate(stream);
         }
 
-        public void SetMediaCreatedDate(string filePath, DateTime createdAt)
+        public Stream SetMediaCreatedDate(Stream stream, DateTime createdAt)
         {
-            var manager = GetSupportingManager(filePath);
+            var manager = GetSupportingManager(stream);
 
             if (manager == null)
             {
                 throw new InvalidOperationException("The file specified is not supported.");
             }
 
-            manager.SetMediaCreatedDate(filePath, createdAt);
+            return manager.SetMediaCreatedDate(stream, createdAt);
         }
 
-        private IMediaManager GetSupportingManager(string filePath)
+        private IMediaManager GetSupportingManager(Stream stream)
         {
-            return _managers.FirstOrDefault(x => x.IsSupported(filePath));
+            return _managers.FirstOrDefault(x => x.CanProcess(stream));
         }
     }
 }

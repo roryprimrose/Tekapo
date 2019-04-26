@@ -13,6 +13,7 @@ namespace Tekapo.Processing
             RegisterMediaManagers(builder);
 
             builder.RegisterType<PathManager>().As<IPathManager>();
+            builder.RegisterType<RenameProcessor>().As<IRenameProcessor>();
         }
         
         private static IEnumerable<IMediaManager> BuildMediaManagerRegistration(
