@@ -259,7 +259,7 @@ namespace Tekapo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Renaming {0} to {1}..
+        ///   Looks up a localized string similar to Renamed {0} to {1}..
         /// </summary>
         internal static string RenameProcessFormat {
             get {

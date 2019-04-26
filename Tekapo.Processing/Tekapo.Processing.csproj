@@ -136,6 +136,7 @@
   <ItemGroup>
     <Compile Include="CompositeMediaManager.cs" />
     <Compile Include="FileResult.cs" />
+    <Compile Include="IRenameProcessor.cs" />
     <Compile Include="MediaInfo.cs" />
     <Compile Include="MediaManagerExtensions.cs" />
     <Compile Include="PathManager.cs" />
@@ -150,6 +151,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RenameConfiguration.cs" />
+    <Compile Include="RenameProcessor.cs" />
     <Compile Include="Results.cs" />
     <Compile Include="StreamExtensions.cs" />
   </ItemGroup>

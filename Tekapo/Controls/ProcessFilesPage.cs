@@ -11,11 +11,13 @@ namespace Tekapo.Controls
     {
         private readonly IMediaManager _mediaManager;
         private readonly IPathManager _pathManager;
+        private readonly IRenameProcessor _renameProcessor;
 
-        public ProcessFilesPage(IMediaManager mediaManager, IPathManager pathManager)
+        public ProcessFilesPage(IMediaManager mediaManager, IPathManager pathManager, IRenameProcessor renameProcessor)
         {
             _mediaManager = mediaManager;
             _pathManager = pathManager;
+            _renameProcessor = renameProcessor;
 
             InitializeComponent();
         }
@@ -25,13 +27,17 @@ namespace Tekapo.Controls
             var items = (BindingList<string>)State[Constants.FileListStateKey];
             var totalItems = items.Count;
             var isRenameTask = (string)State[Constants.TaskStateKey] == Constants.RenameTask;
-
-            // Create the process results
-            var processResults = new Results();
-
-            // Store the results information
-            processResults.ProcessRunDate = DateTime.Now.ToLongDateString() + ", " + DateTime.Now.ToShortTimeString();
-            processResults.ProcessType = (string)State[Constants.TaskStateKey];
+            var renameConfig = new RenameConfiguration
+            {
+                RenameFormat = (string) State[Constants.NameFormatStateKey],
+                IncrementOnCollision = (bool) State[Constants.IncrementOnCollisionStateKey],
+                MaxCollisionIncrement = Settings.Default.MaxCollisionIncrement
+            };
+            var processResults = new Results
+            {
+                ProcessRunDate = DateTime.Now.ToLongDateString() + ", " + DateTime.Now.ToShortTimeString(),
+                ProcessType = (string) State[Constants.TaskStateKey]
+            };
 
             // Store the process results in state
             State[Constants.ProcessResultsStateKey] = processResults;
@@ -40,14 +46,11 @@ namespace Tekapo.Controls
             {
                 var path = items[index];
 
-                // Update the status
-                SetProgressPercentage(index + 1, totalItems);
-
                 // Check if the task is a rename
                 if (isRenameTask)
                 {
                     // Rename the file
-                    ProcessRename(path);
+                    ProcessRename(path, renameConfig);
                 }
                 else
                 {
@@ -55,106 +58,30 @@ namespace Tekapo.Controls
                     // Shift the time of the file
                     ProcessTimeShift(path);
                 }
+
+                SetProgressPercentage(index + 1, totalItems);
             }
         }
 
-        private void ProcessRename(string path)
+        private void ProcessRename(string path, RenameConfiguration config)
         {
-            // Calculate the new path
-            var renameFormat = (string)State[Constants.NameFormatStateKey];
-            var incrementOnCollision = (bool)State[Constants.IncrementOnCollisionStateKey];
-            var maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
-            var result = new FileResult { OriginalPath = path };
-
-            DateTime? currentTime;
-
-            using (var stream = File.Open(path, FileMode.Open, FileAccess.Read))
-            {
-                currentTime = _mediaManager.ReadMediaCreatedDate(stream);
-            }
-
-            if (currentTime == null)
-            {
-                ProcessResults.AddFailedResult(result, "The date and time the media was created could not be determined, skipping this file.");
-
-                return;
-            }
-
-            var newPath = _pathManager.GetRenamedPath(renameFormat,
-                currentTime.Value,
-                path,
-                incrementOnCollision,
-                maxCollisionIncrement);
-
-            result.NewPath = newPath;
-
-            var displayPath = newPath;
-
-            // Store the results
+            var result = _renameProcessor.RenameFile(path, config);
+            var displayPath = result.NewPath;
 
             // Check if the new path is in the same directory
-            if (Path.GetDirectoryName(path).ToUpperInvariant() == Path.GetDirectoryName(newPath).ToUpperInvariant())
+            if (Path.GetDirectoryName(result.OriginalPath).ToUpperInvariant() == Path.GetDirectoryName(result.NewPath).ToUpperInvariant())
             {
                 // Strip off the path to leave just the file name
-                displayPath = Path.GetFileName(newPath);
+                displayPath = Path.GetFileName(result.NewPath);
             }
 
-            // Set the progress status
             var progressMessage = string.Format(CultureInfo.CurrentCulture,
                 Resources.RenameProcessFormat,
                 path,
                 displayPath);
             SetProgressStatus(progressMessage);
 
-            try
-            {
-                // Check that the file paths are different
-                if (path != newPath)
-                {
-                    // Get the parent directory path
-                    var parentDirectory = Path.GetDirectoryName(newPath);
-
-                    // Check if the directory exists
-                    if (Directory.Exists(parentDirectory) == false)
-                    {
-                        // Create the directory
-                        Directory.CreateDirectory(parentDirectory);
-                    }
-
-                    // Check if collision checks are in place
-                    if (incrementOnCollision)
-                    {
-                        // Get the file named without an increment and the path with the first increment
-                        var newPathWithoutIncrement = _pathManager.GetRenamedPath(renameFormat,
-                            currentTime.Value,
-                            path,
-                            false,
-                            maxCollisionIncrement);
-                        var firstIncrementPath = _pathManager.CreateFilePathWithIncrement(
-                            newPathWithoutIncrement,
-                            1,
-                            maxCollisionIncrement);
-
-                        // Check if the first file needs to be renamed
-                        if (File.Exists(newPathWithoutIncrement)
-                            && File.Exists(firstIncrementPath) == false)
-                        {
-                            // Rename the original file as the first increment
-                            File.Move(newPathWithoutIncrement, firstIncrementPath);
-                        }
-                    }
-
-                    // Rename the file
-                    File.Move(path, newPath);
-                }
-
-                ProcessResults.AddSuccessfulResult(result);
-            }
-            catch (IOException ex)
-            {
-                // Store the results
-                ProcessResults.AddFailedResult(result, ex.Message);
-            }
+            ProcessResults.Add(result);
         }
 
         private void ProcessTimeShift(string path)
@@ -203,7 +130,6 @@ namespace Tekapo.Controls
                 {
                     // Store the new time in the file
                     updatedStream = _mediaManager.SetMediaCreatedDate(originalStream, newTime);
-
                 }
                 catch (IOException ex)
                 {
