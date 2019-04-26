@@ -46,7 +46,13 @@ steps:
     Contents: '**Tekapo/bin/$(buildConfiguration)/*.*'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     flattenFolders: true
+    
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+    includeRootFolder: false
 
 - task: PublishBuildArtifacts@1
   inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     ArtifactName: 'drop'
