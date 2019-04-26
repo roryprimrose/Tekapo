@@ -17,10 +17,8 @@ steps:
   inputs:
     updateAssemblyInfo: true
 
-- script: ${{ format('echo ##vso[build.updatebuildnumber]{0}', $(GitVersion.NuGetVersionV2)) }}
+- script: echo The build version is $(GitVersion.NuGetVersionV2)
   displayName: 'Set build version'
-   # env:
-   #   GitVersion_NuGetVersionV2: $(GitVersion_NuGetVersionV2)
 
 - task: NuGetToolInstaller@0
 
