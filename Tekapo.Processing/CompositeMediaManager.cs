@@ -37,7 +37,9 @@
 
             if (manager == null)
             {
-                throw new InvalidOperationException("The file specified is not supported.");
+                // This is not a supported file
+                // Possibly a file content format issue as the file extension looks like it should be supported
+                return null;
             }
 
             return manager.ReadMediaCreatedDate(stream);

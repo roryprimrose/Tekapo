@@ -68,12 +68,13 @@ namespace Tekapo.Controls
 
         private void AddFiles_Click(object sender, EventArgs e)
         {            
-            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.ReadWrite : MediaOperationType.Read;
+            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
             var supportedFileTypes = _mediaManager.GetSupportedFileTypes(operationType).Select(x => x.Substring(1)).ToList();
             var dialogFilter = BuildFilter(supportedFileTypes);
             var defaultExtension = "jpg";
+            var jpgIndex = supportedFileTypes.IndexOf(defaultExtension);
 
-            if (supportedFileTypes.Contains(defaultExtension) == false)
+            if (jpgIndex == -1)
             {
                 var firstExtension = supportedFileTypes.FirstOrDefault();
 
@@ -85,13 +86,13 @@ namespace Tekapo.Controls
 
             using (var dialog = new OpenFileDialog())
             {
-                dialog.Title = "Select files to add.";
+                dialog.Title = "Select files to add";
                 dialog.AddExtension = true;
                 dialog.CheckFileExists = true;
                 dialog.CheckPathExists = true;
                 dialog.DefaultExt = defaultExtension;
                 dialog.Filter = dialogFilter;
-                dialog.FilterIndex = 0;
+                dialog.FilterIndex = jpgIndex + 1;
                 dialog.Multiselect = true;
                 dialog.InitialDirectory = _lastDirectoryPath;
 
@@ -117,7 +118,7 @@ namespace Tekapo.Controls
 
         private void Files_DragDrop(object sender, DragEventArgs e)
         {
-            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.ReadWrite : MediaOperationType.Read;
+            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
             
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -152,7 +153,7 @@ namespace Tekapo.Controls
 
         private void Files_DragEnter(object sender, DragEventArgs e)
         {
-            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.ReadWrite : MediaOperationType.Read;
+            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
             
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))

@@ -64,7 +64,7 @@ namespace Tekapo.Controls
         {
             var expressionTest = new Regex(regularExpressionPattern, RegexOptions.Singleline);
             var totalCount = files.Count;
-            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.ReadWrite : MediaOperationType.Read;
+            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
 
             // Loop through each file
             for (var index = 0; index < totalCount; index++)

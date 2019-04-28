@@ -8,6 +8,7 @@
     using System.Linq;
     using EnsureThat;
     using ExifLibrary;
+    using MetadataExtractor.Util;
 
     public class JpegMediaManager : IMediaManager
     {
@@ -17,9 +18,9 @@
 
             try
             {
-                var image = ImageFile.FromStream(stream);
+                var fileType = FileTypeDetector.DetectFileType(stream);
 
-                if (image.Format == ImageFileFormat.JPEG)
+                if (fileType == FileType.Jpeg)
                 {
                     return true;
                 }

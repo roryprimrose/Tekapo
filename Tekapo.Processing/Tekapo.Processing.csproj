@@ -78,6 +78,9 @@
     <Reference Include="ExifLibrary, Version=1.2.21.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ExifLibNet.1.2.21\lib\netstandard1.3\ExifLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="MetadataExtractor, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetadataExtractor.2.0.0\lib\net45\MetadataExtractor.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
     </Reference>
@@ -133,6 +136,9 @@
     <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Xml.ReaderWriter.4.3.1\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
     </Reference>
+    <Reference Include="XmpCore, Version=5.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\XmpCore.5.1.3\lib\net35\XmpCore.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompositeMediaManager.cs" />
@@ -141,6 +147,7 @@
     <Compile Include="MediaInfo.cs" />
     <Compile Include="MediaManagerExtensions.cs" />
     <Compile Include="MediaOperationType.cs" />
+    <Compile Include="MovMediaManager.cs" />
     <Compile Include="PathManager.cs" />
     <Compile Include="IMediaManager.cs" />
     <Compile Include="IPathManager.cs" />
