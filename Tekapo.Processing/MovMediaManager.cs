@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using EnsureThat;
     using MetadataExtractor;
     using MetadataExtractor.Formats.QuickTime;
     using MetadataExtractor.Util;
@@ -14,6 +15,8 @@
     {
         public bool CanProcess(Stream stream)
         {
+            Ensure.Any.IsNotNull(stream, nameof(stream));
+
             stream.Position = 0;
 
             var fileType = FileTypeDetector.DetectFileType(stream);
@@ -36,6 +39,8 @@
 
         public DateTime? ReadMediaCreatedDate(Stream stream)
         {
+            Ensure.Any.IsNotNull(stream, nameof(stream));
+
             stream.Position = 0;
 
             var metadata = ImageMetadataReader.ReadMetadata(stream);
@@ -69,7 +74,7 @@
             throw new NotSupportedException("Updates can not be made to mov files.");
         }
 
-        private Tag SearchForTag(IReadOnlyList<Directory> directories)
+        private static Tag SearchForTag(IReadOnlyList<Directory> directories)
         {
             var movieHeader = directories.FirstOrDefault(x => x.Name == "QuickTime Movie Header");
 
