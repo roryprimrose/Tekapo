@@ -121,7 +121,7 @@
     <value>Close</value>
   </data>
   <data name="DefaultRenameFormat" xml:space="preserve">
-    <value>&lt;yyyy&gt;&lt;MM&gt;&lt;dd&gt;-&lt;hh&gt;&lt;mm&gt;&lt;ss&gt;</value>
+    <value>&lt;yyyy&gt;&lt;MM&gt;&lt;dd&gt;-&lt;HH&gt;&lt;mm&gt;&lt;ss&gt;</value>
   </data>
   <data name="ErrorNameFormatInvalid" xml:space="preserve">
     <value>The name format specified is invalid.</value>
@@ -145,7 +145,9 @@
     <value>No wildcard format has been specified.</value>
   </data>
   <data name="ErrorRegularExpressionInvalid" xml:space="preserve">
-    <value>The regular expression format specified is invalid.\n\n{0}</value>
+    <value>The regular expression format specified is invalid.
+
+{0}</value>
   </data>
   <data name="ErrorSearchPathDoesNotExist" xml:space="preserve">
     <value>The search path specified does not exist.</value>
@@ -169,16 +171,24 @@
     <value>http://neovolve.com/</value>
   </data>
   <data name="NameFormatExample" xml:space="preserve">
-    <value>Example:\n\n{0}\n\nwill be renamed to \n\n{1}</value>
+    <value>Example:
+
+{0} will be renamed to {1}</value>
   </data>
   <data name="NameFormatExampleInvalidFormat" xml:space="preserve">
-    <value>Example:\n\nThe format specified is not valid.</value>
+    <value>Example:
+
+The format specified is not valid.</value>
   </data>
   <data name="NameFormatExampleNoFormatAvailable" xml:space="preserve">
-    <value>Example:\n\nNo name format specified.</value>
+    <value>Example:
+
+No name format specified.</value>
   </data>
   <data name="NameFormatExampleNoValidFile" xml:space="preserve">
-    <value>Example:\n\n{0}\n\nNo valid files found for processing.</value>
+    <value>Example:
+
+No valid files found for processing.</value>
   </data>
   <data name="ParseCommandLineArguments" xml:space="preserve">
     <value>Parsing command line arguments.</value>

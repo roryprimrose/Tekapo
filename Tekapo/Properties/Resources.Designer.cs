@@ -70,7 +70,7 @@ namespace Tekapo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;yyyy&gt;&lt;MM&gt;&lt;dd&gt;-&lt;hh&gt;&lt;mm&gt;&lt;ss&gt;.
+        ///   Looks up a localized string similar to &lt;yyyy&gt;&lt;MM&gt;&lt;dd&gt;-&lt;HH&gt;&lt;mm&gt;&lt;ss&gt;.
         /// </summary>
         internal static string DefaultRenameFormat {
             get {
@@ -142,7 +142,9 @@ namespace Tekapo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The regular expression format specified is invalid.\n\n{0}.
+        ///   Looks up a localized string similar to The regular expression format specified is invalid.
+        ///
+        ///{0}.
         /// </summary>
         internal static string ErrorRegularExpressionInvalid {
             get {
@@ -214,7 +216,9 @@ namespace Tekapo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Example:\n\n{0}\n\nwill be renamed to \n\n{1}.
+        ///   Looks up a localized string similar to Example:
+        ///
+        ///{0} will be renamed to {1}.
         /// </summary>
         internal static string NameFormatExample {
             get {
@@ -223,7 +227,9 @@ namespace Tekapo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Example:\n\nThe format specified is not valid..
+        ///   Looks up a localized string similar to Example:
+        ///
+        ///The format specified is not valid..
         /// </summary>
         internal static string NameFormatExampleInvalidFormat {
             get {
@@ -232,7 +238,9 @@ namespace Tekapo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Example:\n\nNo name format specified..
+        ///   Looks up a localized string similar to Example:
+        ///
+        ///No name format specified..
         /// </summary>
         internal static string NameFormatExampleNoFormatAvailable {
             get {
@@ -241,7 +249,9 @@ namespace Tekapo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Example:\n\n{0}\n\nNo valid files found for processing..
+        ///   Looks up a localized string similar to Example:
+        ///
+        ///No valid files found for processing..
         /// </summary>
         internal static string NameFormatExampleNoValidFile {
             get {

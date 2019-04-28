@@ -55,7 +55,6 @@ steps:
   inputs:
     gitHubConnection: 'GitHub - roryprimrose'
     action: 'create'
-    target: '$(GitVersion.NuGetVersionV2)'
     tagSource: 'manual'
     tag: 'v$(GitVersion.NuGetVersionV2)'
     title: 'v$(GitVersion.NuGetVersionV2)'

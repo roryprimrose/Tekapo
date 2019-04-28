@@ -100,12 +100,22 @@ namespace Tekapo.Controls
                         exampleData.Path,
                         incrementOnCollision,
                         maxCollisionIncrement);
-                    var exampleFormat = Resources.NameFormatExample.Replace("\\n", "\n");
+
+                    var sourceDirectory = Path.GetDirectoryName(exampleData.Path);
+                    var targetDirectory = Path.GetDirectoryName(resultPath);
+                    var sourceExample = exampleData.Path;
+                    var targetExample = resultPath;
+
+                    if (string.Equals(sourceDirectory, targetDirectory, StringComparison.OrdinalIgnoreCase))
+                    {
+                        sourceExample = Path.GetFileName(sourceExample);
+                        targetExample = Path.GetFileName(targetExample);
+                    }
 
                     exampleMessage = string.Format(CultureInfo.CurrentCulture,
-                        exampleFormat,
-                        exampleData.Path,
-                        resultPath);
+                        Resources.NameFormatExample,
+                        sourceExample,
+                        targetExample);
                 }
             }
 
