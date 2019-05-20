@@ -191,7 +191,9 @@
     <Compile Include="Controls\TimeShiftPage.Designer.cs">
       <DependentUpon>TimeShiftPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExecutionContext.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="IExecutionContext.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

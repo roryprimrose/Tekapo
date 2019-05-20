@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using Autofac;
     using Neovolve.Windows.Forms.Controls;
@@ -13,8 +12,8 @@
         {
             // Populate all the wizard page controls
             var pageTypes = (from x in ThisAssembly.GetTypes()
-                             where x.IsAssignableTo<WizardPage>() && x.IsAbstract == false && x.IsInterface == false
-                             select x).ToList();
+                where x.IsAssignableTo<WizardPage>() && x.IsAbstract == false && x.IsInterface == false
+                select x).ToList();
 
             pageTypes.ForEach(x => builder.RegisterType(x).Named<WizardPage>(x.FullName));
             builder.Register(c => BuildWizardPageRegistration(c, pageTypes));

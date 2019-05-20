@@ -20,11 +20,15 @@ namespace Tekapo
     /// </summary>
     public partial class MainForm : WizardForm
     {
+        private readonly IExecutionContext _executionContext;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainForm" /> class.
         /// </summary>
-        public MainForm(IList<WizardPage> pages)
+        public MainForm(IExecutionContext executionContext, IList<WizardPage> pages)
         {
+            _executionContext = executionContext;
+
             InitializeComponent();
 
             // Populate the state
@@ -90,40 +94,6 @@ namespace Tekapo
         }
 
         /// <summary>
-        ///     Gets the directory from arguments.
-        /// </summary>
-        /// <param name="arguments">
-        ///     The arguments.
-        /// </param>
-        /// <returns>
-        ///     A <see cref="string" /> instance.
-        /// </returns>
-        private static string GetDirectoryFromArguments(string[] arguments)
-        {
-            // Exit if there are no values to process
-            if (arguments == null
-                || arguments.Length == 0)
-            {
-                return string.Empty;
-            }
-
-            // Loop through each string
-            for (var index = 0; index < arguments.Length; index++)
-            {
-                var item = arguments[index];
-
-                // Check if the item is a directory path
-                if (Directory.Exists(item))
-                {
-                    return item;
-                }
-            }
-
-            // No directory was found
-            return string.Empty;
-        }
-
-        /// <summary>
         ///     Handles the FormClosing event of the MainForm control.
         /// </summary>
         /// <param name="sender">
@@ -171,22 +141,22 @@ namespace Tekapo
             State[Constants.TaskStateKey] = Constants.RenameTask;
 
             // Determine whether there is a directory path in the commandline arguments
-            var lastSearchPath = GetDirectoryFromArguments(Environment.GetCommandLineArgs());
+            var searchPath = _executionContext.SearchPath;
 
             // Check if there is a search path
-            if (string.IsNullOrEmpty(lastSearchPath))
+            if (string.IsNullOrEmpty(searchPath))
             {
-                lastSearchPath = Settings.Default.LastSearchDirectory;
+                searchPath = Settings.Default.LastSearchDirectory;
 
                 // Check if there is a search path
-                if (string.IsNullOrEmpty(lastSearchPath))
+                if (string.IsNullOrEmpty(searchPath))
                 {
                     // Set the search path to the personal directory
-                    lastSearchPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+                    searchPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
                 }
             }
 
-            State[Constants.SearchPathStateKey] = lastSearchPath;
+            State[Constants.SearchPathStateKey] = searchPath;
             State[Constants.SearchSubDirectoriesStateKey] = Settings.Default.SearchSubDirectories;
 
             try

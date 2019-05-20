@@ -11,14 +11,14 @@ namespace Tekapo
     /// </summary>
     internal static class Program
     {
-        private static readonly IContainer _container = BuildContainer();
-
-        private static IContainer BuildContainer()
+        private static IContainer BuildContainer(string[] args)
         {
             var builder = new ContainerBuilder();
 
             builder.RegisterModule<TekapoModule>();
             builder.RegisterModule<ProcessingModule>();
+
+            builder.Register(x => new ExecutionContext(args)).As<IExecutionContext>();
 
             return builder.Build();
         }
@@ -27,12 +27,14 @@ namespace Tekapo
         ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main()
+        private static void Main(params string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            
+        var container = BuildContainer(args);
 
-            var form = _container.Resolve<MainForm>();
+            var form = container.Resolve<MainForm>();
 
             Application.Run(form);
         }
