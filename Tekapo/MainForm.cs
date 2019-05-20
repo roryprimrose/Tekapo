@@ -6,14 +6,12 @@ namespace Tekapo
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Linq;
     using System.Windows.Forms;
-    using Autofac;
     using Neovolve.Windows.Forms;
     using Neovolve.Windows.Forms.Controls;
     using Tekapo.Controls;
-    using Tekapo.Processing;
     using Tekapo.Properties;
-    using IContainer = Autofac.IContainer;
 
     /// <summary>
     ///     The <see cref="MainForm" /> class is the main application window for Tekapo. It hosts the pages in the wizard
@@ -22,22 +20,18 @@ namespace Tekapo
     /// </summary>
     public partial class MainForm : WizardForm
     {
-        private readonly IContainer _container;
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainForm" /> class.
         /// </summary>
-        public MainForm()
+        public MainForm(IList<WizardPage> pages)
         {
-            _container = BuildContainer();
-
             InitializeComponent();
 
             // Populate the state
             PopulateState();
 
             // Populate pages
-            PopulateWizardPages();
+            PopulateWizardPages(pages);
         }
 
         /// <summary>
@@ -93,16 +87,6 @@ namespace Tekapo
                 // Remove the last item
                 list.RemoveAt(list.Count - 1);
             }
-        }
-
-        private static IContainer BuildContainer()
-        {
-            var builder = new ContainerBuilder();
-
-            builder.RegisterModule<TekapoModule>();
-            builder.RegisterModule<ProcessingModule>();
-
-            return builder.Build();
         }
 
         /// <summary>
@@ -242,18 +226,19 @@ namespace Tekapo
         /// <summary>
         ///     Populates the wizard pages.
         /// </summary>
+        /// <param name="pages"></param>
         [SuppressMessage("Microsoft.Reliability",
             "CA2000:Dispose objects before losing scope",
             Justification = "Pages are disposed when the form is disposed.")]
-        private void PopulateWizardPages()
+        private void PopulateWizardPages(IList<WizardPage> pages)
         {
             // Create the Choose Task page
-            var chooseTaskPage = _container.Resolve<ChooseTaskPage>();
+            var chooseTaskPage = pages.OfType<ChooseTaskPage>().Single();
 
             Pages.Add(Constants.ChooseNavigationKey, chooseTaskPage);
 
             // Create the Select Path page
-            var selectPathPage = _container.Resolve<SelectPathPage>();
+            var selectPathPage = pages.OfType<SelectPathPage>().Single();
             var selectPathSkipButtonSettings = new WizardButtonSettings(Resources.SkipButtonText);
             var selectPathPageSettings = new WizardPageSettings(null, null, null, null, selectPathSkipButtonSettings);
             var selectPathNavigationSettings = new WizardPageNavigationSettings(
@@ -269,19 +254,19 @@ namespace Tekapo
                 selectPathNavigationSettings);
 
             // Create the File Search page
-            var fileSearchPage = _container.Resolve<FileSearchPage>();
+            var fileSearchPage = pages.OfType<FileSearchPage>().Single();
 
             Pages.Add(Constants.FileSearchNavigationKey, fileSearchPage);
 
             // Create the Select Files page
-            var selectFilesPage = _container.Resolve<SelectFilesPage>();
+            var selectFilesPage = pages.OfType<SelectFilesPage>().Single();
             var selectFilesNavigationSettings =
                 new WizardPageNavigationSettings(null, Constants.SelectPathNavigationKey);
 
             Pages.Add(Constants.SelectFilesNavigationKey, selectFilesPage, null, selectFilesNavigationSettings);
 
             // Declare the finish page settings
-            var nameFormatPage = _container.Resolve<NameFormatPage>();
+            var nameFormatPage = pages.OfType<NameFormatPage>().Single();
             var finishButton = new WizardButtonSettings(Resources.Finish);
             var finishPageSettings = new WizardPageSettings(finishButton);
             var finishNavigationSettings = new WizardPageNavigationSettings(Constants.ProcessFilesNavigationKey);
@@ -290,16 +275,16 @@ namespace Tekapo
             Pages.Add(Constants.NameFormatNavigationKey, nameFormatPage, finishPageSettings, finishNavigationSettings);
 
             // Create the Time Shift page
-            var timeShiftPage = _container.Resolve<TimeShiftPage>();
+            var timeShiftPage = pages.OfType<TimeShiftPage>().Single();
 
             Pages.Add(Constants.TimeShiftNavigationKey, timeShiftPage, finishPageSettings, finishNavigationSettings);
 
             // Create the Progress page
-            var processFilesPage = _container.Resolve<ProcessFilesPage>();
+            var processFilesPage = pages.OfType<ProcessFilesPage>().Single();
 
             Pages.Add(Constants.ProcessFilesNavigationKey, processFilesPage);
 
-            var completedPage = _container.Resolve<CompletedPage>();
+            var completedPage = pages.OfType<CompletedPage>().Single();
 
             completedPage.PageSettings.BackButtonSettings.Visible = false;
             completedPage.PageSettings.NextButtonSettings.Text = Resources.Close;
