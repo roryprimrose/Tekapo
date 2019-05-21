@@ -6,14 +6,12 @@ namespace Tekapo
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Linq;
     using System.Windows.Forms;
-    using Autofac;
     using Neovolve.Windows.Forms;
     using Neovolve.Windows.Forms.Controls;
     using Tekapo.Controls;
-    using Tekapo.Processing;
     using Tekapo.Properties;
-    using IContainer = Autofac.IContainer;
 
     /// <summary>
     ///     The <see cref="MainForm" /> class is the main application window for Tekapo. It hosts the pages in the wizard
@@ -22,14 +20,14 @@ namespace Tekapo
     /// </summary>
     public partial class MainForm : WizardForm
     {
-        private readonly IContainer _container;
+        private readonly IExecutionContext _executionContext;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainForm" /> class.
         /// </summary>
-        public MainForm()
+        public MainForm(IExecutionContext executionContext, IList<WizardPage> pages)
         {
-            _container = BuildContainer();
+            _executionContext = executionContext;
 
             InitializeComponent();
 
@@ -37,7 +35,7 @@ namespace Tekapo
             PopulateState();
 
             // Populate pages
-            PopulateWizardPages();
+            PopulateWizardPages(pages);
         }
 
         /// <summary>
@@ -95,50 +93,6 @@ namespace Tekapo
             }
         }
 
-        private static IContainer BuildContainer()
-        {
-            var builder = new ContainerBuilder();
-
-            builder.RegisterModule<TekapoModule>();
-            builder.RegisterModule<ProcessingModule>();
-
-            return builder.Build();
-        }
-
-        /// <summary>
-        ///     Gets the directory from arguments.
-        /// </summary>
-        /// <param name="arguments">
-        ///     The arguments.
-        /// </param>
-        /// <returns>
-        ///     A <see cref="string" /> instance.
-        /// </returns>
-        private static string GetDirectoryFromArguments(string[] arguments)
-        {
-            // Exit if there are no values to process
-            if (arguments == null
-                || arguments.Length == 0)
-            {
-                return string.Empty;
-            }
-
-            // Loop through each string
-            for (var index = 0; index < arguments.Length; index++)
-            {
-                var item = arguments[index];
-
-                // Check if the item is a directory path
-                if (Directory.Exists(item))
-                {
-                    return item;
-                }
-            }
-
-            // No directory was found
-            return string.Empty;
-        }
-
         /// <summary>
         ///     Handles the FormClosing event of the MainForm control.
         /// </summary>
@@ -187,22 +141,22 @@ namespace Tekapo
             State[Constants.TaskStateKey] = Constants.RenameTask;
 
             // Determine whether there is a directory path in the commandline arguments
-            var lastSearchPath = GetDirectoryFromArguments(Environment.GetCommandLineArgs());
+            var searchPath = _executionContext.SearchPath;
 
             // Check if there is a search path
-            if (string.IsNullOrEmpty(lastSearchPath))
+            if (string.IsNullOrEmpty(searchPath))
             {
-                lastSearchPath = Settings.Default.LastSearchDirectory;
+                searchPath = Settings.Default.LastSearchDirectory;
 
                 // Check if there is a search path
-                if (string.IsNullOrEmpty(lastSearchPath))
+                if (string.IsNullOrEmpty(searchPath))
                 {
                     // Set the search path to the personal directory
-                    lastSearchPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+                    searchPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
                 }
             }
 
-            State[Constants.SearchPathStateKey] = lastSearchPath;
+            State[Constants.SearchPathStateKey] = searchPath;
             State[Constants.SearchSubDirectoriesStateKey] = Settings.Default.SearchSubDirectories;
 
             try
@@ -242,18 +196,19 @@ namespace Tekapo
         /// <summary>
         ///     Populates the wizard pages.
         /// </summary>
+        /// <param name="pages"></param>
         [SuppressMessage("Microsoft.Reliability",
             "CA2000:Dispose objects before losing scope",
             Justification = "Pages are disposed when the form is disposed.")]
-        private void PopulateWizardPages()
+        private void PopulateWizardPages(IList<WizardPage> pages)
         {
             // Create the Choose Task page
-            var chooseTaskPage = _container.Resolve<ChooseTaskPage>();
+            var chooseTaskPage = pages.OfType<ChooseTaskPage>().Single();
 
             Pages.Add(Constants.ChooseNavigationKey, chooseTaskPage);
 
             // Create the Select Path page
-            var selectPathPage = _container.Resolve<SelectPathPage>();
+            var selectPathPage = pages.OfType<SelectPathPage>().Single();
             var selectPathSkipButtonSettings = new WizardButtonSettings(Resources.SkipButtonText);
             var selectPathPageSettings = new WizardPageSettings(null, null, null, null, selectPathSkipButtonSettings);
             var selectPathNavigationSettings = new WizardPageNavigationSettings(
@@ -269,19 +224,19 @@ namespace Tekapo
                 selectPathNavigationSettings);
 
             // Create the File Search page
-            var fileSearchPage = _container.Resolve<FileSearchPage>();
+            var fileSearchPage = pages.OfType<FileSearchPage>().Single();
 
             Pages.Add(Constants.FileSearchNavigationKey, fileSearchPage);
 
             // Create the Select Files page
-            var selectFilesPage = _container.Resolve<SelectFilesPage>();
+            var selectFilesPage = pages.OfType<SelectFilesPage>().Single();
             var selectFilesNavigationSettings =
                 new WizardPageNavigationSettings(null, Constants.SelectPathNavigationKey);
 
             Pages.Add(Constants.SelectFilesNavigationKey, selectFilesPage, null, selectFilesNavigationSettings);
 
             // Declare the finish page settings
-            var nameFormatPage = _container.Resolve<NameFormatPage>();
+            var nameFormatPage = pages.OfType<NameFormatPage>().Single();
             var finishButton = new WizardButtonSettings(Resources.Finish);
             var finishPageSettings = new WizardPageSettings(finishButton);
             var finishNavigationSettings = new WizardPageNavigationSettings(Constants.ProcessFilesNavigationKey);
@@ -290,16 +245,16 @@ namespace Tekapo
             Pages.Add(Constants.NameFormatNavigationKey, nameFormatPage, finishPageSettings, finishNavigationSettings);
 
             // Create the Time Shift page
-            var timeShiftPage = _container.Resolve<TimeShiftPage>();
+            var timeShiftPage = pages.OfType<TimeShiftPage>().Single();
 
             Pages.Add(Constants.TimeShiftNavigationKey, timeShiftPage, finishPageSettings, finishNavigationSettings);
 
             // Create the Progress page
-            var processFilesPage = _container.Resolve<ProcessFilesPage>();
+            var processFilesPage = pages.OfType<ProcessFilesPage>().Single();
 
             Pages.Add(Constants.ProcessFilesNavigationKey, processFilesPage);
 
-            var completedPage = _container.Resolve<CompletedPage>();
+            var completedPage = pages.OfType<CompletedPage>().Single();
 
             completedPage.PageSettings.BackButtonSettings.Visible = false;
             completedPage.PageSettings.NextButtonSettings.Text = Resources.Close;
