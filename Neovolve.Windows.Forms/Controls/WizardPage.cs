@@ -205,7 +205,7 @@ namespace Neovolve.Windows.Forms.Controls
         /// <param name="e">
         ///     The <see cref="System.EventArgs" /> instance containing the event data.
         /// </param>
-        protected internal virtual void OnUpdateWizardSettingsRequiredRequired(EventArgs e)
+        protected internal virtual void OnUpdateWizardSettingsRequired(EventArgs e)
         {
             // Check if there is a handler
             if (UpdateWizardSettingsRequired != null)
@@ -388,7 +388,7 @@ namespace Neovolve.Windows.Forms.Controls
                 _wizardButtonsDisabled = value;
 
                 // Update the UI
-                OnUpdateWizardSettingsRequiredRequired(new EventArgs());
+                OnUpdateWizardSettingsRequired(new EventArgs());
             }
         }
 

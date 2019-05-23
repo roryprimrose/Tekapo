@@ -136,6 +136,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
+    <Compile Include="Controls\ProcessingPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ProcessingPage.Designer.cs">
+      <DependentUpon>ProcessingPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="DisposeTrigger.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -218,6 +224,10 @@
     <EmbeddedResource Include="Controls\CompletedPage.resx">
       <SubType>Designer</SubType>
       <DependentUpon>CompletedPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ProcessingPage.resx">
+      <DependentUpon>ProcessingPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ProgressPage.resx">
       <DependentUpon>ProgressPage.cs</DependentUpon>

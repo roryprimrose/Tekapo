@@ -67,9 +67,6 @@ namespace Tekapo.Controls
             this.PageSettings.HelpButtonSettings.Text = "Help";
             this.PageSettings.HelpButtonSettings.Visible = false;
             this.PageSettings.NextButtonSettings.Text = "Next";
-            this.Closing += new System.EventHandler(this.ProgressPage_Closing);
-            this.Opened += new System.EventHandler(this.ProgressPage_Opened);
-            this.Opening += new System.EventHandler(this.ProgressPage_Opening);
             this.Contents.ResumeLayout(false);
             this.ResumeLayout(false);
 
