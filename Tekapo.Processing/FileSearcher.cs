@@ -21,11 +21,7 @@
             _settings = settings;
         }
 
-        public event EventHandler<PathEventArgs> DirectoryFound;
-
-        public event EventHandler<PathProgressEventArgs> FilteringFile;
-
-        public event EventHandler<PathProgressEventArgs> SearchingDirectory;
+        public event EventHandler<PathEventArgs> EvaluatingPath;
 
         public IEnumerable<string> FindSupportedFiles(IEnumerable<string> paths, MediaOperationType operationType)
         {
@@ -71,8 +67,6 @@
             {
                 // Get the path
                 var path = files[index];
-
-                FilteringFile?.Invoke(this, PathProgressEventArgs.For(path, index + 1, totalCount));
 
                 // Check if the file is a supported type
                 if (_mediaManager.IsSupported(path, operationType))
@@ -145,7 +139,7 @@
                     directories.Add(pathToProcess);
 
                     // Update the progress message
-                    DirectoryFound?.Invoke(this, PathEventArgs.For(pathToProcess));
+                    EvaluatingPath?.Invoke(this, PathEventArgs.For(pathToProcess));
 
                     // Check if we need to recurse
                     if (recurseDirectories)
@@ -171,8 +165,6 @@
             {
                 // Get the directory
                 var directory = directories[index];
-
-                SearchingDirectory?.Invoke(this, PathProgressEventArgs.For(directory, index + 1, totalCount));
 
                 // Get the files for the directory
                 string[] newFiles;

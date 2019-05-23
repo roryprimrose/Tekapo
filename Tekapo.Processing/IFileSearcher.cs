@@ -5,11 +5,7 @@
 
     public interface IFileSearcher
     {
-        event EventHandler<PathEventArgs> DirectoryFound;
-
-        event EventHandler<PathProgressEventArgs> FilteringFile;
-
-        event EventHandler<PathProgressEventArgs> SearchingDirectory;
+        event EventHandler<PathEventArgs> EvaluatingPath;
 
         IEnumerable<string> FindSupportedFiles(IEnumerable<string> paths, MediaOperationType operationType);
     }

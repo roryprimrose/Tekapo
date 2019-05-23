@@ -3,13 +3,14 @@ namespace Tekapo.Controls
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using EnsureThat;
     using Tekapo.Processing;
     using Tekapo.Properties;
 
-    public partial class FileSearchPage : ProgressPage
+    public partial class FileSearchPage : ProcessingPage
     {
         private readonly IFileSearcher _fileSearcher;
         private readonly ISettings _settings;
@@ -26,17 +27,13 @@ namespace Tekapo.Controls
 
             InitializeComponent();
 
-            _fileSearcher.DirectoryFound += FileSearcherOnDirectoryFound;
-            _fileSearcher.SearchingDirectory += FileSearcherOnProgress;
-            _fileSearcher.FilteringFile += FileSearcherOnProgress;
+            _fileSearcher.EvaluatingPath += FileSearcherOnEvaluatingPath;
 
             var disposeTrigger = new DisposeTrigger(disposing =>
             {
                 if (disposing)
                 {
-                    _fileSearcher.DirectoryFound -= FileSearcherOnDirectoryFound;
-                    _fileSearcher.SearchingDirectory -= FileSearcherOnProgress;
-                    _fileSearcher.FilteringFile -= FileSearcherOnProgress;
+                    _fileSearcher.EvaluatingPath -= FileSearcherOnEvaluatingPath;
                 }
             });
 
@@ -65,17 +62,32 @@ namespace Tekapo.Controls
             State[Tekapo.State.FileListKey] = fileList;
         }
 
-        private void FileSearcherOnDirectoryFound(object sender, PathEventArgs e)
+        /// <summary>
+        ///     Sets the search status.
+        /// </summary>
+        /// <param name="value">
+        ///     The value.
+        /// </param>
+        protected void SetProgressStatus(string value)
         {
-            SetProgressStatus(e.Path);
+            // Check if a thread switch is required
+            if (ProgressStatus.InvokeRequired)
+            {
+                object[] args = {value};
+
+                ProgressStatus.Invoke(new StringThreadSwitch(SetProgressStatus), args);
+
+                return;
+            }
+
+            Debug.WriteLine(value);
+
+            // Assign the value
+            ProgressStatus.Text = value;
         }
 
-        private void FileSearcherOnProgress(object sender, PathProgressEventArgs e)
+        private void FileSearcherOnEvaluatingPath(object sender, PathEventArgs e)
         {
-            // Update the progress percentage
-            SetProgressPercentage(e.CurrentItem, e.TotalItems);
-
-            // Update the status
             SetProgressStatus(e.Path);
         }
 

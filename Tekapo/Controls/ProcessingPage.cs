@@ -37,17 +37,6 @@ namespace Tekapo.Controls
         protected delegate void StringThreadSwitch(string value);
 
         /// <summary>
-        ///     Defines the thread switching delegate for updating the progress bar percentage.
-        /// </summary>
-        /// <param name="current">
-        ///     The current count.
-        /// </param>
-        /// <param name="total">
-        ///     The total count.
-        /// </param>
-        private delegate void ProgressThreadSwitch(int current, int total);
-
-        /// <summary>
         ///     Finishes the process.
         /// </summary>
         protected virtual void FinishProcess()
