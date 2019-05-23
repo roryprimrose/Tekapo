@@ -3,184 +3,117 @@ namespace Tekapo.Controls
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics.Eventing.Reader;
     using System.IO;
-    using System.Text.RegularExpressions;
+    using System.Linq;
     using EnsureThat;
     using Tekapo.Processing;
     using Tekapo.Properties;
 
     public partial class FileSearchPage : ProgressPage
     {
-        private readonly IMediaManager _mediaManager;
+        private readonly IFileSearcher _fileSearcher;
         private readonly ISettings _settings;
 
-        public FileSearchPage(IMediaManager mediaManager, ISettings settings)
+        public FileSearchPage(IFileSearcher fileSearcher, ISettings settings)
         {
-            Ensure.Any.IsNotNull(mediaManager, nameof(mediaManager));
+            Ensure.Any.IsNotNull(fileSearcher, nameof(fileSearcher));
             Ensure.Any.IsNotNull(settings, nameof(settings));
-            
-            _mediaManager = mediaManager;
+
+            _fileSearcher = fileSearcher;
             _settings = settings;
 
+            components = new Container();
+
             InitializeComponent();
+
+            _fileSearcher.SearchStageChange += FileSearcherOnSearchStageChange;
+            _fileSearcher.DirectoryFound += FileSearcherOnDirectoryFound;
+            _fileSearcher.SearchingDirectory += FileSearcherOnProgress;
+            _fileSearcher.FilteringFile += FileSearcherOnProgress;
+
+            var disposeTrigger = new DisposeTrigger(disposing =>
+            {
+                if (disposing)
+                {
+                    _fileSearcher.SearchStageChange -= FileSearcherOnSearchStageChange;
+                    _fileSearcher.DirectoryFound -= FileSearcherOnDirectoryFound;
+                    _fileSearcher.SearchingDirectory -= FileSearcherOnProgress;
+                    _fileSearcher.FilteringFile -= FileSearcherOnProgress;
+                }
+            });
+
+            components.Add(disposeTrigger);
         }
 
         protected override void ProcessTask()
         {
-            // Get the search criteria
-            var basePath = _settings.SearchPath;
-            var recurseDirectories = _settings.RecursiveSearch;
-            var filterType = _settings.SearchFilterType;
-            var wildcardPattern = _settings.WildcardFilter;
-            var regularExpressionPattern = _settings.RegularExpressionFilter;
+            var searchPaths = LoadFromCommandLine();
 
-            // Run the first search stage
-            // Get the list of directories involved
-            var directories = new List<string>();
-            SetStepTitle(Resources.FileSearchDirectoryTitle);
-            FindDirectories(basePath, recurseDirectories, directories);
+            var searchPath = _settings.SearchPath;
 
-            // Run the second search stage
-            // Get list of files involved
-            var files = new List<string>();
-            SetStepTitle(Resources.FileSearchFileTitle);
+            if (searchPaths.Contains(searchPath) == false)
+            {
+                searchPaths.Add(searchPath);
+            }
 
-            LoadFromCommandLine(files);
+            var taskType = (TaskType) State[Tekapo.State.TaskKey];
+            var operationType = taskType.AsMediaOperationType();
 
-            FindFiles(directories, files, filterType, wildcardPattern);
+            var filesFound = _fileSearcher.FindSupportedFiles(searchPaths, operationType).ToList();
 
-            // Clean up memory
-            directories.Clear();
-
-            // Run the third search stage
-            // Filter the files involved
-            var filteredFiles = new BindingList<string>();
-            SetStepTitle(Resources.FileSearchFileFilterTitle);
-            FilterFiles(files, filteredFiles, filterType, regularExpressionPattern);
-
-            // Clean up memory
-            files.Clear();
+            var fileList = new BindingList<string>(filesFound);
 
             // Store the list of files found
-            State[Tekapo.State.FileListKey] = filteredFiles;
+            State[Tekapo.State.FileListKey] = fileList;
         }
 
-        private void FilterFiles(
-            IList<string> files,
-            ICollection<string> filteredFiles,
-            SearchFilterType filterType,
-            string regularExpressionPattern)
+        private void FileSearcherOnDirectoryFound(object sender, PathEventArgs e)
         {
-            var expressionTest = new Regex(regularExpressionPattern, RegexOptions.Singleline);
-            var totalCount = files.Count;
-            var operationType = (string)State[Tekapo.State.TaskKey] == Task.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
+            SetProgressStatus(e.Path);
+        }
 
-            // Loop through each file
-            for (var index = 0; index < totalCount; index++)
+        private void FileSearcherOnProgress(object sender, PathProgressEventArgs e)
+        {
+            // Update the progress percentage
+            SetProgressPercentage(e.CurrentItem, e.TotalItems);
+
+            // Update the status
+            SetProgressStatus(e.Path);
+        }
+
+        private void FileSearcherOnSearchStageChange(object sender, SearchStageEventArgs e)
+        {
+            switch (e.Stage)
             {
-                // Get the path
-                var path = files[index];
+                case SearchStage.FindingDirectories:
 
-                // Update the progress percentage
-                SetProgressPercentage(index + 1, totalCount);
+                    SetStepTitle(Resources.FileSearchDirectoryTitle);
 
-                // Update the search status
-                SetProgressStatus(path);
+                    break;
 
-                // Check if the file is a supported type
-                if (_mediaManager.IsSupported(path, operationType))
-                {
-                    if (filterType != SearchFilterType.RegularExpression
-                        || expressionTest.IsMatch(path))
-                    {
-                        // Add the item
-                        filteredFiles.Add(path);
-                    }
-                }
+                case SearchStage.FindingFiles:
+
+                    SetStepTitle(Resources.FileSearchFileTitle);
+
+                    break;
+
+                case SearchStage.FilteringFiles:
+
+                    SetStepTitle(Resources.FileSearchFileFilterTitle);
+
+                    break;
+
+                default:
+
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
-        private void FindDirectories(string path, bool recurseDirectories, ICollection<string> directories)
+        private List<string> LoadFromCommandLine()
         {
-            // Add the current path to the list
-            directories.Add(path);
+            var files = new List<string>();
 
-            try
-            {
-
-                // Get the sub-directory paths
-                var newPaths = Directory.EnumerateDirectories(path);
-
-                // Loop through each directory path
-                foreach (var newPath in newPaths)
-                {
-                    // Update the progress message
-                    SetProgressStatus(newPath);
-
-                    // Check if we need to recurse
-                    if (recurseDirectories)
-                    {
-                        // SearchExpression the call
-                        FindDirectories(newPath, true, directories);
-                    }
-                }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                // We can't read this folder
-            }
-        }
-
-        private void FindFiles(
-            IList<string> directories,
-            List<string> files,
-            SearchFilterType filterType,
-            string wildcardPattern)
-        {
-            var totalCount = directories.Count;
-
-            // Loop through each directory
-            for (var index = 0; index < totalCount; index++)
-            {
-                // Get the directory
-                var directory = directories[index];
-
-                // Update the progress percentage
-                SetProgressPercentage(index + 1, totalCount);
-
-                // Update the status
-                SetProgressStatus(directory);
-
-                // Get the files for the directory
-                string[] newFiles;
-
-                switch (filterType)
-                {
-                    case SearchFilterType.None:
-                    case SearchFilterType.RegularExpression:
-
-                        newFiles = Directory.GetFiles(directory);
-
-                        break;
-
-                    case SearchFilterType.Wildcard:
-
-                        newFiles = Directory.GetFiles(directory, wildcardPattern);
-
-                        break;
-
-                    default:
-
-                        throw new NotSupportedException();
-                }
-
-                // Add the new files to the collection
-                files.AddRange(newFiles);
-            }
-        }
-
-        private void LoadFromCommandLine(List<string> files)
-        {
             // Check if the command line arguments have been processed
             // Update the status
             SetProgressStatus(Resources.ParseCommandLineArguments);
@@ -191,15 +124,33 @@ namespace Tekapo.Controls
             for (var index = 0; index < arguments.Length; index++)
             {
                 var argument = arguments[index];
+                string path;
+
+                if (File.Exists(argument))
+                {
+                    // We will process this file
+                    path = Path.GetFullPath(argument);
+                }
+                else if (Directory.Exists(argument))
+                {
+                    path = Path.GetFullPath(argument);
+                }
+                else
+                {
+                    continue;
+                }
 
                 // Check if the item is a file path
-                if (File.Exists(argument)
-                    && files.Contains(argument) == false)
+                if (files.Contains(path))
                 {
-                    // Add the file to the list
-                    files.Add(argument);
+                    continue;
                 }
+
+                // Add the file to the list
+                files.Add(path);
             }
+
+            return files;
         }
 
         private void SetStepTitle(string value)
@@ -207,10 +158,15 @@ namespace Tekapo.Controls
             // Check if a thread switch is required
             if (StepTitle.InvokeRequired)
             {
-                object[] args = { value };
+                object[] args = {value};
 
                 StepTitle.Invoke(new StringThreadSwitch(SetStepTitle), args);
 
+                return;
+            }
+
+            if (StepTitle.Text == value)
+            {
                 return;
             }
 

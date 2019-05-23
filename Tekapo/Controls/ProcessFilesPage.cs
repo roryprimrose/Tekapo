@@ -38,7 +38,7 @@ namespace Tekapo.Controls
         {
             var items = (BindingList<string>) State[Tekapo.State.FileListKey];
             var totalItems = items.Count;
-            var isRenameTask = (string) State[Tekapo.State.TaskKey] == Task.RenameTask;
+            var isRenameTask = (TaskType) State[Tekapo.State.TaskKey] == TaskType.RenameTask;
             var renameConfig = new RenameConfiguration
             {
                 RenameFormat = _settings.NameFormat,
@@ -47,8 +47,7 @@ namespace Tekapo.Controls
             };
             var processResults = new Results
             {
-                ProcessRunDate = DateTime.Now.ToLongDateString() + ", " + DateTime.Now.ToShortTimeString(),
-                ProcessType = (string) State[Tekapo.State.TaskKey]
+                ProcessRunDate = DateTime.Now.ToLongDateString() + ", " + DateTime.Now.ToShortTimeString()
             };
 
             // Store the process results in state

@@ -1,4 +1,4 @@
-﻿namespace Tekapo
+﻿namespace Tekapo.Processing
 {
     using System.ComponentModel;
 

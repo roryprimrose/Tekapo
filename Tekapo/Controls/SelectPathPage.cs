@@ -9,6 +9,7 @@ namespace Tekapo.Controls
     using EnsureThat;
     using Neovolve.Windows.Forms;
     using Neovolve.Windows.Forms.Controls;
+    using Tekapo.Processing;
     using Tekapo.Properties;
 
     /// <summary>

@@ -5,6 +5,7 @@
     using System.Linq;
     using Autofac;
     using Neovolve.Windows.Forms.Controls;
+    using Tekapo.Processing;
 
     public class TekapoModule : Module
     {

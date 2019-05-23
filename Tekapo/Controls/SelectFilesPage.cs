@@ -47,7 +47,7 @@ namespace Tekapo.Controls
                 }
 
                 // Define what the next navigation will go to
-                if ((string) State[Tekapo.State.TaskKey] == Task.RenameTask)
+                if ((TaskType) State[Tekapo.State.TaskKey] == TaskType.RenameTask)
                 {
                     e.NavigationKey = NavigationKey.NameFormatPage;
                 }
@@ -73,8 +73,9 @@ namespace Tekapo.Controls
         }
 
         private void AddFiles_Click(object sender, EventArgs e)
-        {            
-            var operationType = (string)State[Tekapo.State.TaskKey] == Task.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
+        {
+            var taskType = (TaskType) State[Tekapo.State.TaskKey];
+            var operationType = taskType.AsMediaOperationType();
             var supportedFileTypes = _mediaManager.GetSupportedFileTypes(operationType).Select(x => x.Substring(1)).ToList();
             var dialogFilter = BuildFilter(supportedFileTypes);
             var defaultExtension = "jpg";
@@ -124,8 +125,9 @@ namespace Tekapo.Controls
 
         private void Files_DragDrop(object sender, DragEventArgs e)
         {
-            var operationType = (string)State[Tekapo.State.TaskKey] == Task.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
-            
+            var taskType = (TaskType) State[Tekapo.State.TaskKey];
+            var operationType = taskType.AsMediaOperationType();
+
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -159,8 +161,9 @@ namespace Tekapo.Controls
 
         private void Files_DragEnter(object sender, DragEventArgs e)
         {
-            var operationType = (string)State[Tekapo.State.TaskKey] == Task.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
-            
+            var taskType = (TaskType) State[Tekapo.State.TaskKey];
+            var operationType = taskType.AsMediaOperationType();
+
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {

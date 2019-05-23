@@ -12,6 +12,7 @@ namespace Tekapo.Processing
         {
             RegisterMediaManagers(builder);
 
+            builder.RegisterType<FileSearcher>().As<IFileSearcher>();
             builder.RegisterType<PathManager>().As<IPathManager>();
             builder.RegisterType<RenameProcessor>().As<IRenameProcessor>();
         }

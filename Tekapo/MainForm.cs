@@ -12,6 +12,7 @@ namespace Tekapo
     using Neovolve.Windows.Forms.Controls;
     using Newtonsoft.Json;
     using Tekapo.Controls;
+    using Tekapo.Processing;
     using Tekapo.Properties;
 
     /// <summary>
@@ -151,7 +152,7 @@ namespace Tekapo
         /// </summary>
         private void PopulateState()
         {
-            State[Tekapo.State.TaskKey] = Task.RenameTask;
+            State[Tekapo.State.TaskKey] = TaskType.RenameTask;
 
             // Determine whether there is a directory path in the commandline arguments
             var searchPath = _executionContext.SearchPath;

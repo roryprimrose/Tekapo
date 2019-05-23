@@ -3,7 +3,7 @@
     using System;
     using System.ComponentModel;
     using Newtonsoft.Json;
-    using Tekapo.Properties;
+    using Tekapo.Processing;
 
     public class Settings : ISettings
     {
@@ -25,7 +25,11 @@
             set => Properties.Settings.Default.IncrementOnCollision = value;
         }
 
-        public string NameFormat { get => Properties.Settings.Default.NameFormat; set => Properties.Settings.Default.NameFormat = value; }
+        public string NameFormat
+        {
+            get => Properties.Settings.Default.NameFormat;
+            set => Properties.Settings.Default.NameFormat = value;
+        }
 
         public BindingList<string> NameFormatList => ReadList(Properties.Settings.Default.NameFormatMRU);
 
