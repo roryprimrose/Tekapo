@@ -18,13 +18,16 @@ namespace Tekapo.Controls
         private readonly IMediaManager _mediaManager;
         private string _lastDirectoryPath;
         private readonly ISettings _settings;
+        private readonly IFileSearcher _fileSearcher;
 
-        public SelectFilesPage(IMediaManager mediaManager, ISettings settings)
+        public SelectFilesPage(IMediaManager mediaManager, IFileSearcher fileSearcher, ISettings settings)
         {
             Ensure.Any.IsNotNull(mediaManager, nameof(mediaManager));
+            Ensure.Any.IsNotNull(fileSearcher, nameof(fileSearcher));
             Ensure.Any.IsNotNull(settings, nameof(settings));
 
             _mediaManager = mediaManager;
+            _fileSearcher = fileSearcher;
             _settings = settings;
 
             InitializeComponent();
@@ -47,7 +50,7 @@ namespace Tekapo.Controls
                 }
 
                 // Define what the next navigation will go to
-                if ((TaskType) State[Tekapo.State.TaskKey] == TaskType.RenameTask)
+                if ((TaskType)State[Tekapo.State.TaskKey] == TaskType.RenameTask)
                 {
                     e.NavigationKey = NavigationKey.NameFormatPage;
                 }
@@ -74,7 +77,7 @@ namespace Tekapo.Controls
 
         private void AddFiles_Click(object sender, EventArgs e)
         {
-            var taskType = (TaskType) State[Tekapo.State.TaskKey];
+            var taskType = (TaskType)State[Tekapo.State.TaskKey];
             var operationType = taskType.AsMediaOperationType();
             var supportedFileTypes = _mediaManager.GetSupportedFileTypes(operationType).Select(x => x.Substring(1)).ToList();
             var dialogFilter = BuildFilter(supportedFileTypes);
@@ -104,71 +107,42 @@ namespace Tekapo.Controls
                 dialog.InitialDirectory = _lastDirectoryPath;
 
                 // Check if the user clicked Ok
-                if (dialog.ShowDialog(this) == DialogResult.OK)
+                if (dialog.ShowDialog(this) != DialogResult.OK)
                 {
-                    for (var index = 0; index < dialog.FileNames.Length; index++)
-                    {
-                        var newPath = dialog.FileNames[index];
-
-                        if (FileList.Contains(newPath) == false)
-                        {
-                            // Add the files
-                            FileList.Add(newPath);
-                        }
-                    }
-
-                    // Store the last path
-                    _lastDirectoryPath = Path.GetDirectoryName(dialog.FileName);
+                    return;
                 }
+
+                var paths = dialog.FileNames.ToList();
+
+                AddPathsToList(paths);
+
+                // Store the last path
+                _lastDirectoryPath = Path.GetDirectoryName(dialog.FileName);
             }
         }
 
         private void Files_DragDrop(object sender, DragEventArgs e)
         {
-            var taskType = (TaskType) State[Tekapo.State.TaskKey];
-            var operationType = taskType.AsMediaOperationType();
-
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 // Get the list of files
-                var files = (string[]) e.Data.GetData(DataFormats.FileDrop);
+                var files = ((string[])e.Data.GetData(DataFormats.FileDrop)).ToList();
 
-                // Loop through each item being dragged
-                for (var index = 0; index < files.Length; index++)
-                {
-                    var item = files[index];
-
-                    if (File.Exists(item) == false)
-                    {
-                        continue;
-                    }
-
-                    if (FileList.Contains(item))
-                    {
-                        continue;
-                    }
-
-                    // Check that the item is a file which is supported, but not yet in the list
-                    if (_mediaManager.IsSupported(item, operationType))
-                    {
-                        // Add the file to the list
-                        FileList.Add(item);
-                    }
-                }
+                AddPathsToList(files);
             }
         }
 
         private void Files_DragEnter(object sender, DragEventArgs e)
         {
-            var taskType = (TaskType) State[Tekapo.State.TaskKey];
+            var taskType = (TaskType)State[Tekapo.State.TaskKey];
             var operationType = taskType.AsMediaOperationType();
 
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 // Get the list of files
-                var files = (string[]) e.Data.GetData(DataFormats.FileDrop);
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
                 // Loop through each item being dragged
                 for (var index = 0; index < files.Length; index++)
@@ -280,6 +254,47 @@ namespace Tekapo.Controls
             _lastDirectoryPath = _settings.SearchPath;
         }
 
-        public BindingList<string> FileList => (BindingList<string>) State[Tekapo.State.FileListKey];
+        public BindingList<string> FileList => (BindingList<string>)State[Tekapo.State.FileListKey];
+
+        private void AddFolder_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new FolderBrowserDialog())
+            {
+                dialog.SelectedPath = _lastDirectoryPath;
+                dialog.Description = Resources.SelectPathDescription;
+                dialog.ShowNewFolderButton = false;
+
+                // Check if the user clicked OK
+                if (dialog.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                _lastDirectoryPath = dialog.SelectedPath;
+
+                var paths = new List<string> { dialog.SelectedPath };
+
+                AddPathsToList(paths);
+            }
+        }
+
+        private void AddPathsToList(List<string> paths)
+        {
+            var taskType = (TaskType) State[Tekapo.State.TaskKey];
+            var operationType = taskType.AsMediaOperationType();
+
+            var files = _fileSearcher.FindSupportedFiles(paths, operationType);
+
+            foreach (var file in files)
+            {
+                if (FileList.Contains(file))
+                {
+                    continue;
+                }
+
+                // Add the file to the list
+                FileList.Add(file);
+            }
+        }
     }
 }
