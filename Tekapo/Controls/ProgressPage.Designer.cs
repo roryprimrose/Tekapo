@@ -40,28 +40,37 @@ namespace Tekapo.Controls
             // 
             // SearchProgress
             // 
-            this.SearchProgress.Location = new System.Drawing.Point(21, 45);
+            this.SearchProgress.Location = new System.Drawing.Point(41, 25);
+            this.SearchProgress.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.SearchProgress.Name = "SearchProgress";
-            this.SearchProgress.Size = new System.Drawing.Size(451, 23);
+            this.SearchProgress.Size = new System.Drawing.Size(902, 44);
             this.SearchProgress.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.SearchProgress.TabIndex = 0;
             // 
             // ProgressStatus
             // 
-            this.ProgressStatus.Location = new System.Drawing.Point(21, 80);
+            this.ProgressStatus.Location = new System.Drawing.Point(42, 92);
+            this.ProgressStatus.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.ProgressStatus.Name = "ProgressStatus";
-            this.ProgressStatus.Size = new System.Drawing.Size(451, 166);
+            this.ProgressStatus.Size = new System.Drawing.Size(902, 381);
             this.ProgressStatus.TabIndex = 2;
             // 
-            // FileSearchPage
+            // ProgressPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.Name = "FileSearchPage";
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.Name = "ProgressPage";
+            this.PageSettings.BackButtonSettings.Text = "Back";
+            this.PageSettings.CancelButtonSettings.Text = "Cancel";
+            this.PageSettings.CustomButtonSettings.Text = "Custom";
+            this.PageSettings.CustomButtonSettings.Visible = false;
+            this.PageSettings.HelpButtonSettings.Text = "Help";
+            this.PageSettings.HelpButtonSettings.Visible = false;
+            this.PageSettings.NextButtonSettings.Text = "Next";
             this.Closing += new System.EventHandler(this.ProgressPage_Closing);
-            this.Opening += new System.EventHandler(this.ProgressPage_Opening);
             this.Opened += new System.EventHandler(this.ProgressPage_Opened);
+            this.Opening += new System.EventHandler(this.ProgressPage_Opening);
             this.Contents.ResumeLayout(false);
-            this.Contents.PerformLayout();
             this.ResumeLayout(false);
 
         }

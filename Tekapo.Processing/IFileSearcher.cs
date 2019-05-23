@@ -11,8 +11,6 @@
 
         event EventHandler<PathProgressEventArgs> SearchingDirectory;
 
-        event EventHandler<SearchStageEventArgs> SearchStageChange;
-
         IEnumerable<string> FindSupportedFiles(IEnumerable<string> paths, MediaOperationType operationType);
     }
 }

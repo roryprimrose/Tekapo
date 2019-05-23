@@ -171,33 +171,6 @@ namespace Tekapo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Step 1 of 3: Searching for directories.
-        /// </summary>
-        internal static string FileSearchDirectoryTitle {
-            get {
-                return ResourceManager.GetString("FileSearchDirectoryTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Step 3 of 3: Filtering files.
-        /// </summary>
-        internal static string FileSearchFileFilterTitle {
-            get {
-                return ResourceManager.GetString("FileSearchFileFilterTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Step 2 of 3: Calculating files.
-        /// </summary>
-        internal static string FileSearchFileTitle {
-            get {
-                return ResourceManager.GetString("FileSearchFileTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Finish.
         /// </summary>
         internal static string Finish {

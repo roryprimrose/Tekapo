@@ -28,39 +28,26 @@ namespace Tekapo.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            this.StepTitle = new System.Windows.Forms.Label();
-            this.Contents.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // Contents
-            // 
-            this.Contents.Controls.Add(this.StepTitle);
-            this.Contents.Controls.SetChildIndex(this.StepTitle, 0);
-            // 
-            // StepTitle
-            // 
-            this.StepTitle.AutoSize = true;
-            this.StepTitle.Location = new System.Drawing.Point(21, 29);
-            this.StepTitle.Name = "StepTitle";
-            this.StepTitle.Size = new System.Drawing.Size(179, 13);
-            this.StepTitle.TabIndex = 1;
-            this.StepTitle.Text = "Step 1 of 3: Searching for directories";
             // 
             // FileSearchPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.Description = "The search path is now being searched for files that match the supported formats " +
-                "and any filters specified.";
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.Description = "Searching for files that match the supported formats and any filters specified.";
+            this.Margin = new System.Windows.Forms.Padding(12);
             this.Name = "FileSearchPage";
+            this.PageSettings.BackButtonSettings.Text = "Back";
+            this.PageSettings.CancelButtonSettings.Text = "Cancel";
+            this.PageSettings.CustomButtonSettings.Text = "Custom";
+            this.PageSettings.CustomButtonSettings.Visible = false;
+            this.PageSettings.HelpButtonSettings.Text = "Help";
+            this.PageSettings.HelpButtonSettings.Visible = false;
+            this.PageSettings.NextButtonSettings.Text = "Next";
             this.Title = "Searching for files";
-            this.Contents.ResumeLayout(false);
-            this.Contents.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label StepTitle;
     }
 }

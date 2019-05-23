@@ -155,15 +155,6 @@
   <data name="FailedProcessedResultsFormat" xml:space="preserve">
     <value>{0} files failed to be processed.</value>
   </data>
-  <data name="FileSearchDirectoryTitle" xml:space="preserve">
-    <value>Step 1 of 3: Searching for directories</value>
-  </data>
-  <data name="FileSearchFileFilterTitle" xml:space="preserve">
-    <value>Step 3 of 3: Filtering files</value>
-  </data>
-  <data name="FileSearchFileTitle" xml:space="preserve">
-    <value>Step 2 of 3: Calculating files</value>
-  </data>
   <data name="Finish" xml:space="preserve">
     <value>Finish</value>
   </data>

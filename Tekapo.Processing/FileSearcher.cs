@@ -27,19 +27,13 @@
 
         public event EventHandler<PathProgressEventArgs> SearchingDirectory;
 
-        public event EventHandler<SearchStageEventArgs> SearchStageChange;
-
         public IEnumerable<string> FindSupportedFiles(IEnumerable<string> paths, MediaOperationType operationType)
         {
             var sourceData = paths.ToList();
             var sourceDirectories = sourceData.Where(Directory.Exists);
             var sourceFiles = sourceData.Where(File.Exists).ToList();
 
-             SearchStageChange?.Invoke(this, SearchStageEventArgs.For(SearchStage.FindingDirectories));
-
             var directories = FindDirectories(sourceDirectories, _settings.RecursiveSearch);
-
-            SearchStageChange?.Invoke(this, SearchStageEventArgs.For(SearchStage.FindingFiles));
 
             var filesFound = FindFiles(directories, _settings.SearchFilterType, _settings.WildcardFilter);
 
@@ -56,8 +50,6 @@
                 filesFound.AddRange(sourceFiles);
             }
             
-            SearchStageChange?.Invoke(this, SearchStageEventArgs.For(SearchStage.FilteringFiles));
-
             return FilterFiles(filesFound,
                 operationType,
                 _settings.SearchFilterType,

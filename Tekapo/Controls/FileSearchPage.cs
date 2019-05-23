@@ -3,7 +3,6 @@ namespace Tekapo.Controls
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics.Eventing.Reader;
     using System.IO;
     using System.Linq;
     using EnsureThat;
@@ -27,7 +26,6 @@ namespace Tekapo.Controls
 
             InitializeComponent();
 
-            _fileSearcher.SearchStageChange += FileSearcherOnSearchStageChange;
             _fileSearcher.DirectoryFound += FileSearcherOnDirectoryFound;
             _fileSearcher.SearchingDirectory += FileSearcherOnProgress;
             _fileSearcher.FilteringFile += FileSearcherOnProgress;
@@ -36,7 +34,6 @@ namespace Tekapo.Controls
             {
                 if (disposing)
                 {
-                    _fileSearcher.SearchStageChange -= FileSearcherOnSearchStageChange;
                     _fileSearcher.DirectoryFound -= FileSearcherOnDirectoryFound;
                     _fileSearcher.SearchingDirectory -= FileSearcherOnProgress;
                     _fileSearcher.FilteringFile -= FileSearcherOnProgress;
@@ -82,34 +79,6 @@ namespace Tekapo.Controls
             SetProgressStatus(e.Path);
         }
 
-        private void FileSearcherOnSearchStageChange(object sender, SearchStageEventArgs e)
-        {
-            switch (e.Stage)
-            {
-                case SearchStage.FindingDirectories:
-
-                    SetStepTitle(Resources.FileSearchDirectoryTitle);
-
-                    break;
-
-                case SearchStage.FindingFiles:
-
-                    SetStepTitle(Resources.FileSearchFileTitle);
-
-                    break;
-
-                case SearchStage.FilteringFiles:
-
-                    SetStepTitle(Resources.FileSearchFileFilterTitle);
-
-                    break;
-
-                default:
-
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
         private List<string> LoadFromCommandLine()
         {
             var files = new List<string>();
@@ -151,27 +120,6 @@ namespace Tekapo.Controls
             }
 
             return files;
-        }
-
-        private void SetStepTitle(string value)
-        {
-            // Check if a thread switch is required
-            if (StepTitle.InvokeRequired)
-            {
-                object[] args = {value};
-
-                StepTitle.Invoke(new StringThreadSwitch(SetStepTitle), args);
-
-                return;
-            }
-
-            if (StepTitle.Text == value)
-            {
-                return;
-            }
-
-            // Assign the value
-            StepTitle.Text = value;
         }
     }
 }

@@ -170,8 +170,6 @@
     <Compile Include="RenameProcessor.cs" />
     <Compile Include="Results.cs" />
     <Compile Include="SearchFilterType.cs" />
-    <Compile Include="SearchStage.cs" />
-    <Compile Include="SearchStageEventArgs.cs" />
     <Compile Include="StreamExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
