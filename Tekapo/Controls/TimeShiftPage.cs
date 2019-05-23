@@ -123,12 +123,12 @@ namespace Tekapo.Controls
         /// </param>
         private void TimeShiftPage_Closing(object sender, EventArgs e)
         {
-            State[Constants.ShiftHoursStateKey] = txtHours.Value;
-            State[Constants.ShiftMinutesStateKey] = txtMinutes.Value;
-            State[Constants.ShiftSecondsStateKey] = txtSeconds.Value;
-            State[Constants.ShiftYearsStateKey] = txtYears.Value;
-            State[Constants.ShiftMonthsStateKey] = txtMonths.Value;
-            State[Constants.ShiftDaysStateKey] = txtDays.Value;
+            State[Tekapo.State.ShiftHoursKey] = txtHours.Value;
+            State[Tekapo.State.ShiftMinutesKey] = txtMinutes.Value;
+            State[Tekapo.State.ShiftSecondsKey] = txtSeconds.Value;
+            State[Tekapo.State.ShiftYearsKey] = txtYears.Value;
+            State[Tekapo.State.ShiftMonthsKey] = txtMonths.Value;
+            State[Tekapo.State.ShiftDaysKey] = txtDays.Value;
         }
 
         /// <summary>
@@ -142,12 +142,12 @@ namespace Tekapo.Controls
         /// </param>
         private void TimeShiftPage_Opening(object sender, EventArgs e)
         {
-            txtHours.Value = GetShiftValue(Constants.ShiftHoursStateKey);
-            txtMinutes.Value = GetShiftValue(Constants.ShiftMinutesStateKey);
-            txtSeconds.Value = GetShiftValue(Constants.ShiftSecondsStateKey);
-            txtYears.Value = GetShiftValue(Constants.ShiftYearsStateKey);
-            txtMonths.Value = GetShiftValue(Constants.ShiftMonthsStateKey);
-            txtDays.Value = GetShiftValue(Constants.ShiftDaysStateKey);
+            txtHours.Value = GetShiftValue(Tekapo.State.ShiftHoursKey);
+            txtMinutes.Value = GetShiftValue(Tekapo.State.ShiftMinutesKey);
+            txtSeconds.Value = GetShiftValue(Tekapo.State.ShiftSecondsKey);
+            txtYears.Value = GetShiftValue(Tekapo.State.ShiftYearsKey);
+            txtMonths.Value = GetShiftValue(Tekapo.State.ShiftMonthsKey);
+            txtDays.Value = GetShiftValue(Tekapo.State.ShiftDaysKey);
         }
     }
 }

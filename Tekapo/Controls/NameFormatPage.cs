@@ -7,6 +7,7 @@ namespace Tekapo.Controls
     using System.IO;
     using System.Threading;
     using System.Windows.Forms;
+    using EnsureThat;
     using Neovolve.Windows.Forms;
     using Neovolve.Windows.Forms.Controls;
     using Tekapo.Processing;
@@ -14,14 +15,24 @@ namespace Tekapo.Controls
 
     public partial class NameFormatPage : WizardBannerPage
     {
+        private readonly IConfiguration _configuration;
+        private readonly ISettings _settings;
         private readonly IMediaManager _mediaManager;
         private readonly IPathManager _pathManager;
         private Thread _exampleThread;
 
-        public NameFormatPage(IMediaManager mediaManager, IPathManager pathManager)
+        public NameFormatPage(IMediaManager mediaManager, IPathManager pathManager, ISettings settings,
+            IConfiguration configuration)
         {
+            Ensure.Any.IsNotNull(mediaManager, nameof(mediaManager));
+            Ensure.Any.IsNotNull(pathManager, nameof(pathManager));
+            Ensure.Any.IsNotNull(settings, nameof(settings));
+            Ensure.Any.IsNotNull(configuration, nameof(configuration));
+
             _mediaManager = mediaManager;
             _pathManager = pathManager;
+            _settings = settings;
+            _configuration = configuration;
 
             InitializeComponent();
         }
@@ -94,7 +105,7 @@ namespace Tekapo.Controls
                 else
                 {
                     var incrementOnCollision = IncrementOnCollision.Checked;
-                    var maxCollisionIncrement = Settings.Default.MaxCollisionIncrement;
+                    var maxCollisionIncrement = _configuration.MaxCollisionIncrement;
                     var resultPath = _pathManager.GetRenamedPath(renameFormat,
                         exampleData.CreatedAt.Value,
                         exampleData.Path,
@@ -124,7 +135,7 @@ namespace Tekapo.Controls
 
         private ExampleData FindPictureTakenDate()
         {
-            var paths = (BindingList<string>) State[Constants.FileListStateKey];
+            var paths = (BindingList<string>) State[Tekapo.State.FileListKey];
 
             foreach (var path in paths)
             {
@@ -201,12 +212,6 @@ namespace Tekapo.Controls
             BuildExample();
         }
 
-        private void NameFormatPage_Closing(object sender, EventArgs e)
-        {
-            State[Constants.NameFormatStateKey] = NameFormat.Text;
-            State[Constants.IncrementOnCollisionStateKey] = IncrementOnCollision.Checked;
-        }
-
         [SuppressMessage("Microsoft.Reliability",
             "CA2000:Dispose objects before losing scope",
             Justification = "The instance lives beyond the scope of this method.")]
@@ -239,9 +244,7 @@ namespace Tekapo.Controls
         private void NameFormatPage_Opening(object sender, EventArgs e)
         {
             // Load the state values
-            NameFormat.Text = (string) State[Constants.NameFormatStateKey];
-            NameFormat.DataSource = State[Constants.NameFormatMRUStateKey];
-            IncrementOnCollision.Checked = (bool) State[Constants.IncrementOnCollisionStateKey];
+            NameFormat.DataSource = _settings.NameFormatList;
 
             // Build the example
             BuildExample();

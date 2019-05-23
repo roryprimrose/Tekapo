@@ -109,18 +109,6 @@ namespace Tekapo.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int MaxCollisionIncrement {
-            get {
-                return ((int)(this["MaxCollisionIncrement"]));
-            }
-            set {
-                this["MaxCollisionIncrement"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string NameFormatMRU {
             get {
@@ -133,18 +121,6 @@ namespace Tekapo.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public int MaxNameFormatMRUItems {
-            get {
-                return ((int)(this["MaxNameFormatMRUItems"]));
-            }
-            set {
-                this["MaxNameFormatMRUItems"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string SearchDirectoryMRU {
             get {
@@ -152,18 +128,6 @@ namespace Tekapo.Properties {
             }
             set {
                 this["SearchDirectoryMRU"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public int MaxSearchDirectoryMRUItems {
-            get {
-                return ((int)(this["MaxSearchDirectoryMRUItems"]));
-            }
-            set {
-                this["MaxSearchDirectoryMRUItems"] = value;
             }
         }
     }

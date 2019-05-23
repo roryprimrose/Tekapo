@@ -7,6 +7,7 @@ namespace Tekapo.Controls
     using System.IO;
     using System.Linq;
     using System.Windows.Forms;
+    using EnsureThat;
     using Neovolve.Windows.Forms;
     using Neovolve.Windows.Forms.Controls;
     using Tekapo.Processing;
@@ -16,10 +17,15 @@ namespace Tekapo.Controls
     {
         private readonly IMediaManager _mediaManager;
         private string _lastDirectoryPath;
+        private readonly ISettings _settings;
 
-        public SelectFilesPage(IMediaManager mediaManager)
+        public SelectFilesPage(IMediaManager mediaManager, ISettings settings)
         {
+            Ensure.Any.IsNotNull(mediaManager, nameof(mediaManager));
+            Ensure.Any.IsNotNull(settings, nameof(settings));
+
             _mediaManager = mediaManager;
+            _settings = settings;
 
             InitializeComponent();
         }
@@ -41,13 +47,13 @@ namespace Tekapo.Controls
                 }
 
                 // Define what the next navigation will go to
-                if ((string) State[Constants.TaskStateKey] == Constants.RenameTask)
+                if ((string) State[Tekapo.State.TaskKey] == Task.RenameTask)
                 {
-                    e.NavigationKey = Constants.NameFormatNavigationKey;
+                    e.NavigationKey = NavigationKey.NameFormatPage;
                 }
                 else
                 {
-                    e.NavigationKey = Constants.TimeShiftNavigationKey;
+                    e.NavigationKey = NavigationKey.TimeShiftPage;
                 }
             }
 
@@ -68,7 +74,7 @@ namespace Tekapo.Controls
 
         private void AddFiles_Click(object sender, EventArgs e)
         {            
-            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
+            var operationType = (string)State[Tekapo.State.TaskKey] == Task.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
             var supportedFileTypes = _mediaManager.GetSupportedFileTypes(operationType).Select(x => x.Substring(1)).ToList();
             var dialogFilter = BuildFilter(supportedFileTypes);
             var defaultExtension = "jpg";
@@ -118,7 +124,7 @@ namespace Tekapo.Controls
 
         private void Files_DragDrop(object sender, DragEventArgs e)
         {
-            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
+            var operationType = (string)State[Tekapo.State.TaskKey] == Task.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
             
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -153,7 +159,7 @@ namespace Tekapo.Controls
 
         private void Files_DragEnter(object sender, DragEventArgs e)
         {
-            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
+            var operationType = (string)State[Tekapo.State.TaskKey] == Task.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
             
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -267,10 +273,10 @@ namespace Tekapo.Controls
 
         private void SelectFiles_Opening(object sender, EventArgs e)
         {
-            Files.DataSource = State[Constants.FileListStateKey];
-            _lastDirectoryPath = (string) State[Constants.SearchPathStateKey];
+            Files.DataSource = State[Tekapo.State.FileListKey];
+            _lastDirectoryPath = _settings.SearchPath;
         }
 
-        public BindingList<string> FileList => (BindingList<string>) State[Constants.FileListStateKey];
+        public BindingList<string> FileList => (BindingList<string>) State[Tekapo.State.FileListKey];
     }
 }

@@ -23,20 +23,11 @@
     <Setting Name="IncrementOnCollision" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="MaxCollisionIncrement" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1000</Value>
-    </Setting>
     <Setting Name="NameFormatMRU" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="MaxNameFormatMRUItems" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">5</Value>
-    </Setting>
     <Setting Name="SearchDirectoryMRU" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="MaxSearchDirectoryMRUItems" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">5</Value>
     </Setting>
   </Settings>
 </SettingsFile>

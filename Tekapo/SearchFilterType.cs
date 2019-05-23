@@ -1,4 +1,4 @@
-namespace Tekapo.Controls
+namespace Tekapo
 {
     /// <summary>
     ///     The <see cref="SearchFilterType" /> enumeration defines the types of filters that can be used when

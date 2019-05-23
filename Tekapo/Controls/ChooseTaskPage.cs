@@ -30,11 +30,11 @@ namespace Tekapo.Controls
         {
             if (Rename.Checked)
             {
-                State[Constants.TaskStateKey] = Constants.RenameTask;
+                State[Tekapo.State.TaskKey] = Task.RenameTask;
             }
             else
             {
-                State[Constants.TaskStateKey] = Constants.ShiftTask;
+                State[Tekapo.State.TaskKey] = Task.ShiftTask;
             }
         }
 
@@ -49,8 +49,8 @@ namespace Tekapo.Controls
         /// </param>
         private void ChooseTaskPage_Opening(object sender, EventArgs e)
         {
-            Rename.Checked = (string) State[Constants.TaskStateKey] == Constants.RenameTask;
-            Shift.Checked = (string) State[Constants.TaskStateKey] == Constants.ShiftTask;
+            Rename.Checked = (string) State[Tekapo.State.TaskKey] == Task.RenameTask;
+            Shift.Checked = (string) State[Tekapo.State.TaskKey] == Task.ShiftTask;
         }
     }
 }

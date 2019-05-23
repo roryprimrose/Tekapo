@@ -1,10 +1,12 @@
 namespace Tekapo.Controls
 {
     using System;
+    using System.Diagnostics;
     using System.Threading;
     using System.Windows.Forms;
     using Neovolve.Windows.Forms;
     using Neovolve.Windows.Forms.Controls;
+    using ThreadState = System.Threading.ThreadState;
 
     /// <summary>
     ///     The <see cref="ProgressPage" /> class is a Wizard page that displays progress to the user.
@@ -149,6 +151,8 @@ namespace Tekapo.Controls
 
                 return;
             }
+
+            Debug.WriteLine(value);
 
             // Assign the value
             ProgressStatus.Text = value;
