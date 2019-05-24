@@ -135,7 +135,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Controls\ProcessingPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -146,7 +146,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Extensions.cs" />
-    <Compile Include="IConfiguration.cs" />
+    <Compile Include="IConfig.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Controls\ChooseTaskPage.cs">
       <SubType>UserControl</SubType>

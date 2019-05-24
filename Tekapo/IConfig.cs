@@ -1,6 +1,6 @@
 ﻿namespace Tekapo
 {
-    public interface IConfiguration
+    public interface IConfig
     {
         int MaxCollisionIncrement { get; }
 

@@ -22,7 +22,7 @@ namespace Tekapo
     /// </summary>
     public partial class MainForm : WizardForm
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfig _config;
         private readonly IExecutionContext _executionContext;
         private readonly ISettings _settings;
 
@@ -33,16 +33,16 @@ namespace Tekapo
             IExecutionContext executionContext,
             IList<WizardPage> pages,
             ISettings settings,
-            IConfiguration configuration)
+            IConfig config)
         {
             Ensure.Any.IsNotNull(executionContext, nameof(executionContext));
             Ensure.Any.IsNotNull(pages, nameof(pages));
             Ensure.Any.IsNotNull(settings, nameof(settings));
-            Ensure.Any.IsNotNull(configuration, nameof(configuration));
+            Ensure.Any.IsNotNull(config, nameof(config));
 
             _executionContext = executionContext;
             _settings = settings;
-            _configuration = configuration;
+            _config = config;
 
             InitializeComponent();
 
@@ -266,14 +266,14 @@ namespace Tekapo
             var searchDirectoryMru = _settings.SearchDirectoryList;
             AddItemToMru(searchDirectoryMru,
                 _settings.SearchPath,
-                _configuration.MaxSearchDirectoryItems);
+                _config.MaxSearchDirectoryItems);
             Properties.Settings.Default.SearchDirectoryMRU = JsonConvert.SerializeObject(searchDirectoryMru);
 
             // Store the name format MRU
             var nameFormatMru = _settings.NameFormatList;
             AddItemToMru(nameFormatMru,
                 _settings.NameFormat,
-                _configuration.MaxNameFormatItems);
+                _config.MaxNameFormatItems);
             Properties.Settings.Default.NameFormatMRU = JsonConvert.SerializeObject(nameFormatMru);
 
             // Save the properties

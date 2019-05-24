@@ -7,7 +7,7 @@
 
     public class Settings : ISettings
     {
-        private BindingList<string> ReadList(string value)
+        private static BindingList<string> ReadList(string value)
         {
             try
             {

@@ -18,7 +18,7 @@
 
             pageTypes.ForEach(x => builder.RegisterType(x).Named<WizardPage>(x.FullName));
             builder.Register(c => BuildWizardPageRegistration(c, pageTypes));
-            builder.RegisterType<Configuration>().As<IConfiguration>().SingleInstance();
+            builder.RegisterType<Config>().As<IConfig>().SingleInstance();
             builder.RegisterType<Settings>().As<ISettings>().SingleInstance();
             builder.RegisterType<MainForm>().AsSelf();
 

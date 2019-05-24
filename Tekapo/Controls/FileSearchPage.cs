@@ -4,6 +4,7 @@ namespace Tekapo.Controls
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using EnsureThat;
@@ -15,6 +16,9 @@ namespace Tekapo.Controls
         private readonly IFileSearcher _fileSearcher;
         private readonly ISettings _settings;
 
+        [SuppressMessage("Microsoft.Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "The reference is held by the form and cannot be disposed here.")]
         public FileSearchPage(IFileSearcher fileSearcher, ISettings settings)
         {
             Ensure.Any.IsNotNull(fileSearcher, nameof(fileSearcher));

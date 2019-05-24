@@ -2,16 +2,16 @@
 {
     using System.Configuration;
 
-    public class Configuration : IConfiguration
+    public class Config : IConfig
     {
-        public Configuration()
+        public Config()
         {
             MaxCollisionIncrement = ParseInt(nameof(MaxCollisionIncrement), 1000);
             MaxNameFormatItems = ParseInt(nameof(MaxNameFormatItems), 5);
             MaxSearchDirectoryItems = ParseInt(nameof(MaxSearchDirectoryItems), 5);
         }
 
-        private int ParseInt(string key, int defaultValue = 0)
+        private static int ParseInt(string key, int defaultValue = 0)
         {
             var value = ConfigurationManager.AppSettings[key];
 

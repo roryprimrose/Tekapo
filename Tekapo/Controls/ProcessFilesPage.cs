@@ -10,7 +10,7 @@ namespace Tekapo.Controls
 
     public partial class ProcessFilesPage : ProgressPage
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfig _config;
         private readonly IMediaManager _mediaManager;
         private readonly IRenameProcessor _renameProcessor;
         private readonly ISettings _settings;
@@ -19,17 +19,17 @@ namespace Tekapo.Controls
             IMediaManager mediaManager,
             IRenameProcessor renameProcessor,
             ISettings settings,
-            IConfiguration configuration)
+            IConfig config)
         {
             Ensure.Any.IsNotNull(mediaManager, nameof(mediaManager));
             Ensure.Any.IsNotNull(renameProcessor, nameof(renameProcessor));
             Ensure.Any.IsNotNull(settings, nameof(settings));
-            Ensure.Any.IsNotNull(configuration, nameof(configuration));
+            Ensure.Any.IsNotNull(config, nameof(config));
 
             _mediaManager = mediaManager;
             _renameProcessor = renameProcessor;
             _settings = settings;
-            _configuration = configuration;
+            _config = config;
 
             InitializeComponent();
         }
@@ -43,7 +43,7 @@ namespace Tekapo.Controls
             {
                 RenameFormat = _settings.NameFormat,
                 IncrementOnCollision = _settings.IncrementOnCollision,
-                MaxCollisionIncrement = _configuration.MaxCollisionIncrement
+                MaxCollisionIncrement = _config.MaxCollisionIncrement
             };
             var processResults = new Results
             {

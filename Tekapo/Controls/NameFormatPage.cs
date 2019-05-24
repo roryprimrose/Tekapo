@@ -15,24 +15,24 @@ namespace Tekapo.Controls
 
     public partial class NameFormatPage : WizardBannerPage
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfig _config;
         private readonly ISettings _settings;
         private readonly IMediaManager _mediaManager;
         private readonly IPathManager _pathManager;
         private Thread _exampleThread;
 
         public NameFormatPage(IMediaManager mediaManager, IPathManager pathManager, ISettings settings,
-            IConfiguration configuration)
+            IConfig config)
         {
             Ensure.Any.IsNotNull(mediaManager, nameof(mediaManager));
             Ensure.Any.IsNotNull(pathManager, nameof(pathManager));
             Ensure.Any.IsNotNull(settings, nameof(settings));
-            Ensure.Any.IsNotNull(configuration, nameof(configuration));
+            Ensure.Any.IsNotNull(config, nameof(config));
 
             _mediaManager = mediaManager;
             _pathManager = pathManager;
             _settings = settings;
-            _configuration = configuration;
+            _config = config;
 
             InitializeComponent();
         }
@@ -105,7 +105,7 @@ namespace Tekapo.Controls
                 else
                 {
                     var incrementOnCollision = IncrementOnCollision.Checked;
-                    var maxCollisionIncrement = _configuration.MaxCollisionIncrement;
+                    var maxCollisionIncrement = _config.MaxCollisionIncrement;
                     var resultPath = _pathManager.GetRenamedPath(renameFormat,
                         exampleData.CreatedAt.Value,
                         exampleData.Path,
