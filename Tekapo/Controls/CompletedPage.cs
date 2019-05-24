@@ -33,7 +33,7 @@ namespace Tekapo.Controls
         private void CompletedPage_Opening(object sender, EventArgs e)
         {
             // Display the results
-            var processingResults = (Results) State[Constants.ProcessResultsStateKey];
+            var processingResults = (Results) State[Tekapo.State.ProcessResultsKey];
 
             var message = string.Format(CultureInfo.CurrentCulture,
                 Resources.SuccessfulProcessedResultsFormat,
@@ -65,10 +65,10 @@ namespace Tekapo.Controls
             var filePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".htm");
 
             // Store the path in state
-            State[Constants.ResultsLogPathStateKey] = filePath;
+            State[Tekapo.State.ResultsLogPathKey] = filePath;
 
             // Write the log
-            LogWriter.SaveResultsLog((Results) State[Constants.ProcessResultsStateKey], filePath);
+            LogWriter.SaveResultsLog((Results) State[Tekapo.State.ProcessResultsKey], filePath);
 
             // Shell the file path
             Process.Start(filePath);

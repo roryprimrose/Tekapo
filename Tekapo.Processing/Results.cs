@@ -68,7 +68,5 @@ namespace Tekapo.Processing
         public int FilesSucceeded { get; set; }
 
         public string ProcessRunDate { get; set; }
-
-        public string ProcessType { get; set; }
     }
 }

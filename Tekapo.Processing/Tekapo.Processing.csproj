@@ -144,11 +144,15 @@
   <ItemGroup>
     <Compile Include="CompositeMediaManager.cs" />
     <Compile Include="FileResult.cs" />
+    <Compile Include="FileSearcher.cs" />
+    <Compile Include="IFileSearcher.cs" />
     <Compile Include="IRenameProcessor.cs" />
+    <Compile Include="ISettings.cs" />
     <Compile Include="MediaInfo.cs" />
     <Compile Include="MediaManagerExtensions.cs" />
     <Compile Include="MediaOperationType.cs" />
     <Compile Include="MovMediaManager.cs" />
+    <Compile Include="PathEventArgs.cs" />
     <Compile Include="PathManager.cs" />
     <Compile Include="IMediaManager.cs" />
     <Compile Include="IPathManager.cs" />
@@ -164,6 +168,7 @@
     <Compile Include="RenameConfiguration.cs" />
     <Compile Include="RenameProcessor.cs" />
     <Compile Include="Results.cs" />
+    <Compile Include="SearchFilterType.cs" />
     <Compile Include="StreamExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

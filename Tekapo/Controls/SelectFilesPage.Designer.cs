@@ -34,12 +34,14 @@ namespace Tekapo.Controls
             this.RemoveSelected = new System.Windows.Forms.Button();
             this.AddFiles = new System.Windows.Forms.Button();
             this.ErrorDisplay = new System.Windows.Forms.ErrorProvider(this.components);
+            this.AddFolder = new System.Windows.Forms.Button();
             this.Contents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorDisplay)).BeginInit();
             this.SuspendLayout();
             // 
             // Contents
             // 
+            this.Contents.Controls.Add(this.AddFolder);
             this.Contents.Controls.Add(this.AddFiles);
             this.Contents.Controls.Add(this.RemoveSelected);
             this.Contents.Controls.Add(this.RemoveAll);
@@ -51,21 +53,24 @@ namespace Tekapo.Controls
             this.Files.FormattingEnabled = true;
             this.Files.HorizontalScrollbar = true;
             this.Files.IntegralHeight = false;
-            this.Files.Location = new System.Drawing.Point(12, 17);
+            this.Files.ItemHeight = 25;
+            this.Files.Location = new System.Drawing.Point(24, 33);
+            this.Files.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Files.Name = "Files";
             this.Files.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.Files.Size = new System.Drawing.Size(358, 230);
+            this.Files.Size = new System.Drawing.Size(712, 439);
             this.Files.Sorted = true;
             this.Files.TabIndex = 0;
-            this.Files.DragEnter += new System.Windows.Forms.DragEventHandler(this.Files_DragEnter);
             this.Files.DragDrop += new System.Windows.Forms.DragEventHandler(this.Files_DragDrop);
+            this.Files.DragEnter += new System.Windows.Forms.DragEventHandler(this.Files_DragEnter);
             this.Files.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Files_KeyUp);
             // 
             // RemoveAll
             // 
-            this.RemoveAll.Location = new System.Drawing.Point(376, 224);
+            this.RemoveAll.Location = new System.Drawing.Point(752, 431);
+            this.RemoveAll.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.RemoveAll.Name = "RemoveAll";
-            this.RemoveAll.Size = new System.Drawing.Size(107, 23);
+            this.RemoveAll.Size = new System.Drawing.Size(214, 44);
             this.RemoveAll.TabIndex = 1;
             this.RemoveAll.Text = "Remove All";
             this.RemoveAll.UseVisualStyleBackColor = true;
@@ -73,9 +78,10 @@ namespace Tekapo.Controls
             // 
             // RemoveSelected
             // 
-            this.RemoveSelected.Location = new System.Drawing.Point(376, 195);
+            this.RemoveSelected.Location = new System.Drawing.Point(752, 375);
+            this.RemoveSelected.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.RemoveSelected.Name = "RemoveSelected";
-            this.RemoveSelected.Size = new System.Drawing.Size(107, 23);
+            this.RemoveSelected.Size = new System.Drawing.Size(214, 44);
             this.RemoveSelected.TabIndex = 2;
             this.RemoveSelected.Text = "Remove Selected";
             this.RemoveSelected.UseVisualStyleBackColor = true;
@@ -83,9 +89,10 @@ namespace Tekapo.Controls
             // 
             // AddFiles
             // 
-            this.AddFiles.Location = new System.Drawing.Point(376, 166);
+            this.AddFiles.Location = new System.Drawing.Point(748, 263);
+            this.AddFiles.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.AddFiles.Name = "AddFiles";
-            this.AddFiles.Size = new System.Drawing.Size(107, 23);
+            this.AddFiles.Size = new System.Drawing.Size(214, 44);
             this.AddFiles.TabIndex = 3;
             this.AddFiles.Text = "Add Files";
             this.AddFiles.UseVisualStyleBackColor = true;
@@ -95,18 +102,30 @@ namespace Tekapo.Controls
             // 
             this.ErrorDisplay.ContainerControl = this;
             // 
+            // AddFolder
+            // 
+            this.AddFolder.Location = new System.Drawing.Point(752, 319);
+            this.AddFolder.Margin = new System.Windows.Forms.Padding(6);
+            this.AddFolder.Name = "AddFolder";
+            this.AddFolder.Size = new System.Drawing.Size(214, 44);
+            this.AddFolder.TabIndex = 4;
+            this.AddFolder.Text = "Add Folder";
+            this.AddFolder.UseVisualStyleBackColor = true;
+            this.AddFolder.Click += new System.EventHandler(this.AddFolder_Click);
+            // 
             // SelectFilesPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.Description = "This page will be loaded with files found from a files search. Please add and/or " +
-                "remove files as required before selecting Next.";
+    "remove files as required before selecting Next.";
+            this.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.Name = "SelectFilesPage";
+            this.PageSettings.BackButtonSettings.Text = "Back";
             this.PageSettings.CancelButtonSettings.Text = "Cancel";
             this.PageSettings.CustomButtonSettings.Text = "Custom";
             this.PageSettings.CustomButtonSettings.Visible = false;
             this.PageSettings.HelpButtonSettings.Text = "Help";
             this.PageSettings.HelpButtonSettings.Visible = false;
-            this.PageSettings.NextButtonSettings.Text = "Next";
             this.PageSettings.NextButtonSettings.Text = "Back";
             this.Title = "Determine files to process.";
             this.Opening += new System.EventHandler(this.SelectFiles_Opening);
@@ -123,5 +142,6 @@ namespace Tekapo.Controls
         private System.Windows.Forms.Button RemoveSelected;
         private System.Windows.Forms.Button AddFiles;
         private System.Windows.Forms.ErrorProvider ErrorDisplay;
+        private System.Windows.Forms.Button AddFolder;
     }
 }

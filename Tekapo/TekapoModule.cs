@@ -5,6 +5,7 @@
     using System.Linq;
     using Autofac;
     using Neovolve.Windows.Forms.Controls;
+    using Tekapo.Processing;
 
     public class TekapoModule : Module
     {
@@ -17,7 +18,8 @@
 
             pageTypes.ForEach(x => builder.RegisterType(x).Named<WizardPage>(x.FullName));
             builder.Register(c => BuildWizardPageRegistration(c, pageTypes));
-
+            builder.RegisterType<Config>().As<IConfig>().SingleInstance();
+            builder.RegisterType<Settings>().As<ISettings>().SingleInstance();
             builder.RegisterType<MainForm>().AsSelf();
 
             base.Load(builder);

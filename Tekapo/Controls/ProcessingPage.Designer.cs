@@ -1,6 +1,6 @@
 namespace Tekapo.Controls
 {
-    partial class FileSearchPage
+    partial class ProcessingPage
     {
         /// <summary>
         /// Required designer variable.
@@ -28,27 +28,13 @@ namespace Tekapo.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            this.ProgressStatus = new System.Windows.Forms.Label();
-            this.Contents.SuspendLayout();
             this.SuspendLayout();
             // 
-            // Contents
-            // 
-            this.Contents.Controls.Add(this.ProgressStatus);
-            // 
-            // ProgressStatus
-            // 
-            this.ProgressStatus.Location = new System.Drawing.Point(44, 42);
-            this.ProgressStatus.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.ProgressStatus.Name = "ProgressStatus";
-            this.ProgressStatus.Size = new System.Drawing.Size(902, 419);
-            this.ProgressStatus.TabIndex = 3;
-            // 
-            // FileSearchPage
+            // ProcessPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
-            this.Description = "Searching for files that match the supported formats and any filters specified.";
-            this.Name = "FileSearchPage";
+            this.Margin = new System.Windows.Forms.Padding(12);
+            this.Name = "ProcessPage";
             this.PageSettings.BackButtonSettings.Text = "Back";
             this.PageSettings.CancelButtonSettings.Text = "Cancel";
             this.PageSettings.CustomButtonSettings.Text = "Custom";
@@ -56,14 +42,14 @@ namespace Tekapo.Controls
             this.PageSettings.HelpButtonSettings.Text = "Help";
             this.PageSettings.HelpButtonSettings.Visible = false;
             this.PageSettings.NextButtonSettings.Text = "Next";
-            this.Title = "Searching for files";
-            this.Contents.ResumeLayout(false);
+            this.Closing += new System.EventHandler(this.ProgressPage_Closing);
+            this.Opened += new System.EventHandler(this.ProgressPage_Opened);
+            this.Opening += new System.EventHandler(this.ProgressPage_Opening);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label ProgressStatus;
     }
 }

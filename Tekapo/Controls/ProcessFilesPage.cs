@@ -10,39 +10,48 @@ namespace Tekapo.Controls
 
     public partial class ProcessFilesPage : ProgressPage
     {
+        private readonly IConfig _config;
         private readonly IMediaManager _mediaManager;
         private readonly IRenameProcessor _renameProcessor;
+        private readonly ISettings _settings;
 
-        public ProcessFilesPage(IMediaManager mediaManager, IRenameProcessor renameProcessor)
+        public ProcessFilesPage(
+            IMediaManager mediaManager,
+            IRenameProcessor renameProcessor,
+            ISettings settings,
+            IConfig config)
         {
             Ensure.Any.IsNotNull(mediaManager, nameof(mediaManager));
             Ensure.Any.IsNotNull(renameProcessor, nameof(renameProcessor));
+            Ensure.Any.IsNotNull(settings, nameof(settings));
+            Ensure.Any.IsNotNull(config, nameof(config));
 
             _mediaManager = mediaManager;
             _renameProcessor = renameProcessor;
+            _settings = settings;
+            _config = config;
 
             InitializeComponent();
         }
 
         protected override void ProcessTask()
         {
-            var items = (BindingList<string>)State[Constants.FileListStateKey];
+            var items = (BindingList<string>) State[Tekapo.State.FileListKey];
             var totalItems = items.Count;
-            var isRenameTask = (string)State[Constants.TaskStateKey] == Constants.RenameTask;
+            var isRenameTask = (TaskType) State[Tekapo.State.TaskKey] == TaskType.RenameTask;
             var renameConfig = new RenameConfiguration
             {
-                RenameFormat = (string) State[Constants.NameFormatStateKey],
-                IncrementOnCollision = (bool) State[Constants.IncrementOnCollisionStateKey],
-                MaxCollisionIncrement = Settings.Default.MaxCollisionIncrement
+                RenameFormat = _settings.NameFormat,
+                IncrementOnCollision = _settings.IncrementOnCollision,
+                MaxCollisionIncrement = _config.MaxCollisionIncrement
             };
             var processResults = new Results
             {
-                ProcessRunDate = DateTime.Now.ToLongDateString() + ", " + DateTime.Now.ToShortTimeString(),
-                ProcessType = (string) State[Constants.TaskStateKey]
+                ProcessRunDate = DateTime.Now.ToLongDateString() + ", " + DateTime.Now.ToShortTimeString()
             };
 
             // Store the process results in state
-            State[Constants.ProcessResultsStateKey] = processResults;
+            State[Tekapo.State.ProcessResultsKey] = processResults;
 
             for (var index = 0; index < items.Count; index++)
             {
@@ -79,7 +88,8 @@ namespace Tekapo.Controls
             var displayPath = result.NewPath;
 
             // Check if the new path is in the same directory
-            if (Path.GetDirectoryName(result.OriginalPath).ToUpperInvariant() == Path.GetDirectoryName(result.NewPath).ToUpperInvariant())
+            if (Path.GetDirectoryName(result.OriginalPath).ToUpperInvariant()
+                == Path.GetDirectoryName(result.NewPath).ToUpperInvariant())
             {
                 // Strip off the path to leave just the file name
                 displayPath = Path.GetFileName(result.NewPath);
@@ -98,7 +108,7 @@ namespace Tekapo.Controls
             var progressMessage = string.Format(CultureInfo.CurrentCulture, Resources.TimeShiftProcessFormat, path);
             SetProgressStatus(progressMessage);
 
-            var result = new FileResult { OriginalPath = path };
+            var result = new FileResult {OriginalPath = path};
 
             // Get the current time of the file
             Stream updatedStream;
@@ -109,30 +119,32 @@ namespace Tekapo.Controls
 
                 if (currentTime == null)
                 {
-                    ProcessResults.AddFailedResult(result, "The date and time the media was created could not be determined, skipping this file.");
+                    ProcessResults.AddFailedResult(result,
+                        "The date and time the media was created could not be determined, skipping this file.");
 
                     return;
                 }
 
                 // Shift the time
-                var newTime =
-                    currentTime.Value.AddHours(Convert.ToDouble(State[Constants.ShiftHoursStateKey], CultureInfo.CurrentCulture));
-                newTime = newTime.AddMinutes(Convert.ToDouble(State[Constants.ShiftMinutesStateKey],
+                var newTime = currentTime.Value.AddHours(Convert.ToDouble(State[Tekapo.State.ShiftHoursKey],
                     CultureInfo.CurrentCulture));
-                newTime = newTime.AddSeconds(Convert.ToDouble(State[Constants.ShiftSecondsStateKey],
+                newTime = newTime.AddMinutes(Convert.ToDouble(State[Tekapo.State.ShiftMinutesKey],
                     CultureInfo.CurrentCulture));
-                newTime = newTime.AddYears(Convert.ToInt32(State[Constants.ShiftYearsStateKey],
+                newTime = newTime.AddSeconds(Convert.ToDouble(State[Tekapo.State.ShiftSecondsKey],
                     CultureInfo.CurrentCulture));
-                newTime = newTime.AddMonths(Convert.ToInt32(State[Constants.ShiftMonthsStateKey],
+                newTime = newTime.AddYears(Convert.ToInt32(State[Tekapo.State.ShiftYearsKey],
                     CultureInfo.CurrentCulture));
-                newTime = newTime.AddDays(Convert.ToInt32(State[Constants.ShiftDaysStateKey], CultureInfo.CurrentCulture));
+                newTime = newTime.AddMonths(Convert.ToInt32(State[Tekapo.State.ShiftMonthsKey],
+                    CultureInfo.CurrentCulture));
+                newTime = newTime.AddDays(Convert.ToInt32(State[Tekapo.State.ShiftDaysKey],
+                    CultureInfo.CurrentCulture));
 
                 // Store the results
-                result.OriginalMediaCreatedDate = string.Concat(
-                    currentTime.Value.ToLongDateString(),
+                result.OriginalMediaCreatedDate = string.Concat(currentTime.Value.ToLongDateString(),
                     ", ",
                     currentTime.Value.ToShortTimeString());
-                result.NewMediaCreatedDate = string.Concat(newTime.ToLongDateString(), ", ", newTime.ToShortTimeString());
+                result.NewMediaCreatedDate =
+                    string.Concat(newTime.ToLongDateString(), ", ", newTime.ToShortTimeString());
 
                 try
                 {
@@ -160,6 +172,6 @@ namespace Tekapo.Controls
             ProcessResults.AddSuccessfulResult(result);
         }
 
-        private Results ProcessResults => (Results)State[Constants.ProcessResultsStateKey];
+        private Results ProcessResults => (Results) State[Tekapo.State.ProcessResultsKey];
     }
 }

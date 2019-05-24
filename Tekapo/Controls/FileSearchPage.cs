@@ -3,207 +3,139 @@ namespace Tekapo.Controls
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
-    using System.Text.RegularExpressions;
+    using System.Linq;
+    using EnsureThat;
     using Tekapo.Processing;
     using Tekapo.Properties;
 
-    public partial class FileSearchPage : ProgressPage
+    public partial class FileSearchPage : ProcessingPage
     {
-        private readonly IMediaManager _mediaManager;
+        private readonly IFileSearcher _fileSearcher;
+        private readonly ISettings _settings;
 
-        public FileSearchPage(IMediaManager mediaManager)
+        [SuppressMessage("Microsoft.Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "The reference is held by the form and cannot be disposed here.")]
+        public FileSearchPage(IFileSearcher fileSearcher, ISettings settings)
         {
-            _mediaManager = mediaManager;
+            Ensure.Any.IsNotNull(fileSearcher, nameof(fileSearcher));
+            Ensure.Any.IsNotNull(settings, nameof(settings));
+
+            _fileSearcher = fileSearcher;
+            _settings = settings;
+
+            components = new Container();
 
             InitializeComponent();
+
+            _fileSearcher.EvaluatingPath += FileSearcherOnEvaluatingPath;
+
+            var disposeTrigger = new DisposeTrigger(disposing =>
+            {
+                if (disposing)
+                {
+                    _fileSearcher.EvaluatingPath -= FileSearcherOnEvaluatingPath;
+                }
+            });
+
+            components.Add(disposeTrigger);
         }
 
         protected override void ProcessTask()
         {
-            // Get the search criteria
-            var basePath = (string)State[Constants.SearchPathStateKey];
-            var recurseDirectories = (bool)State[Constants.SearchSubDirectoriesStateKey];
-            var filterType = (SearchFilterType)State[Constants.SearchFilterTypeStateKey];
-            var wildcardPattern = (string)State[Constants.SearchFilterWildcardStateKey];
-            var regularExpressionPattern = (string)State[Constants.SearchFilterRegularExpressionStateKey];
+            var searchPaths = LoadFromCommandLine();
 
-            // Run the first search stage
-            // Get the list of directories involved
-            var directories = new List<string>();
-            SetStepTitle(Resources.FileSearchDirectoryTitle);
-            FindDirectories(basePath, recurseDirectories, directories);
+            var searchPath = _settings.SearchPath;
 
-            // Run the second search stage
-            // Get list of files involved
-            var files = new List<string>();
-            SetStepTitle(Resources.FileSearchFileTitle);
-            FindFiles(directories, files, filterType, wildcardPattern);
+            if (searchPaths.Contains(searchPath) == false)
+            {
+                searchPaths.Add(searchPath);
+            }
 
-            // Clean up memory
-            directories.Clear();
+            var taskType = (TaskType) State[Tekapo.State.TaskKey];
+            var operationType = taskType.AsMediaOperationType();
 
-            // Run the third search stage
-            // Filter the files involved
-            var filteredFiles = new BindingList<string>();
-            SetStepTitle(Resources.FileSearchFileFilterTitle);
-            FilterFiles(files, filteredFiles, filterType, regularExpressionPattern);
+            var filesFound = _fileSearcher.FindSupportedFiles(searchPaths, operationType).ToList();
 
-            // Clean up memory
-            files.Clear();
+            var fileList = new BindingList<string>(filesFound);
 
             // Store the list of files found
-            State[Constants.FileListStateKey] = filteredFiles;
+            State[Tekapo.State.FileListKey] = fileList;
         }
 
-        private void FilterFiles(
-            IList<string> files,
-            ICollection<string> filteredFiles,
-            SearchFilterType filterType,
-            string regularExpressionPattern)
-        {
-            var expressionTest = new Regex(regularExpressionPattern, RegexOptions.Singleline);
-            var totalCount = files.Count;
-            var operationType = (string)State[Constants.TaskStateKey] == Constants.RenameTask ? MediaOperationType.Read : MediaOperationType.ReadWrite;
-
-            // Loop through each file
-            for (var index = 0; index < totalCount; index++)
-            {
-                // Get the path
-                var path = files[index];
-
-                // Update the progress percentage
-                SetProgressPercentage(index + 1, totalCount);
-
-                // Update the search status
-                SetProgressStatus(path);
-                
-                // Check if the file is a supported type
-                if (_mediaManager.IsSupported(path, operationType))
-                {
-                    if (filterType != SearchFilterType.RegularExpression
-                        || expressionTest.IsMatch(path))
-                    {
-                        // Add the item
-                        filteredFiles.Add(path);
-                    }
-                }
-            }
-        }
-
-        private void FindDirectories(string path, bool recurseDirectories, ICollection<string> directories)
-        {
-            // Add the current path to the list
-            directories.Add(path);
-
-            // Get the sub-directory paths
-            var newPaths = Directory.GetDirectories(path);
-
-            // Loop through each directory path
-            for (var index = 0; index < newPaths.Length; index++)
-            {
-                var newPath = newPaths[index];
-
-                // Update the progress message
-                SetProgressStatus(newPath);
-
-                // Check if we need to recurse
-                if (recurseDirectories)
-                {
-                    // SearchExpression the call
-                    FindDirectories(newPath, true, directories);
-                }
-            }
-        }
-
-        private void FindFiles(
-            IList<string> directories,
-            List<string> files,
-            SearchFilterType filterType,
-            string wildcardPattern)
-        {
-            var totalCount = directories.Count;
-
-            // Loop through each directory
-            for (var index = 0; index < totalCount; index++)
-            {
-                // Get the directory
-                var directory = directories[index];
-
-                // Update the progress percentage
-                SetProgressPercentage(index + 1, totalCount);
-
-                // Update the status
-                SetProgressStatus(directory);
-
-                // Get the files for the directory
-                string[] newFiles;
-
-                switch (filterType)
-                {
-                    case SearchFilterType.None:
-                    case SearchFilterType.RegularExpression:
-
-                        newFiles = Directory.GetFiles(directory);
-
-                        break;
-
-                    case SearchFilterType.Wildcard:
-
-                        newFiles = Directory.GetFiles(directory, wildcardPattern);
-
-                        break;
-
-                    default:
-
-                        throw new NotSupportedException();
-                }
-
-                // Add the new files to the collection
-                files.AddRange(newFiles);
-            }
-
-            // Check if the command line arguments have been processed
-            if ((bool)State[Constants.CommandLineArgumentsProcessedStateKey] == false)
-            {
-                // Update the status
-                SetProgressStatus(Resources.ParseCommandLineArguments);
-
-                var arguments = Environment.GetCommandLineArgs();
-
-                // Loop through each argument
-                for (var index = 0; index < arguments.Length; index++)
-                {
-                    var argument = arguments[index];
-
-                    // Check if the item is a file path
-                    if (File.Exists(argument)
-                        && files.Contains(argument) == false)
-                    {
-                        // Add the file to the list
-                        files.Add(argument);
-                    }
-                }
-
-                // Update the state value
-                State[Constants.CommandLineArgumentsProcessedStateKey] = true;
-            }
-        }
-
-        private void SetStepTitle(string value)
+        /// <summary>
+        ///     Sets the search status.
+        /// </summary>
+        /// <param name="value">
+        ///     The value.
+        /// </param>
+        protected void SetProgressStatus(string value)
         {
             // Check if a thread switch is required
-            if (StepTitle.InvokeRequired)
+            if (ProgressStatus.InvokeRequired)
             {
-                object[] args = { value };
+                object[] args = {value};
 
-                StepTitle.Invoke(new StringThreadSwitch(SetStepTitle), args);
+                ProgressStatus.Invoke(new StringThreadSwitch(SetProgressStatus), args);
 
                 return;
             }
 
+            Debug.WriteLine(value);
+
             // Assign the value
-            StepTitle.Text = value;
+            ProgressStatus.Text = value;
+        }
+
+        private void FileSearcherOnEvaluatingPath(object sender, PathEventArgs e)
+        {
+            SetProgressStatus(e.Path);
+        }
+
+        private List<string> LoadFromCommandLine()
+        {
+            var files = new List<string>();
+
+            // Check if the command line arguments have been processed
+            // Update the status
+            SetProgressStatus(Resources.ParseCommandLineArguments);
+
+            var arguments = Environment.GetCommandLineArgs();
+
+            // Loop through each argument
+            for (var index = 0; index < arguments.Length; index++)
+            {
+                var argument = arguments[index];
+                string path;
+
+                if (File.Exists(argument))
+                {
+                    // We will process this file
+                    path = Path.GetFullPath(argument);
+                }
+                else if (Directory.Exists(argument))
+                {
+                    path = Path.GetFullPath(argument);
+                }
+                else
+                {
+                    continue;
+                }
+
+                // Check if the item is a file path
+                if (files.Contains(path))
+                {
+                    continue;
+                }
+
+                // Add the file to the list
+                files.Add(path);
+            }
+
+            return files;
         }
     }
 }

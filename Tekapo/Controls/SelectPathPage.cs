@@ -6,8 +6,10 @@ namespace Tekapo.Controls
     using System.IO;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
+    using EnsureThat;
     using Neovolve.Windows.Forms;
     using Neovolve.Windows.Forms.Controls;
+    using Tekapo.Processing;
     using Tekapo.Properties;
 
     /// <summary>
@@ -17,11 +19,17 @@ namespace Tekapo.Controls
     /// </summary>
     public partial class SelectPathPage : WizardBannerPage
     {
+        private readonly ISettings _settings;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="Tekapo.Controls.SelectPathPage" /> class.
         /// </summary>
-        public SelectPathPage()
+        public SelectPathPage(ISettings settings)
         {
+            Ensure.Any.IsNotNull(settings, nameof(settings));
+
+            _settings = settings;
+
             InitializeComponent();
         }
 
@@ -65,7 +73,7 @@ namespace Tekapo.Controls
         {
             using (var dialog = new FolderBrowserDialog())
             {
-                dialog.SelectedPath = (string) State[Constants.SearchPathStateKey];
+                dialog.SelectedPath = _settings.SearchPath;
                 dialog.Description = Resources.SelectPathDescription;
                 dialog.ShowNewFolderButton = false;
 
@@ -174,27 +182,21 @@ namespace Tekapo.Controls
             }
 
             // Store a new file list in state
-            State[Constants.FileListStateKey] = new BindingList<string>();
+            State[Tekapo.State.FileListKey] = new BindingList<string>();
 
             // Store the settings in state
-            State[Constants.SearchPathStateKey] = SearchPath.Text;
-            State[Constants.SearchSubDirectoriesStateKey] = Recurse.Checked;
-
             if (UseRegularExpression.Checked)
             {
-                State[Constants.SearchFilterTypeStateKey] = SearchFilterType.RegularExpression;
+                _settings.SearchFilterType = SearchFilterType.RegularExpression;
             }
             else if (UseWildcard.Checked)
             {
-                State[Constants.SearchFilterTypeStateKey] = SearchFilterType.Wildcard;
+                _settings.SearchFilterType = SearchFilterType.Wildcard;
             }
             else
             {
-                State[Constants.SearchFilterTypeStateKey] = SearchFilterType.None;
+                _settings.SearchFilterType = SearchFilterType.None;
             }
-
-            State[Constants.SearchFilterWildcardStateKey] = Wildcard.Text;
-            State[Constants.SearchFilterRegularExpressionStateKey] = Expression.Text;
         }
 
         /// <summary>
@@ -209,17 +211,13 @@ namespace Tekapo.Controls
         private void SelectPathPage_Opening(object sender, EventArgs e)
         {
             // Populate the wizard
-            SearchPath.Text = (string) State[Constants.SearchPathStateKey];
-            SearchPath.DataSource = State[Constants.SearchDirectoryMRUStateKey];
-            Recurse.Checked = (bool) State[Constants.SearchSubDirectoriesStateKey];
+            SearchPath.DataSource = _settings.SearchDirectoryList;
 
-            var filterType = (SearchFilterType) State[Constants.SearchFilterTypeStateKey];
+            var filterType = _settings.SearchFilterType;
 
             UseNoFilter.Checked = filterType == SearchFilterType.None;
             UseRegularExpression.Checked = filterType == SearchFilterType.RegularExpression;
-            Expression.Text = (string) State[Constants.SearchFilterRegularExpressionStateKey];
             UseWildcard.Checked = filterType == SearchFilterType.Wildcard;
-            Wildcard.Text = (string) State[Constants.SearchFilterWildcardStateKey];
         }
 
         /// <summary>
