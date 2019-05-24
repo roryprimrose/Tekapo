@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Text.RegularExpressions;
     using EnsureThat;
 
@@ -25,175 +24,178 @@
 
         public IEnumerable<string> FindSupportedFiles(IEnumerable<string> paths, MediaOperationType operationType)
         {
-            var sourceData = paths.ToList();
-            var sourceDirectories = sourceData.Where(Directory.Exists);
-            var sourceFiles = sourceData.Where(File.Exists).ToList();
-
-            var directories = FindDirectories(sourceDirectories, _settings.RecursiveSearch);
-
-            var filesFound = FindFiles(directories, _settings.SearchFilterType, _settings.WildcardFilter);
-
-            // Clean up memory
-            directories.Clear();
-
-            foreach (var sourceFile in sourceFiles)
-            {
-                if (filesFound.Contains(sourceFile))
-                {
-                    continue;
-                }
-            
-                filesFound.AddRange(sourceFiles);
-            }
-            
-            return FilterFiles(filesFound,
-                operationType,
-                _settings.SearchFilterType,
-                _settings.RegularExpressionFilter);
-        }
-
-        private IEnumerable<string> FilterFiles(
-            IList<string> files,
-            MediaOperationType operationType,
-            SearchFilterType filterType,
-            string regularExpressionPattern)
-        {
-            var matchingFiles = new List<string>();
-            var expressionTest = new Regex(regularExpressionPattern, RegexOptions.Singleline);
-            var totalCount = files.Count;
-
-            // Loop through each file
-            for (var index = 0; index < totalCount; index++)
-            {
-                // Get the path
-                var path = files[index];
-
-                // Check if the file is a supported type
-                if (_mediaManager.IsSupported(path, operationType))
-                {
-                    if (filterType != SearchFilterType.RegularExpression
-                        || expressionTest.IsMatch(path))
-                    {
-                        // Add the item
-                        matchingFiles.Add(path);
-                    }
-                }
-            }
-
-            return matchingFiles;
-        }
-
-        private IList<string> FindDirectories(IEnumerable<string> paths, bool recurseDirectories)
-        {
-            var itemsFound = new List<string>();
+            var context = BuildSearchContext(operationType);
 
             foreach (var path in paths)
             {
-                var pathToProcess = path;
-
-                if (pathToProcess.EndsWith("\\") == false)
+                if (File.Exists(path))
                 {
-                    pathToProcess = pathToProcess + "\\";
+                    if (IsSupportedFile(path, context))
+                    {
+                        yield return path;
+                    }
                 }
-
-                if (itemsFound.Contains(pathToProcess))
+                else if (Directory.Exists(path))
                 {
-                    continue;
+                    var files = SearchDirectory(path, context);
+
+                    foreach (var file in files)
+                    {
+                        yield return file;
+                    }
                 }
-
-                itemsFound.Add(pathToProcess);
-
-                FindDirectories(pathToProcess, itemsFound, recurseDirectories);
-}
-
-            return itemsFound;
+            }
         }
 
-        private void FindDirectories(string path, ICollection<string> directories, bool recurseDirectories)
+        private SearchContext BuildSearchContext(MediaOperationType operationType)
         {
-            if (Directory.Exists(path) == false)
+            var context = new SearchContext
             {
-                return;
+                RecursiveSearch = _settings.RecursiveSearch,
+                FilterType = _settings.SearchFilterType,
+                WildcardPattern = "*",
+                OperationType = operationType
+            };
+
+            if (context.FilterType == SearchFilterType.Wildcard)
+            {
+                context.WildcardPattern = _settings.WildcardFilter ?? "*";
+
+                // Create a regex of the wildcard to apply against files in the paths variable
+                var wildcardExpressionPattern = "^" + Regex.Escape(context.WildcardPattern).Replace("\\*", ".*") + "$";
+                var wildcardExpression = new Regex(wildcardExpressionPattern);
+
+                context.WildcardExpression = wildcardExpression;
             }
+
+            if (string.IsNullOrWhiteSpace(_settings.RegularExpressionFilter) == false)
+            {
+                context.RegularExpression = new Regex(_settings.RegularExpressionFilter);
+            }
+
+            return context;
+        }
+
+        private bool IsSupportedFile(string path, SearchContext context)
+        {
+            if (context.FilesProcessed.Contains(path))
+            {
+                return false;
+            }
+
+            // We don't care if the file is supported and could be processed, we care whether we need to evaluate it again
+            context.FilesProcessed.Add(path);
+
+            var filename = Path.GetFileName(path);
+
+            if (context.FilterType == SearchFilterType.RegularExpression
+                && string.IsNullOrWhiteSpace(filename) == false
+                && context.RegularExpression.IsMatch(filename) == false)
+            {
+                // This is a regex check and neither the file path or file name  matches the expression
+                return false;
+            }
+
+            if (context.FilterType == SearchFilterType.Wildcard
+                && string.IsNullOrWhiteSpace(filename) == false
+                && context.WildcardExpression.IsMatch(filename) == false)
+            {
+                // This is a wildcard check and neither the file path or file name  matches the expression
+                return false;
+            }
+
+            // Check if the file is a supported type
+            if (_mediaManager.IsSupported(path, context.OperationType))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private IEnumerable<string> SearchDirectory(string path, SearchContext context)
+        {
+            var fullPath = Path.GetFullPath(path);
+
+            if (fullPath.EndsWith("\\") == false)
+            {
+                fullPath += "\\";
+            }
+
+            if (context.DirectoriesProcessed.Contains(fullPath))
+            {
+                yield break;
+            }
+
+            context.DirectoriesProcessed.Add(fullPath);
+
+            EvaluatingPath?.Invoke(this, PathEventArgs.For(fullPath));
+
+            IEnumerable<string> files;
 
             try
             {
-                // Get the sub-directory paths
-                var newPaths = Directory.EnumerateDirectories(path);
-
-                // Loop through each directory path
-                foreach (var newPath in newPaths)
-                {
-                    var pathToProcess = newPath;
-
-                    if (pathToProcess.EndsWith("\\") == false)
-                    {
-                        pathToProcess = pathToProcess + "\\";
-                    }
-
-                    if (directories.Contains(pathToProcess))
-                    {
-                        return;
-                    }
-
-                    directories.Add(pathToProcess);
-
-                    // Update the progress message
-                    EvaluatingPath?.Invoke(this, PathEventArgs.For(pathToProcess));
-
-                    // Check if we need to recurse
-                    if (recurseDirectories)
-                    {
-                        // SearchExpression the call
-                        FindDirectories(pathToProcess, directories, true);
-                    }
-                }
+                files = Directory.EnumerateFiles(fullPath, context.WildcardPattern, SearchOption.TopDirectoryOnly);
             }
             catch (UnauthorizedAccessException)
             {
                 // We can't read this folder
+                files = new List<string>();
+            }
+
+            foreach (var file in files)
+            {
+                if (IsSupportedFile(file, context))
+                {
+                    yield return file;
+                }
+            }
+
+            if (context.RecursiveSearch == false)
+            {
+                yield break;
+            }
+
+            IEnumerable<string> directories;
+
+            try
+            {
+                directories = Directory.EnumerateDirectories(fullPath, "*", SearchOption.TopDirectoryOnly);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // We can't read this folder
+                directories = new List<string>();
+            }
+
+            foreach (var directory in directories)
+            {
+                var childFiles = SearchDirectory(directory, context);
+
+                foreach (var childFile in childFiles)
+                {
+                    yield return childFile;
+                }
             }
         }
 
-        private List<string> FindFiles(IList<string> directories, SearchFilterType filterType, string wildcardPattern)
+        private class SearchContext
         {
-            var totalCount = directories.Count;
-            var itemsFound = new List<string>();
+            public List<string> DirectoriesProcessed { get; } = new List<string>();
 
-            // Loop through each directory
-            for (var index = 0; index < totalCount; index++)
-            {
-                // Get the directory
-                var directory = directories[index];
+            public List<string> FilesProcessed { get; } = new List<string>();
 
-                // Get the files for the directory
-                string[] newFiles;
+            public SearchFilterType FilterType { get; set; }
 
-                switch (filterType)
-                {
-                    case SearchFilterType.None:
-                    case SearchFilterType.RegularExpression:
+            public MediaOperationType OperationType { get; set; }
 
-                        newFiles = Directory.GetFiles(directory);
+            public bool RecursiveSearch { get; set; }
 
-                        break;
+            public Regex RegularExpression { get; set; }
 
-                    case SearchFilterType.Wildcard:
+            public Regex WildcardExpression { get; set; }
 
-                        newFiles = Directory.GetFiles(directory, wildcardPattern);
-
-                        break;
-
-                    default:
-
-                        throw new NotSupportedException();
-                }
-
-                // Add the new files to the collection
-                itemsFound.AddRange(newFiles);
-            }
-
-            return itemsFound;
+            public string WildcardPattern { get; set; }
         }
     }
 }
