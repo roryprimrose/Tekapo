@@ -135,38 +135,21 @@ namespace Tekapo.Controls
 
         private void Files_DragEnter(object sender, DragEventArgs e)
         {
-            var taskType = (TaskType)State[Tekapo.State.TaskKey];
-            var operationType = taskType.AsMediaOperationType();
-
             // Check if the dragged data contains file references
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 // Get the list of files
                 var files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                // Loop through each item being dragged
-                for (var index = 0; index < files.Length; index++)
+                var filesToAdd = DeterminePossibleItems(files);
+                
+                // Check that the item is a file which is supported, but not yet in the list
+                if (filesToAdd.Any())
                 {
-                    var item = files[index];
+                    // Determine whether this item is a valid extension
+                    e.Effect = DragDropEffects.Link;
 
-                    if (File.Exists(item) == false)
-                    {
-                        continue;
-                    }
-
-                    if (FileList.Contains(item))
-                    {
-                        continue;
-                    }
-
-                    // Check that the item is a file which is supported, but not yet in the list
-                    if (_mediaManager.IsSupported(item, operationType))
-                    {
-                        // Determine whether this item is a valid extension
-                        e.Effect = DragDropEffects.Link;
-
-                        return;
-                    }
+                    return;
                 }
             }
 
@@ -278,7 +261,7 @@ namespace Tekapo.Controls
             }
         }
 
-        private void AddPathsToList(List<string> paths)
+        private IEnumerable<string> DeterminePossibleItems(IEnumerable<string> paths)
         {
             var taskType = (TaskType) State[Tekapo.State.TaskKey];
             var operationType = taskType.AsMediaOperationType();
@@ -292,6 +275,16 @@ namespace Tekapo.Controls
                     continue;
                 }
 
+                yield return file;
+            }
+        }
+
+        private void AddPathsToList(IEnumerable<string> paths)
+        {
+            var filesToAdd = DeterminePossibleItems(paths);
+
+            foreach (var file in filesToAdd)
+            {
                 // Add the file to the list
                 FileList.Add(file);
             }
