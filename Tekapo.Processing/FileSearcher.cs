@@ -28,6 +28,11 @@
 
             foreach (var path in paths)
             {
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    continue;
+                }
+
                 if (File.Exists(path))
                 {
                     if (IsSupportedFile(path, context))
@@ -53,16 +58,15 @@
             {
                 RecursiveSearch = _settings.RecursiveSearch,
                 FilterType = _settings.SearchFilterType,
-                WildcardPattern = "*",
                 OperationType = operationType
             };
 
-            if (context.FilterType == SearchFilterType.Wildcard)
+            if (context.FilterType == SearchFilterType.Wildcard
+                && string.IsNullOrWhiteSpace(_settings.WildcardFilter) == false
+                && _settings.WildcardFilter != "*")
             {
-                context.WildcardPattern = _settings.WildcardFilter ?? "*";
-
                 // Create a regex of the wildcard to apply against files in the paths variable
-                var wildcardExpressionPattern = "^" + Regex.Escape(context.WildcardPattern).Replace("\\*", ".*") + "$";
+                var wildcardExpressionPattern = "^" + Regex.Escape(_settings.WildcardFilter).Replace("\\*", ".*") + "$";
                 var wildcardExpression = new Regex(wildcardExpressionPattern);
 
                 context.WildcardExpression = wildcardExpression;
@@ -89,16 +93,22 @@
             var filename = Path.GetFileName(path);
 
             if (context.FilterType == SearchFilterType.RegularExpression
-                && string.IsNullOrWhiteSpace(filename) == false
-                && context.RegularExpression.IsMatch(filename) == false)
+                && context.RegularExpression != null
+
+                // ReSharper disable once AssignNullToNotNullAttribute
+                && context.RegularExpression.IsMatch(filename) == false
+                && context.RegularExpression.IsMatch(path) == false)
             {
                 // This is a regex check and neither the file path or file name  matches the expression
                 return false;
             }
 
             if (context.FilterType == SearchFilterType.Wildcard
-                && string.IsNullOrWhiteSpace(filename) == false
-                && context.WildcardExpression.IsMatch(filename) == false)
+                && context.WildcardExpression != null
+
+                // ReSharper disable once AssignNullToNotNullAttribute
+                && context.WildcardExpression.IsMatch(filename) == false
+                && context.WildcardExpression.IsMatch(path) == false)
             {
                 // This is a wildcard check and neither the file path or file name  matches the expression
                 return false;
@@ -135,7 +145,7 @@
 
             try
             {
-                files = Directory.EnumerateFiles(fullPath, context.WildcardPattern, SearchOption.TopDirectoryOnly);
+                files = Directory.EnumerateFiles(fullPath);
             }
             catch (UnauthorizedAccessException)
             {
@@ -160,7 +170,7 @@
 
             try
             {
-                directories = Directory.EnumerateDirectories(fullPath, "*", SearchOption.TopDirectoryOnly);
+                directories = Directory.EnumerateDirectories(fullPath);
             }
             catch (UnauthorizedAccessException)
             {
@@ -194,8 +204,6 @@
             public Regex RegularExpression { get; set; }
 
             public Regex WildcardExpression { get; set; }
-
-            public string WildcardPattern { get; set; }
         }
     }
 }
