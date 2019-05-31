@@ -53,7 +53,12 @@
             {
                 var value = Properties.Settings.Default.SearchFilterType;
 
-                if (Enum.TryParse(value, out SearchFilterType result))
+                if (Enum.IsDefined(typeof(SearchFilterType), value) == false)
+                {
+                    return SearchFilterType.None;
+                }
+
+                if (Enum.TryParse(value, true, out SearchFilterType result))
                 {
                     return result;
                 }

@@ -1,6 +1,7 @@
 ﻿namespace Tekapo
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
 
@@ -10,19 +11,37 @@
         {
             if (args == null)
             {
+                var emptyList = new List<string>();
+
+                SearchPaths = new ReadOnlyCollection<string>(emptyList);
+
                 // There are no arguments to evaluate
                 return;
             }
 
             // Determine the search path
-            var directories = args.Where(Directory.Exists).Select(x => x).ToList();
+            var arguments = args.ToList();
 
-            if (directories.Count == 1)
+            var directories = arguments.Where(Directory.Exists).ToList();
+            var files = arguments.Where(File.Exists).ToList();
+
+            if (files.Count == 0
+                && directories.Count == 1)
             {
-                SearchPath = directories[0];
+                // There is only one directory, we will use it as the single search directory
+                SearchDirectory = directories[0];
+                SearchPaths = new List<string>();
+            }
+            else
+            {
+                var entries = directories.Union(files).ToList();
+
+                SearchPaths = new ReadOnlyCollection<string>(entries);
             }
         }
 
-        public string SearchPath { get; }
+        public string SearchDirectory { get; }
+
+        public IReadOnlyCollection<string> SearchPaths { get; }
     }
 }

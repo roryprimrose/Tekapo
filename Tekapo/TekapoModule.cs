@@ -20,7 +20,9 @@
             builder.Register(c => BuildWizardPageRegistration(c, pageTypes));
             builder.RegisterType<Config>().As<IConfig>().SingleInstance();
             builder.RegisterType<Settings>().As<ISettings>().SingleInstance();
+            builder.RegisterType<SettingsWriter>().As<ISettingsWriter>().SingleInstance();
             builder.RegisterType<MainForm>().AsSelf();
+            builder.RegisterType<Startup>().As<IStartable>();
 
             base.Load(builder);
         }

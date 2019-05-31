@@ -30,7 +30,7 @@ namespace Tekapo.Controls
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.Label label1;
+            this.PathSearchLabel = new System.Windows.Forms.Label();
             this.Browse = new System.Windows.Forms.Button();
             this.Recurse = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -41,7 +41,6 @@ namespace Tekapo.Controls
             this.UseNoFilter = new System.Windows.Forms.RadioButton();
             this.errProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.SearchPath = new System.Windows.Forms.ComboBox();
-            label1 = new System.Windows.Forms.Label();
             this.Contents.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errProvider)).BeginInit();
@@ -53,17 +52,17 @@ namespace Tekapo.Controls
             this.Contents.Controls.Add(this.groupBox1);
             this.Contents.Controls.Add(this.Recurse);
             this.Contents.Controls.Add(this.Browse);
-            this.Contents.Controls.Add(label1);
+            this.Contents.Controls.Add(this.PathSearchLabel);
             // 
-            // label1
+            // PathSearchLabel
             // 
-            label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(32, 23);
-            label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(157, 25);
-            label1.TabIndex = 3;
-            label1.Text = "Path to search:";
+            this.PathSearchLabel.AutoSize = true;
+            this.PathSearchLabel.Location = new System.Drawing.Point(32, 23);
+            this.PathSearchLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.PathSearchLabel.Name = "PathSearchLabel";
+            this.PathSearchLabel.Size = new System.Drawing.Size(157, 25);
+            this.PathSearchLabel.TabIndex = 3;
+            this.PathSearchLabel.Text = "Path to search:";
             // 
             // Browse
             // 
@@ -218,5 +217,6 @@ namespace Tekapo.Controls
         private System.Windows.Forms.ErrorProvider errProvider;
         private System.Windows.Forms.ComboBox SearchPath;
         private System.Windows.Forms.TextBox Expression;
+        private System.Windows.Forms.Label PathSearchLabel;
     }
 }

@@ -2,13 +2,16 @@
 {
     using System;
     using System.ComponentModel;
+    using EnsureThat;
 
-    internal class DisposeTrigger : Component
+    public class DisposeTrigger : Component
     {
         private readonly Action<bool> _action;
 
-        internal DisposeTrigger(Action<bool> action)
+        public DisposeTrigger(Action<bool> action)
         {
+            Ensure.Any.IsNotNull(action, nameof(action));
+
             _action = action;
         }
 

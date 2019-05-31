@@ -1,11 +1,8 @@
 namespace Tekapo.Controls
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.IO;
     using System.Linq;
     using EnsureThat;
     using Tekapo.Processing;
@@ -13,18 +10,21 @@ namespace Tekapo.Controls
 
     public partial class FileSearchPage : ProcessingPage
     {
+        private readonly IExecutionContext _executionContext;
         private readonly IFileSearcher _fileSearcher;
         private readonly ISettings _settings;
 
         [SuppressMessage("Microsoft.Reliability",
             "CA2000:Dispose objects before losing scope",
             Justification = "The reference is held by the form and cannot be disposed here.")]
-        public FileSearchPage(IFileSearcher fileSearcher, ISettings settings)
+        public FileSearchPage(IFileSearcher fileSearcher, IExecutionContext executionContext, ISettings settings)
         {
             Ensure.Any.IsNotNull(fileSearcher, nameof(fileSearcher));
+            Ensure.Any.IsNotNull(executionContext, nameof(executionContext));
             Ensure.Any.IsNotNull(settings, nameof(settings));
 
             _fileSearcher = fileSearcher;
+            _executionContext = executionContext;
             _settings = settings;
 
             components = new Container();
@@ -46,13 +46,14 @@ namespace Tekapo.Controls
 
         protected override void ProcessTask()
         {
-            var searchPaths = LoadFromCommandLine();
+            SetProgressStatus(Resources.ProcessCommandLineArguments);
 
-            var searchPath = _settings.SearchPath;
+            var searchPaths = _executionContext.SearchPaths.ToList();
 
-            if (searchPaths.Contains(searchPath) == false)
+            if (searchPaths.Count == 0)
             {
-                searchPaths.Add(searchPath);
+                // There are no command line arguments so we will use the search path identified in the previous wizard page
+                searchPaths.Add(_settings.SearchPath);
             }
 
             var taskType = (TaskType) State[Tekapo.State.TaskKey];
@@ -93,49 +94,6 @@ namespace Tekapo.Controls
         private void FileSearcherOnEvaluatingPath(object sender, PathEventArgs e)
         {
             SetProgressStatus(e.Path);
-        }
-
-        private List<string> LoadFromCommandLine()
-        {
-            var files = new List<string>();
-
-            // Check if the command line arguments have been processed
-            // Update the status
-            SetProgressStatus(Resources.ParseCommandLineArguments);
-
-            var arguments = Environment.GetCommandLineArgs();
-
-            // Loop through each argument
-            for (var index = 0; index < arguments.Length; index++)
-            {
-                var argument = arguments[index];
-                string path;
-
-                if (File.Exists(argument))
-                {
-                    // We will process this file
-                    path = Path.GetFullPath(argument);
-                }
-                else if (Directory.Exists(argument))
-                {
-                    path = Path.GetFullPath(argument);
-                }
-                else
-                {
-                    continue;
-                }
-
-                // Check if the item is a file path
-                if (files.Contains(path))
-                {
-                    continue;
-                }
-
-                // Add the file to the list
-                files.Add(path);
-            }
-
-            return files;
         }
     }
 }

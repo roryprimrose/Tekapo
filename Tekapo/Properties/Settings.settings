@@ -18,7 +18,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="NameFormat" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">&lt;yyyy&gt;&lt;MM&gt;&lt;dd&gt;-&lt;HH&gt;&lt;mm&gt;&lt;ss&gt;</Value>
     </Setting>
     <Setting Name="IncrementOnCollision" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

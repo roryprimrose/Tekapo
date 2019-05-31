@@ -3,12 +3,27 @@ namespace Tekapo.Processing.UnitTests
     using System;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using FluentAssertions;
     using Tekapo.Processing.UnitTests.Properties;
     using Xunit;
 
     public class JpegMediaManagerTests
     {
+        [Fact]
+        public void CanProcessReturnsFalseForInvalidFile()
+        {
+            var sut = new JpegMediaManager();
+            var buffer = Encoding.UTF8.GetBytes(Guid.NewGuid().ToString());
+
+            using (var stream = new MemoryStream(buffer))
+            {
+                var actual = sut.CanProcess(stream);
+
+                actual.Should().BeFalse();
+            }
+        }
+
         [Fact]
         public void CanProcessReturnsFalseForPngFile()
         {

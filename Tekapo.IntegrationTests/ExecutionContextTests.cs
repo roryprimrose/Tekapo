@@ -8,77 +8,216 @@
 
     public class ExecutionContextTests
     {
-        [Fact]
-        public void CreatesWithDefaultValuesWhenArgsIsEmpty()
+        private readonly string _assemblyLocation;
+        private readonly string _directoryPath;
+
+        public ExecutionContextTests()
         {
-            var args = new string[0];
+            _assemblyLocation = GetType().Assembly.Location;
+            _directoryPath = Path.GetDirectoryName(_assemblyLocation);
+        }
+
+        [Fact]
+        public void SearchDirectoryReturnsNullWhenArgumentContainsFileOnly()
+        {
+            var value = Guid.NewGuid().ToString();
+            var args = new List<string> {_assemblyLocation, value};
 
             var sut = new ExecutionContext(args);
 
-            sut.SearchPath.Should().BeNull();
+            sut.SearchDirectory.Should().BeNull();
         }
 
         [Fact]
-        public void CreatesWithDefaultValuesWhenArgsIsNull()
+        public void SearchDirectoryReturnsNullWhenArgumentContainsFilesAndDirectories()
         {
-            var sut = new ExecutionContext(null);
+            var value = Guid.NewGuid().ToString();
+            var args = new List<string> {_assemblyLocation, _directoryPath, value};
 
-            sut.SearchPath.Should().BeNull();
+            var sut = new ExecutionContext(args);
+
+            sut.SearchDirectory.Should().BeNull();
         }
 
         [Fact]
-        public void CreatesWithDefaultValuesWhenArgsNotContainingDirectory()
+        public void SearchDirectoryReturnsNullWhenArgumentContainsMultipleDirectories()
+        {
+            var value = Guid.NewGuid().ToString();
+            var secondDirectory = Directory.GetParent(_directoryPath).FullName;
+            var args = new List<string> {_directoryPath, secondDirectory, value};
+
+            var sut = new ExecutionContext(args);
+
+            sut.SearchDirectory.Should().BeNull();
+        }
+
+        [Fact]
+        public void SearchDirectoryReturnsNullWhenArgumentsDoesNotContainDirectoryOrFilePaths()
         {
             var args = new List<string> {Guid.NewGuid().ToString()};
 
             var sut = new ExecutionContext(args);
 
-            sut.SearchPath.Should().BeNull();
+            sut.SearchDirectory.Should().BeNull();
         }
 
         [Fact]
-        public void SearchPathDoesNotReturnFilePath()
+        public void SearchDirectoryReturnsNullWhenArgumentsIsEmpty()
         {
-            var args = new List<string> {GetType().Assembly.Location};
+            var args = new string[0];
 
             var sut = new ExecutionContext(args);
 
-            sut.SearchPath.Should().BeNull();
+            sut.SearchDirectory.Should().BeNull();
         }
 
         [Fact]
-        public void SearchPathReturnsNullWhenMultipleDirectoryPathsFound()
+        public void SearchDirectoryReturnsNullWhenArgumentsIsNull()
         {
-            var path = Path.GetDirectoryName(GetType().Assembly.Location);
+            var sut = new ExecutionContext(null);
+
+            sut.SearchDirectory.Should().BeNull();
+        }
+
+        [Fact]
+        public void SearchDirectoryReturnsNullWhenArgumentsOnlyContainsFilePath()
+        {
+            var args = new List<string> {_assemblyLocation};
+
+            var sut = new ExecutionContext(args);
+
+            sut.SearchDirectory.Should().BeNull();
+        }
+
+        [Fact]
+        public void SearchDirectoryReturnsNullWhenMultipleDirectoryPathsFound()
+        {
+            var path = _directoryPath;
             var args = new List<string> {path, path};
 
             var sut = new ExecutionContext(args);
 
-            sut.SearchPath.Should().BeNull();
+            sut.SearchDirectory.Should().BeNull();
         }
 
         [Fact]
-        public void SearchPathReturnsSingleDirectoryArgument()
+        public void SearchDirectoryReturnsSingleDirectoryArgument()
         {
-            var path = Path.GetDirectoryName(GetType().Assembly.Location);
+            var path = _directoryPath;
             var args = new List<string> {path};
 
             var sut = new ExecutionContext(args);
 
-            sut.SearchPath.Should().Be(path);
+            sut.SearchDirectory.Should().Be(path);
         }
 
         [Fact]
-        public void SearchPathReturnsSingleDirectoryArgumentWhenIgnoringOtherValues()
+        public void SearchDirectoryReturnsSingleDirectoryArgumentWhenIgnoringOtherNonFileValues()
         {
             var value = Guid.NewGuid().ToString();
-            var filePath = GetType().Assembly.Location;
-            var expected = Path.GetDirectoryName(filePath);
-            var args = new List<string> {filePath, expected, value};
+            var args = new List<string> {_directoryPath, value};
 
             var sut = new ExecutionContext(args);
 
-            sut.SearchPath.Should().Be(expected);
+            sut.SearchDirectory.Should().Be(_directoryPath);
+        }
+
+        [Fact]
+        public void SearchPathsDoesNotContainNonFileOrDirectoryValuesFromArgument()
+        {
+            var value = Guid.NewGuid().ToString();
+            var args = new List<string> {_assemblyLocation, _directoryPath, value};
+
+            var sut = new ExecutionContext(args);
+
+            sut.SearchPaths.Should().NotContain(value);
+        }
+
+        [Fact]
+        public void SearchPathsReturnsEmptyWhenArgumentsDoesNotContainDirectoryOrFilePaths()
+        {
+            var args = new List<string> {Guid.NewGuid().ToString()};
+
+            var sut = new ExecutionContext(args);
+
+            sut.SearchPaths.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void SearchPathsReturnsEmptyWhenArgumentsIsEmpty()
+        {
+            var args = new string[0];
+
+            var sut = new ExecutionContext(args);
+
+            sut.SearchPaths.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void SearchPathsReturnsEmptyWhenArgumentsIsNull()
+        {
+            var sut = new ExecutionContext(null);
+
+            sut.SearchPaths.Should().BeEmpty();
+        }
+
+
+        [Fact]
+        public void SearchPathsReturnsFilePathFromArgument()
+        {
+            var value = Guid.NewGuid().ToString();
+            var args = new List<string> {_assemblyLocation, value};
+
+            var sut = new ExecutionContext(args);
+
+            sut.SearchPaths.Should().Contain(_assemblyLocation);
+            sut.SearchPaths.Should().NotContain(value);
+        }
+
+        [Fact]
+        public void SearchPathsReturnsFilesAndDirectoriesFromArgument()
+        {
+            var value = Guid.NewGuid().ToString();
+            var args = new List<string> {_assemblyLocation, _directoryPath, value};
+
+            var sut = new ExecutionContext(args);
+
+            sut.SearchPaths.Should().Contain(_assemblyLocation);
+            sut.SearchPaths.Should().Contain(_directoryPath);
+        }
+
+        [Fact]
+        public void SearchPathsReturnsMultipleDirectoriesFromArgument()
+        {
+            var value = Guid.NewGuid().ToString();
+            var secondDirectory = Directory.GetParent(_directoryPath).FullName;
+            var args = new List<string> {_directoryPath, secondDirectory, value};
+
+            var sut = new ExecutionContext(args);
+
+            sut.SearchPaths.Should().Contain(_directoryPath);
+            sut.SearchPaths.Should().Contain(secondDirectory);
+        }
+
+        [Fact]
+        public void SearchPathsReturnsEmptyForSingleDirectoryArgument()
+        {
+            var args = new List<string> {_directoryPath};
+
+            var sut = new ExecutionContext(args);
+
+            sut.SearchPaths.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void SearchPathsReturnsEmptyForSingleDirectoryArgumentWhileIgnoringOtherNonFileValues()
+        {
+            var value = Guid.NewGuid().ToString();
+            var args = new List<string> {_directoryPath, value};
+
+            var sut = new ExecutionContext(args);
+            
+            sut.SearchPaths.Should().BeEmpty();
         }
     }
 }

@@ -10,55 +10,36 @@ namespace Tekapo
     using EnsureThat;
     using Neovolve.Windows.Forms;
     using Neovolve.Windows.Forms.Controls;
-    using Newtonsoft.Json;
     using Tekapo.Controls;
     using Tekapo.Processing;
     using Tekapo.Properties;
 
-    /// <summary>
-    ///     The <see cref="MainForm" /> class is the main application window for Tekapo. It hosts the pages in the wizard
-    ///     process that allows
-    ///     the user to either rename or time-shift image files.
-    /// </summary>
     public partial class MainForm : WizardForm
     {
         private readonly IConfig _config;
-        private readonly IExecutionContext _executionContext;
         private readonly ISettings _settings;
+        private readonly ISettingsWriter _settingsWriter;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="MainForm" /> class.
-        /// </summary>
-        public MainForm(
-            IExecutionContext executionContext,
-            IList<WizardPage> pages,
-            ISettings settings,
-            IConfig config)
+        public MainForm(IList<WizardPage> pages, ISettings settings, ISettingsWriter settingsWriter, IConfig config)
         {
-            Ensure.Any.IsNotNull(executionContext, nameof(executionContext));
             Ensure.Any.IsNotNull(pages, nameof(pages));
             Ensure.Any.IsNotNull(settings, nameof(settings));
+            Ensure.Any.IsNotNull(settingsWriter, nameof(settingsWriter));
             Ensure.Any.IsNotNull(config, nameof(config));
 
-            _executionContext = executionContext;
             _settings = settings;
+            _settingsWriter = settingsWriter;
             _config = config;
 
             InitializeComponent();
 
-            // Populate the state
-            PopulateState();
+            // Set the default state
+            State[Tekapo.State.TaskKey] = TaskType.RenameTask;
 
             // Populate pages
             PopulateWizardPages(pages);
         }
 
-        /// <summary>
-        ///     Raises the <see cref="WizardForm.Navigating" /> and <see cref="WizardForm.Navigated" /> events.
-        /// </summary>
-        /// <param name="e">
-        ///     The <see cref="WizardFormNavigationEventArgs" /> instance containing the event data.
-        /// </param>
         protected override void OnNavigate(WizardFormNavigationEventArgs e)
         {
             if (e == null)
@@ -77,18 +58,6 @@ namespace Tekapo
             }
         }
 
-        /// <summary>
-        ///     Adds the item to MRU.
-        /// </summary>
-        /// <param name="list">
-        ///     The list to add the item to.
-        /// </param>
-        /// <param name="newItem">
-        ///     The new item.
-        /// </param>
-        /// <param name="maxListSize">
-        ///     Size of the max list.
-        /// </param>
         private static void AddItemToMru(IList<string> list, string newItem, int maxListSize)
         {
             if (list.Contains(newItem))
@@ -108,15 +77,6 @@ namespace Tekapo
             }
         }
 
-        /// <summary>
-        ///     Handles the FormClosing event of the MainForm control.
-        /// </summary>
-        /// <param name="sender">
-        ///     The source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     The <see cref="System.Windows.Forms.FormClosingEventArgs" /> instance containing the event data.
-        /// </param>
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Store state
@@ -132,63 +92,12 @@ namespace Tekapo
             }
         }
 
-        /// <summary>
-        ///     Handles the Load event of the MainForm control.
-        /// </summary>
-        /// <param name="sender">
-        ///     The source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     The <see cref="System.EventArgs" /> instance containing the event data.
-        /// </param>
         private void MainForm_Load(object sender, EventArgs e)
         {
             // Assign the window title using the application name and version
             Text = Application.ProductName;
         }
 
-        /// <summary>
-        ///     Populates the state.
-        /// </summary>
-        private void PopulateState()
-        {
-            State[Tekapo.State.TaskKey] = TaskType.RenameTask;
-
-            // Determine whether there is a directory path in the commandline arguments
-            var searchPath = _executionContext.SearchPath;
-
-            // Check if there is a search path
-            if (string.IsNullOrEmpty(searchPath))
-            {
-                // There is no single directory specified on the command line
-                searchPath = _settings.SearchPath;
-
-                // Check if there is a search path
-                if (string.IsNullOrEmpty(searchPath))
-                {
-                    // Set the search path to the personal directory
-                    searchPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-                }
-            }
-
-            _settings.SearchPath = searchPath;
-
-            var lastNameFormat = _settings.NameFormat;
-
-            // Check if there is a name format
-            if (string.IsNullOrEmpty(lastNameFormat))
-            {
-                // Set a default name format
-                lastNameFormat = Resources.DefaultRenameFormat;
-
-                _settings.NameFormat = lastNameFormat;
-            }
-        }
-
-        /// <summary>
-        ///     Populates the wizard pages.
-        /// </summary>
-        /// <param name="pages"></param>
         [SuppressMessage("Microsoft.Reliability",
             "CA2000:Dispose objects before losing scope",
             Justification = "Pages are disposed when the form is disposed.")]
@@ -257,27 +166,24 @@ namespace Tekapo
             Pages.Add(NavigationKey.CompletedPage, completedPage);
         }
 
-        /// <summary>
-        ///     Stores the state values.
-        /// </summary>
         private void StoreStateValues()
         {
             // Store the search directory MRU
             var searchDirectoryMru = _settings.SearchDirectoryList;
-            AddItemToMru(searchDirectoryMru,
-                _settings.SearchPath,
-                _config.MaxSearchDirectoryItems);
-            Properties.Settings.Default.SearchDirectoryMRU = JsonConvert.SerializeObject(searchDirectoryMru);
+
+            AddItemToMru(searchDirectoryMru, _settings.SearchPath, _config.MaxSearchDirectoryItems);
+
+            _settingsWriter.WriteSearchDirectoryList(searchDirectoryMru);
 
             // Store the name format MRU
             var nameFormatMru = _settings.NameFormatList;
-            AddItemToMru(nameFormatMru,
-                _settings.NameFormat,
-                _config.MaxNameFormatItems);
-            Properties.Settings.Default.NameFormatMRU = JsonConvert.SerializeObject(nameFormatMru);
+
+            AddItemToMru(nameFormatMru, _settings.NameFormat, _config.MaxNameFormatItems);
+
+            _settingsWriter.WriteNameFormatList(nameFormatMru);
 
             // Save the properties
-            Properties.Settings.Default.Save();
+            _settingsWriter.Save();
         }
     }
 }

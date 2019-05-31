@@ -12,36 +12,22 @@ namespace Tekapo.Controls
     using Tekapo.Processing;
     using Tekapo.Properties;
 
-    /// <summary>
-    ///     The <see cref="Tekapo.Controls.SelectPathPage" /> class is a Wizard page that allows the user to select a path to
-    ///     search for
-    ///     images to process.
-    /// </summary>
     public partial class SelectPathPage : WizardBannerPage
     {
         private readonly ISettings _settings;
+        private readonly IExecutionContext _executionContext;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Tekapo.Controls.SelectPathPage" /> class.
-        /// </summary>
-        public SelectPathPage(ISettings settings)
+        public SelectPathPage(ISettings settings, IExecutionContext executionContext)
         {
             Ensure.Any.IsNotNull(settings, nameof(settings));
+            Ensure.Any.IsNotNull(executionContext, nameof(executionContext));
 
             _settings = settings;
+            _executionContext = executionContext;
 
             InitializeComponent();
         }
 
-        /// <summary>
-        ///     Determines whether this instance can navigate the specified e.
-        /// </summary>
-        /// <param name="e">
-        ///     The <see cref="T:Neovolve.Windows.Forms.WizardFormNavigationEventArgs" /> instance containing the event data.
-        /// </param>
-        /// <returns>
-        ///     <c>true</c>if this instance can navigate the specified e; otherwise, <c>false</c>.
-        /// </returns>
         public override bool CanNavigate(WizardFormNavigationEventArgs e)
         {
             if (e == null)
@@ -60,15 +46,6 @@ namespace Tekapo.Controls
             return base.CanNavigate(e);
         }
 
-        /// <summary>
-        ///     Handles the Click event of the Browse control.
-        /// </summary>
-        /// <param name="sender">
-        ///     The source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     The <see cref="System.EventArgs" /> instance containing the event data.
-        /// </param>
         private void Browse_Click(object sender, EventArgs e)
         {
             using (var dialog = new FolderBrowserDialog())
@@ -86,12 +63,6 @@ namespace Tekapo.Controls
             }
         }
 
-        /// <summary>
-        ///     Determines whether the page is valid.
-        /// </summary>
-        /// <returns>
-        ///     <c>true</c>if the page is valid; otherwise, <c>false</c>.
-        /// </returns>
         private bool IsPageValid()
         {
             var result = true;
@@ -99,8 +70,10 @@ namespace Tekapo.Controls
             // Clear the error provider
             errProvider.Clear();
 
-            if (string.IsNullOrEmpty(SearchPath.Text))
+            if (_executionContext.SearchPaths.Count == 0
+                && string.IsNullOrEmpty(SearchPath.Text))
             {
+                // There are no command line parameters and no search path text has been defined
                 // Set the error provider
                 errProvider.SetError(SearchPath, Resources.ErrorNoSearchPathProvided);
 
@@ -161,15 +134,6 @@ namespace Tekapo.Controls
             return result;
         }
 
-        /// <summary>
-        ///     Handles the Closing event of the SelectPathPage control.
-        /// </summary>
-        /// <param name="sender">
-        ///     The source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     The <see cref="System.EventArgs" /> instance containing the event data.
-        /// </param>
         private void SelectPathPage_Closing(object sender, EventArgs e)
         {
             // Check if the path should have \ appended to it
@@ -199,17 +163,14 @@ namespace Tekapo.Controls
             }
         }
 
-        /// <summary>
-        ///     Handles the Opening event of the SelectPathPage control.
-        /// </summary>
-        /// <param name="sender">
-        ///     The source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     The <see cref="System.EventArgs" /> instance containing the event data.
-        /// </param>
         private void SelectPathPage_Opening(object sender, EventArgs e)
         {
+            var noCommandLineArgs = _executionContext.SearchPaths.Count == 0;
+
+            PathSearchLabel.Enabled = noCommandLineArgs;
+            SearchPath.Enabled = noCommandLineArgs;
+            Browse.Enabled = noCommandLineArgs;
+
             // Populate the wizard
             SearchPath.DataSource = _settings.SearchDirectoryList;
 
@@ -220,15 +181,6 @@ namespace Tekapo.Controls
             UseWildcard.Checked = filterType == SearchFilterType.Wildcard;
         }
 
-        /// <summary>
-        ///     Handles the CheckedChanged event of the UseRegularExpression control.
-        /// </summary>
-        /// <param name="sender">
-        ///     The source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     The <see cref="System.EventArgs" /> instance containing the event data.
-        /// </param>
         private void UseRegularExpression_CheckedChanged(object sender, EventArgs e)
         {
             Expression.Enabled = UseRegularExpression.Checked;
@@ -240,15 +192,6 @@ namespace Tekapo.Controls
             }
         }
 
-        /// <summary>
-        ///     Handles the CheckedChanged event of the UseWildcard control.
-        /// </summary>
-        /// <param name="sender">
-        ///     The source of the event.
-        /// </param>
-        /// <param name="e">
-        ///     The <see cref="System.EventArgs" /> instance containing the event data.
-        /// </param>
         private void UseWildcard_CheckedChanged(object sender, EventArgs e)
         {
             Wildcard.Enabled = UseWildcard.Checked;

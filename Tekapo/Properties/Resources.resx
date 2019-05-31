@@ -181,8 +181,8 @@ No name format specified.</value>
 
 No valid files found for processing.</value>
   </data>
-  <data name="ParseCommandLineArguments" xml:space="preserve">
-    <value>Parsing command line arguments.</value>
+  <data name="ProcessCommandLineArguments" xml:space="preserve">
+    <value>Processing command line arguments.</value>
   </data>
   <data name="RenameProcessFormat" xml:space="preserve">
     <value>Renamed {0} to {1}.</value>

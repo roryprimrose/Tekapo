@@ -233,11 +233,11 @@ namespace Tekapo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parsing command line arguments..
+        ///   Looks up a localized string similar to Processing command line arguments..
         /// </summary>
-        internal static string ParseCommandLineArguments {
+        internal static string ProcessCommandLineArguments {
             get {
-                return ResourceManager.GetString("ParseCommandLineArguments", resourceCulture);
+                return ResourceManager.GetString("ProcessCommandLineArguments", resourceCulture);
             }
         }
         

@@ -1,7 +1,11 @@
 ﻿namespace Tekapo
 {
+    using System.Collections.Generic;
+
     public interface IExecutionContext
     {
-        string SearchPath { get; }
+        string SearchDirectory { get; }
+
+        IReadOnlyCollection<string> SearchPaths { get; }
     }
 }

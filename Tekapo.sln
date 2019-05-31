@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{28D99D9B-B097-446F-A134-6E29C150F503}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tekapo.UnitTests", "Tekapo.UnitTests\Tekapo.UnitTests.csproj", "{98036450-25FB-4BCD-A139-11C21AF79BA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{BCFB2BFD-DD35-4D45-B94F-1F5ECDFCBD1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCFB2BFD-DD35-4D45-B94F-1F5ECDFCBD1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCFB2BFD-DD35-4D45-B94F-1F5ECDFCBD1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98036450-25FB-4BCD-A139-11C21AF79BA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98036450-25FB-4BCD-A139-11C21AF79BA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98036450-25FB-4BCD-A139-11C21AF79BA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98036450-25FB-4BCD-A139-11C21AF79BA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +82,7 @@ Global
 		{9D679AD1-0E80-43B5-8D16-2162999C3C79} = {28D99D9B-B097-446F-A134-6E29C150F503}
 		{3D8E335C-FDC0-4087-BD75-1D7072E5A524} = {28D99D9B-B097-446F-A134-6E29C150F503}
 		{BCFB2BFD-DD35-4D45-B94F-1F5ECDFCBD1E} = {28D99D9B-B097-446F-A134-6E29C150F503}
+		{98036450-25FB-4BCD-A139-11C21AF79BA0} = {28D99D9B-B097-446F-A134-6E29C150F503}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {205BCFA2-5D07-45F1-8D08-52F50D0FE672}
