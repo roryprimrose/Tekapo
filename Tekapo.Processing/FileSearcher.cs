@@ -24,6 +24,8 @@
 
         public IEnumerable<string> FindSupportedFiles(IEnumerable<string> paths, MediaOperationType operationType)
         {
+            Ensure.Any.IsNotNull(paths, nameof(paths));
+
             var context = BuildSearchContext(operationType);
 
             foreach (var path in paths)
@@ -67,7 +69,7 @@
             {
                 // Create a regex of the wildcard to apply against files in the paths variable
                 var wildcardExpressionPattern = "^" + Regex.Escape(_settings.WildcardFilter).Replace("\\*", ".*") + "$";
-                var wildcardExpression = new Regex(wildcardExpressionPattern);
+                var wildcardExpression = new Regex(wildcardExpressionPattern, RegexOptions.IgnoreCase);
 
                 context.WildcardExpression = wildcardExpression;
             }
