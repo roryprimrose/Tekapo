@@ -10,13 +10,40 @@
 
     public class FileSearcherTests
     {
-        private readonly string _assemblyLocation;
         private readonly string _directoryPath;
 
         public FileSearcherTests()
         {
-            _assemblyLocation = GetType().Assembly.Location;
-            _directoryPath = Path.GetDirectoryName(_assemblyLocation);
+            var assemblyLocation = GetType().Assembly.Location;
+
+            _directoryPath = Path.GetDirectoryName(assemblyLocation);
+        }
+
+        [Fact]
+        public void FindSupportedPathsDoesNotReturnFilesInChildDirectoriesWhenRecursiveSearchDisabled()
+        {
+            var searchPaths = new List<string> {_directoryPath};
+            var supportedExtensions = new List<string> {".txt"};
+            var mediaOperationType = MediaOperationType.ReadWrite;
+
+            var mediaManager = Substitute.For<IMediaManager>();
+            var settings = Substitute.For<ISettings>();
+
+            settings.SearchFilterType = SearchFilterType.None;
+            settings.RecursiveSearch = false;
+            mediaManager.GetSupportedFileTypes(mediaOperationType).Returns(supportedExtensions);
+
+            using (new TestScenario(_directoryPath,
+                Guid.NewGuid().ToString("N") + ".txt",
+                "Parent\\" + Guid.NewGuid().ToString("N") + ".txt",
+                "2019\\Parent\\" + Guid.NewGuid().ToString("N") + ".txt"))
+            {
+                var sut = new FileSearcher(mediaManager, settings);
+
+                var actual = sut.FindSupportedFiles(searchPaths, mediaOperationType);
+
+                actual.Should().BeEmpty();
+            }
         }
 
         [Fact]
@@ -72,10 +99,61 @@
         }
 
         [Fact]
+        public void FindSupportedPathsProcessesDirectoryOnlyOnce()
+        {
+            var supportedExtensions = new List<string> {".txt"};
+            var mediaOperationType = MediaOperationType.ReadWrite;
+
+            var mediaManager = Substitute.For<IMediaManager>();
+            var settings = Substitute.For<ISettings>();
+
+            settings.SearchFilterType = SearchFilterType.None;
+            settings.RecursiveSearch = true;
+            mediaManager.GetSupportedFileTypes(mediaOperationType).Returns(supportedExtensions);
+
+            using (var scenario = new TestScenario(_directoryPath,
+                Guid.NewGuid().ToString("N") + ".txt",
+                "Parent\\" + Guid.NewGuid().ToString("N") + ".txt",
+                "2019\\Parent\\" + Guid.NewGuid().ToString("N") + ".txt"))
+            {
+                var searchPaths = new List<string> {scenario.ScenarioDirectory, scenario.ScenarioDirectory};
+
+                var sut = new FileSearcher(mediaManager, settings);
+
+                var actual = sut.FindSupportedFiles(searchPaths, mediaOperationType);
+
+                actual.Should().BeEquivalentTo(scenario.Files);
+            }
+        }
+
+        [Fact]
+        public void FindSupportedPathsReturnsEmptyWhenAccessDenied()
+        {
+            var mediaOperationType = MediaOperationType.ReadWrite;
+            var paths = new List<string>
+            {
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "Tasks")
+            };
+
+            var mediaManager = Substitute.For<IMediaManager>();
+            var settings = Substitute.For<ISettings>();
+
+            settings.SearchFilterType = SearchFilterType.None;
+            settings.RecursiveSearch = true;
+            mediaManager.GetSupportedFileTypes(mediaOperationType).Returns(new[] {"*.txt"});
+
+            var sut = new FileSearcher(mediaManager, settings);
+
+            var actual = sut.FindSupportedFiles(paths, mediaOperationType).ToList();
+
+            actual.Should().HaveCount(0);
+        }
+
+        [Fact]
         public void FindSupportedPathsReturnsEmptyWhenPathsIsEmpty()
         {
             var paths = new List<string>();
-
+            
             var mediaManager = Substitute.For<IMediaManager>();
             var settings = Substitute.For<ISettings>();
 
@@ -95,9 +173,7 @@
             MediaOperationType mediaOperationType,
             bool mediaSupported)
         {
-            var filePath = Path.Combine(_directoryPath, Guid.NewGuid().ToString("N") + ".txt");
             var supportedExtensions = new List<string> {".jpg"};
-            var paths = new List<string> {filePath};
 
             var mediaManager = Substitute.For<IMediaManager>();
             var settings = Substitute.For<ISettings>();
@@ -110,28 +186,77 @@
             settings.SearchFilterType = SearchFilterType.None;
             mediaManager.GetSupportedFileTypes(mediaOperationType).Returns(supportedExtensions);
 
-            try
+            using (var scenario = new TestScenario(_directoryPath, Guid.NewGuid().ToString("N") + ".txt"))
             {
-                File.WriteAllText(filePath, Guid.NewGuid().ToString());
-
                 var sut = new FileSearcher(mediaManager, settings);
 
-                var actual = sut.FindSupportedFiles(paths, mediaOperationType);
+                var actual = sut.FindSupportedFiles(scenario.Files, mediaOperationType);
 
                 if (mediaSupported)
                 {
-                    actual.Should().Contain(filePath);
+                    actual.Should().Contain(scenario.Files[0]);
                 }
                 else
                 {
                     actual.Should().BeEmpty();
                 }
             }
-            finally
+        }
+
+        [Theory]
+        [InlineData("test.txt", ".*", true)]
+        [InlineData("test.txt", ".*\\.txt", true)]
+        [InlineData("test.txt", ".*\\.txt$", true)]
+        [InlineData("test.txt", "^.*\\.txt", true)]
+        [InlineData("test.txt", "^.*\\.txt$", true)]
+        [InlineData("test.txt", ".*\\.sky", false)]
+        [InlineData("test.txt", ".*z\\.txt", false)]
+        [InlineData("test.txt", "z.*\\.txt", false)]
+        [InlineData("test.txt", "te.*\\.txt", true)]
+        [InlineData("test.txt", "TE.*\\.txt", false)]
+        [InlineData("Stuff.txt", "stu.*\\.txt", false)]
+        [InlineData("test.txt", "test\\..*", true)]
+        [InlineData("test.txt", "te.*xt", true)]
+        [InlineData("2019\\More Here\\test.txt", ".*\\\\2019\\\\More Here\\\\test\\.txt", true)]
+        [InlineData("2019\\test.txt", ".*\\\\2019\\\\test\\.txt$", true)]
+        [InlineData("2019\\test.txt", ".*\\\\2019\\\\.*", true)]
+        [InlineData("2019\\test.txt", "\\d{4}", true)]
+        [InlineData("2019\\test.txt", "\\\\\\d{4}\\\\", true)]
+        [InlineData("2019\\test.txt", ".*2019.*", true)]
+        [InlineData("2019\\test.txt", "^.*2019.*$", true)]
+        [InlineData("2019\\test.txt", ".*2019", true)]
+        [InlineData("2019\\test.txt", ".*2019$", false)]
+        [InlineData("2019\\test.txt", "2019.*", true)]
+        [InlineData("2019\\test.txt", "^2019.*", false)]
+        public void FindSupportedPathsReturnsExistingFilePathMatchingRegularExpressionFilter(
+            string fileSegment,
+            string regularExpression,
+            bool isMatch)
+        {
+            var extension = Path.GetExtension(fileSegment);
+            var supportedExtensions = new List<string> {extension};
+            var mediaOperationType = MediaOperationType.ReadWrite;
+
+            var mediaManager = Substitute.For<IMediaManager>();
+            var settings = Substitute.For<ISettings>();
+
+            settings.SearchFilterType = SearchFilterType.RegularExpression;
+            settings.RegularExpressionFilter = regularExpression;
+            mediaManager.GetSupportedFileTypes(mediaOperationType).Returns(supportedExtensions);
+
+            using (var scenario = new TestScenario(_directoryPath, fileSegment))
             {
-                if (File.Exists(filePath))
+                var sut = new FileSearcher(mediaManager, settings);
+
+                var actual = sut.FindSupportedFiles(scenario.Files, mediaOperationType);
+
+                if (isMatch)
                 {
-                    File.Delete(filePath);
+                    actual.Should().Contain(scenario.Files[0]);
+                }
+                else
+                {
+                    actual.Should().BeEmpty();
                 }
             }
         }
@@ -157,13 +282,9 @@
             string wildcardPattern,
             bool isMatch)
         {
-            var filePath = Path.Combine(_directoryPath, fileSegment);
-            var directoryPath = Path.GetDirectoryName(filePath);
-            var createDirectory = Directory.Exists(directoryPath) == false;
-            var extension = Path.GetExtension(filePath);
+            var extension = Path.GetExtension(fileSegment);
             var supportedExtensions = new List<string> {extension};
             var mediaOperationType = MediaOperationType.ReadWrite;
-            var paths = new List<string> {filePath};
 
             var mediaManager = Substitute.For<IMediaManager>();
             var settings = Substitute.For<ISettings>();
@@ -172,119 +293,19 @@
             settings.WildcardFilter = wildcardPattern;
             mediaManager.GetSupportedFileTypes(mediaOperationType).Returns(supportedExtensions);
 
-            try
+            using (var scenario = new TestScenario(_directoryPath, fileSegment))
             {
-                if (createDirectory)
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
-
-                File.WriteAllText(filePath, Guid.NewGuid().ToString());
-
                 var sut = new FileSearcher(mediaManager, settings);
 
-                var actual = sut.FindSupportedFiles(paths, mediaOperationType);
+                var actual = sut.FindSupportedFiles(scenario.Files, mediaOperationType);
 
                 if (isMatch)
                 {
-                    actual.Should().Contain(filePath);
+                    actual.Should().Contain(scenario.Files[0]);
                 }
                 else
                 {
                     actual.Should().BeEmpty();
-                }
-            }
-            finally
-            {
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-
-                if (createDirectory && Directory.Exists(directoryPath))
-                {
-                    Directory.Delete(directoryPath);
-                }
-            }
-        }
-        
-        [Theory]
-        [InlineData("test.txt", ".*", true)]
-        [InlineData("test.txt", ".*\\.txt", true)]
-        [InlineData("test.txt", ".*\\.txt$", true)]
-        [InlineData("test.txt", "^.*\\.txt", true)]
-        [InlineData("test.txt", "^.*\\.txt$", true)]
-        [InlineData("test.txt", ".*\\.sky", false)]
-        [InlineData("test.txt", ".*z\\.txt", false)]
-        [InlineData("test.txt", "z.*\\.txt", false)]
-        [InlineData("test.txt", "te.*\\.txt", true)]
-        [InlineData("test.txt", "TE.*\\.txt", false)]
-        [InlineData("Test.txt", "te.*\\.txt", false)]
-        [InlineData("test.txt", "test\\..*", true)]
-        [InlineData("test.txt", "te.*xt", true)]
-        [InlineData("2019\\test.txt", ".*\\\\2019\\\\test\\.txt", true)]
-        [InlineData("2019\\test.txt", ".*\\\\2019\\\\test\\.txt$", true)]
-        [InlineData("2019\\test.txt", ".*\\\\2019\\\\.*", true)]
-        [InlineData("2019\\test.txt", "\\d{4}", true)]
-        [InlineData("2019\\test.txt", "\\\\\\d{4}\\\\", true)]
-        [InlineData("2019\\test.txt", ".*2019.*", true)]
-        [InlineData("2019\\test.txt", "^.*2019.*$", true)]
-        [InlineData("2019\\test.txt", ".*2019", true)]
-        [InlineData("2019\\test.txt", ".*2019$", false)]
-        [InlineData("2019\\test.txt", "2019.*", true)]
-        [InlineData("2019\\test.txt", "^2019.*", false)]
-        public void FindSupportedPathsReturnsExistingFilePathMatchingRegularExpressionFilter(
-            string fileSegment,
-            string regularExpression,
-            bool isMatch)
-        {
-            var filePath = Path.Combine(_directoryPath, fileSegment);
-            var directoryPath = Path.GetDirectoryName(filePath);
-            var createDirectory = Directory.Exists(directoryPath) == false;
-            var extension = Path.GetExtension(filePath);
-            var supportedExtensions = new List<string> {extension};
-            var mediaOperationType = MediaOperationType.ReadWrite;
-            var paths = new List<string> {filePath};
-
-            var mediaManager = Substitute.For<IMediaManager>();
-            var settings = Substitute.For<ISettings>();
-
-            settings.SearchFilterType = SearchFilterType.RegularExpression;
-            settings.RegularExpressionFilter = regularExpression;
-            mediaManager.GetSupportedFileTypes(mediaOperationType).Returns(supportedExtensions);
-
-            try
-            {
-                if (createDirectory)
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
-
-                File.WriteAllText(filePath, Guid.NewGuid().ToString());
-
-                var sut = new FileSearcher(mediaManager, settings);
-
-                var actual = sut.FindSupportedFiles(paths, mediaOperationType);
-
-                if (isMatch)
-                {
-                    actual.Should().Contain(filePath);
-                }
-                else
-                {
-                    actual.Should().BeEmpty();
-                }
-            }
-            finally
-            {
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-
-                if (createDirectory && Directory.Exists(directoryPath))
-                {
-                    Directory.Delete(directoryPath);
                 }
             }
         }
@@ -294,10 +315,8 @@
         [InlineData(".TXT")]
         public void FindSupportedPathsReturnsExistingFilePathWithCaseInsensitiveExtensionMatch(string extension)
         {
-            var filePath = Path.Combine(_directoryPath, Guid.NewGuid().ToString("N") + extension);
             var supportedExtensions = new List<string> {".jpg", ".txt"};
             var mediaOperationType = MediaOperationType.ReadWrite;
-            var paths = new List<string> {filePath};
 
             var mediaManager = Substitute.For<IMediaManager>();
             var settings = Substitute.For<ISettings>();
@@ -305,32 +324,77 @@
             settings.SearchFilterType = SearchFilterType.None;
             mediaManager.GetSupportedFileTypes(mediaOperationType).Returns(supportedExtensions);
 
-            try
+            using (var scenario = new TestScenario(_directoryPath, Guid.NewGuid().ToString("N") + extension))
             {
-                File.WriteAllText(filePath, Guid.NewGuid().ToString());
+                var sut = new FileSearcher(mediaManager, settings);
+
+                var actual = sut.FindSupportedFiles(scenario.Files, mediaOperationType);
+
+                actual.Should().Contain(scenario.Files[0]);
+            }
+        }
+
+        [Fact]
+        public void FindSupportedPathsReturnsFileInSearchPathOnlyWhenRecursiveSearchDisabled()
+        {
+            var supportedExtensions = new List<string> {".txt"};
+            var mediaOperationType = MediaOperationType.ReadWrite;
+
+            var mediaManager = Substitute.For<IMediaManager>();
+            var settings = Substitute.For<ISettings>();
+
+            settings.SearchFilterType = SearchFilterType.None;
+            settings.RecursiveSearch = false;
+            mediaManager.GetSupportedFileTypes(mediaOperationType).Returns(supportedExtensions);
+
+            using (var scenario = new TestScenario(_directoryPath,
+                Guid.NewGuid().ToString("N") + ".txt",
+                "Parent\\" + Guid.NewGuid().ToString("N") + ".txt",
+                "2019\\Parent\\" + Guid.NewGuid().ToString("N") + ".txt"))
+            {
+                var searchPaths = new List<string> {scenario.ScenarioDirectory};
 
                 var sut = new FileSearcher(mediaManager, settings);
 
-                var actual = sut.FindSupportedFiles(paths, mediaOperationType);
+                var actual = sut.FindSupportedFiles(searchPaths, mediaOperationType).ToList();
 
-                actual.Should().Contain(filePath);
-            }
-            finally
-            {
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
+                actual.Should().HaveCount(1);
+                actual[0].Should().Be(scenario.Files[0]);
             }
         }
-        
+
+        [Fact]
+        public void FindSupportedPathsReturnsMatchingFilesInRecursiveDirectories()
+        {
+            var searchPaths = new List<string> {_directoryPath};
+            var supportedExtensions = new List<string> {".txt"};
+            var mediaOperationType = MediaOperationType.ReadWrite;
+
+            var mediaManager = Substitute.For<IMediaManager>();
+            var settings = Substitute.For<ISettings>();
+
+            settings.SearchFilterType = SearchFilterType.None;
+            settings.RecursiveSearch = true;
+            mediaManager.GetSupportedFileTypes(mediaOperationType).Returns(supportedExtensions);
+
+            using (var scenario = new TestScenario(_directoryPath,
+                Guid.NewGuid().ToString("N") + ".txt",
+                "Parent\\" + Guid.NewGuid().ToString("N") + ".txt",
+                "2019\\Parent\\" + Guid.NewGuid().ToString("N") + ".txt"))
+            {
+                var sut = new FileSearcher(mediaManager, settings);
+
+                var actual = sut.FindSupportedFiles(searchPaths, mediaOperationType);
+
+                actual.Should().BeEquivalentTo(scenario.Files);
+            }
+        }
+
         [Fact]
         public void FindSupportedPathsReturnsPathOnlyOnce()
         {
-            var filePath = Path.Combine(_directoryPath, Guid.NewGuid().ToString("N") + ".txt");
             var supportedExtensions = new List<string> {".jpg", ".txt"};
             var mediaOperationType = MediaOperationType.ReadWrite;
-            var paths = new List<string> {filePath, filePath};
 
             var mediaManager = Substitute.For<IMediaManager>();
             var settings = Substitute.For<ISettings>();
@@ -338,23 +402,16 @@
             settings.SearchFilterType = SearchFilterType.None;
             mediaManager.GetSupportedFileTypes(mediaOperationType).Returns(supportedExtensions);
 
-            try
-            {
-                File.WriteAllText(filePath, Guid.NewGuid().ToString());
+            var fileName = Guid.NewGuid().ToString("N") + ".txt";
 
+            using (var scenario = new TestScenario(_directoryPath, fileName, fileName))
+            {
                 var sut = new FileSearcher(mediaManager, settings);
 
-                var actual = sut.FindSupportedFiles(paths, mediaOperationType).ToList();
+                var actual = sut.FindSupportedFiles(scenario.Files, mediaOperationType).ToList();
 
                 actual.Should().HaveCount(1);
-                actual.Should().Contain(filePath);
-            }
-            finally
-            {
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
+                actual.Should().Contain(scenario.Files[0]);
             }
         }
 
@@ -374,29 +431,16 @@
         [Fact]
         public void FindSupportedReturnsEmptyWhenSpecifiedDirectoryIsEmpty()
         {
-            var directoryPath = Path.Combine(_directoryPath, Guid.NewGuid().ToString("N") + "\\");
-
-            var paths = new List<string> {directoryPath};
-
             var mediaManager = Substitute.For<IMediaManager>();
             var settings = Substitute.For<ISettings>();
 
             var sut = new FileSearcher(mediaManager, settings);
-
-            try
+            
+            using (var scenario = new TestScenario(_directoryPath))
             {
-                Directory.CreateDirectory(directoryPath);
-
-                var actual = sut.FindSupportedFiles(paths, MediaOperationType.Read);
+                var actual = sut.FindSupportedFiles(new []{scenario.ScenarioDirectory}, MediaOperationType.Read);
 
                 actual.Should().BeEmpty();
-            }
-            finally
-            {
-                if (Directory.Exists(directoryPath))
-                {
-                    Directory.Delete(directoryPath);
-                }
             }
         }
 

@@ -10,6 +10,7 @@
         public static bool IsSupported(this IMediaManager mediaManager, string filePath, MediaOperationType operationType)
         {
             Ensure.Any.IsNotNull(mediaManager, nameof(mediaManager));
+            Ensure.String.IsNotNullOrWhiteSpace(filePath, nameof(filePath));
 
             var fileType = Path.GetExtension(filePath);
 
@@ -23,7 +24,7 @@
             return fileTypes.Any(x => string.Equals(x, fileType, StringComparison.OrdinalIgnoreCase));
         }
 
-        public static MediaInfo ReadMediaInfo(IMediaManager mediaManager, string filePath)
+        public static MediaInfo ReadMediaInfo(this IMediaManager mediaManager, string filePath)
         {
             Ensure.Any.IsNotNull(mediaManager, nameof(mediaManager));
             Ensure.String.IsNotEmptyOrWhitespace(filePath, nameof(filePath));
