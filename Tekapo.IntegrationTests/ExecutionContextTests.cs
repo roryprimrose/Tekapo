@@ -64,7 +64,7 @@
         [Fact]
         public void SearchDirectoryReturnsNullWhenArgumentsIsEmpty()
         {
-            var args = new string[0];
+            var args = Array.Empty<string>();
 
             var sut = new ExecutionContext(args);
 
@@ -146,7 +146,7 @@
         [Fact]
         public void SearchPathsReturnsEmptyWhenArgumentsIsEmpty()
         {
-            var args = new string[0];
+            var args = Array.Empty<string>();
 
             var sut = new ExecutionContext(args);
 
